@@ -184,23 +184,32 @@
     const preloader = document.getElementById('preloader');
     if (preloader && !preloader.classList.contains('done')) {
       preloader.classList.add('done');
-      setTimeout(initHeroAnimations, 500);
+      setTimeout(() => {
+        preloader.style.display = 'none';
+      }, 600);
     }
   }
 
-  // Hide preloader once everything is ready
-  window.addEventListener('load', () => {
-    // Wait for web + spider descent to finish, then a brief pause
-    const checkReady = setInterval(() => {
-      if (webDrawn && spiderDescended) {
-        clearInterval(checkReady);
-        setTimeout(hidePreloader, 800);
-      }
-    }, 100);
-  });
+  // Click/Tap anywhere to skip preloader immediately
+  const preloaderEl = document.getElementById('preloader');
+  if (preloaderEl) {
+    preloaderEl.addEventListener('click', hidePreloader);
+    preloaderEl.addEventListener('touchstart', hidePreloader, { passive: true });
+  }
 
-  // Fallback safety timeout
-  setTimeout(hidePreloader, 5000);
+  // Hide preloader once web and spider finish
+  const checkReady = setInterval(() => {
+    if (webDrawn && spiderDescended) {
+      clearInterval(checkReady);
+      setTimeout(hidePreloader, 400);
+    }
+  }, 100);
+
+  // Absolute safety timeout: never stay stuck more than 2.2 seconds under any circumstances
+  setTimeout(() => {
+    clearInterval(checkReady);
+    hidePreloader();
+  }, 2200);
 
   // ===== CUSTOM CURSOR (Desktop Only) =====
   if (window.innerWidth > 768) {
