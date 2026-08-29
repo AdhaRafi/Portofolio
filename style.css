@@ -123,6 +123,19 @@ img {
 }
 
 /* ===== PRELOADER — Spider Web ===== */
+@keyframes autoDismissPreloader {
+  0%, 75% {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
 .preloader {
   position: fixed;
   inset: 0;
@@ -132,7 +145,8 @@ img {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  transition: opacity 0.45s ease, visibility 0.45s ease;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+  animation: autoDismissPreloader 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .preloader.done {
