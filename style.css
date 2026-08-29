@@ -132,13 +132,13 @@ img {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  transition: opacity 0.8s ease 0.3s, visibility 0.8s ease 0.3s;
+  transition: opacity 0.45s ease, visibility 0.45s ease;
 }
 
 .preloader.done {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 #spider-web-canvas {
