@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Adha Rafi Nurfaiz — Siswa SMK Telkom Purwokerto, Developer & UI/UX Enthusiast. Portfolio, skills, achievements, dan kontak.">
+    <meta name="keywords"
+        content="Adha Rafi Nurfaiz, developer, UI/UX, PPLG, SMK Telkom Purwokerto, portfolio, web developer">
+    <meta name="author" content="Adha Rafi Nurfaiz">
+
+    <title>Adha Rafi Nurfaiz — Developer & UI/UX Enthusiast</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;600&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="icon" type="image/svg+xml" href=hero-dev.jpg>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+</head>
+
+<body>
+
+    <!-- CUSTOM CURSOR -->
+    <div class="custom-cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursor-dot"></div>
+
+    <!-- PRELOADER — Spider Web -->
+    <div class="preloader" id="preloader">
+        <canvas id="spider-web-canvas"></canvas>
+
+        <!-- Spider silk thread -->
+        <div class="spider-silk" id="spider-silk"></div>
+
+        <!-- Spider SVG with animated legs -->
+        <div class="spider-wrapper" id="spider-wrapper">
+            <svg class="spider-svg" viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <!-- Red glow filter -->
+                    <filter id="redGlow" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="2" result="blur" />
+                        <feFlood flood-color="#ff1744" flood-opacity="0.6" result="color" />
+                        <feComposite in="color" in2="blur" operator="in" result="glow" />
+                        <feMerge>
+                            <feMergeNode in="glow" />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                    </filter>
+                    <!-- Eye glow -->
+                    <filter id="eyeGlow" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="3" result="blur" />
+                        <feFlood flood-color="#ffffff" flood-opacity="0.8" result="color" />
+                        <feComposite in="color" in2="blur" operator="in" result="glow" />
+                        <feMerge>
+                            <feMergeNode in="glow" />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                    </filter>
+                </defs>
+
+                <!-- Legs left side — black with red tips -->
+                <line class="spider-leg leg-l1" x1="38" y1="38" x2="5" y2="12" />
+                <line class="spider-leg leg-l2" x1="35" y1="46" x2="2" y2="42" />
+                <line class="spider-leg leg-l3" x1="35" y1="54" x2="2" y2="62" />
+                <line class="spider-leg leg-l4" x1="38" y1="62" x2="5" y2="90" />
+                <!-- Red tips left -->
+                <line class="spider-leg-tip leg-l1" x1="10" y1="16" x2="5" y2="12" />
+                <line class="spider-leg-tip leg-l2" x1="7" y1="42" x2="2" y2="42" />
+                <line class="spider-leg-tip leg-l3" x1="7" y1="62" x2="2" y2="62" />
+                <line class="spider-leg-tip leg-l4" x1="10" y1="86" x2="5" y2="90" />
+
+                <!-- Legs right side -->
+                <line class="spider-leg leg-r1" x1="82" y1="38" x2="115" y2="12" />
+                <line class="spider-leg leg-r2" x1="85" y1="46" x2="118" y2="42" />
+                <line class="spider-leg leg-r3" x1="85" y1="54" x2="118" y2="62" />
+                <line class="spider-leg leg-r4" x1="82" y1="62" x2="115" y2="90" />
+                <!-- Red tips right -->
+                <line class="spider-leg-tip leg-r1" x1="110" y1="16" x2="115" y2="12" />
+                <line class="spider-leg-tip leg-r2" x1="113" y1="42" x2="118" y2="42" />
+                <line class="spider-leg-tip leg-r3" x1="113" y1="62" x2="118" y2="62" />
+                <line class="spider-leg-tip leg-r4" x1="110" y1="86" x2="115" y2="90" />
+
+                <!-- Body (abdomen) — dark black with red outline glow -->
+                <ellipse cx="60" cy="58" rx="22" ry="26" fill="#0d0d0d" stroke="#cc1133" stroke-width="0.8"
+                    opacity="0.95" />
+                <!-- Red accent stripes on abdomen -->
+                <path d="M52 46 L60 42 L68 46" fill="none" stroke="#ff1744" stroke-width="1.2" opacity="0.8" />
+                <path d="M49 52 L60 47 L71 52" fill="none" stroke="#ff1744" stroke-width="1" opacity="0.6" />
+                <path d="M50 58 L60 54 L70 58" fill="none" stroke="#cc1133" stroke-width="0.8" opacity="0.4" />
+
+                <!-- Spider emblem on abdomen (Miles style) -->
+                <g filter="url(#redGlow)" opacity="0.9">
+                    <!-- Spider body -->
+                    <ellipse cx="60" cy="63" rx="3" ry="5" fill="#ff1744" />
+                    <ellipse cx="60" cy="56" rx="2.5" ry="3" fill="#ff1744" />
+                    <!-- Spider emblem legs -->
+                    <line x1="57" y1="56" x2="50" y2="52" stroke="#ff1744" stroke-width="1" stroke-linecap="round" />
+                    <line x1="63" y1="56" x2="70" y2="52" stroke="#ff1744" stroke-width="1" stroke-linecap="round" />
+                    <line x1="57" y1="59" x2="48" y2="60" stroke="#ff1744" stroke-width="1" stroke-linecap="round" />
+                    <line x1="63" y1="59" x2="72" y2="60" stroke="#ff1744" stroke-width="1" stroke-linecap="round" />
+                    <line x1="57" y1="63" x2="49" y2="68" stroke="#ff1744" stroke-width="1" stroke-linecap="round" />
+                    <line x1="63" y1="63" x2="71" y2="68" stroke="#ff1744" stroke-width="1" stroke-linecap="round" />
+                    <line x1="58" y1="66" x2="51" y2="74" stroke="#ff1744" stroke-width="1" stroke-linecap="round" />
+                    <line x1="62" y1="66" x2="69" y2="74" stroke="#ff1744" stroke-width="1" stroke-linecap="round" />
+                </g>
+
+                <!-- Cephalothorax (head) — dark -->
+                <ellipse cx="60" cy="34" rx="16" ry="14" fill="#111111" stroke="#cc1133" stroke-width="0.6" />
+
+                <!-- Big Spider-Man eyes (Miles Morales white angular) -->
+                <g filter="url(#eyeGlow)">
+                    <!-- Left eye -->
+                    <path d="M47 30 Q50 22 56 26 Q57 32 52 35 Q47 34 47 30Z" fill="#ffffff" opacity="0.95">
+                        <animate attributeName="opacity" values="0.95;0.7;0.95" dur="3s" repeatCount="indefinite" />
+                    </path>
+                    <!-- Right eye -->
+                    <path d="M73 30 Q70 22 64 26 Q63 32 68 35 Q73 34 73 30Z" fill="#ffffff" opacity="0.95">
+                        <animate attributeName="opacity" values="0.95;0.7;0.95" dur="3s" repeatCount="indefinite"
+                            begin="0.5s" />
+                    </path>
+                </g>
+
+                <!-- Red reflection in eyes -->
+                <circle cx="52" cy="29" r="1.2" fill="#ff1744" opacity="0.3" />
+                <circle cx="68" cy="29" r="1.2" fill="#ff1744" opacity="0.3" />
+            </svg>
+        </div>
+
+        <div class="preloader-name" id="preloader-name">RafiKuy</div>
+        <div class="preloader-bar">
+            <div class="preloader-fill" id="preloader-fill"></div>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="#" class="nav-logo">
+                <span class="Clover">☘︎</span> RafiKuy
+            </a>
+            <div class="nav-links" id="nav-links">
+                <a href="#about">About Me</a>
+                <a href="#skills">Skills</a>
+                <a href="#portfolio">Portfolio</a>
+                <a href="#experience">Experience</a>
+                <a href="#services">Services</a>
+                <a href="#achievements">Achievements</a>
+                <a href="#testimonials">Testimonials</a>
+
+                <!-- Language Selector Dropdown -->
+                <div class="lang-dropdown-wrapper" id="lang-wrapper">
+                    <button class="lang-btn" id="lang-btn" type="button" aria-label="Change Language">
+                        <span class="lang-icon">🌐</span>
+                        <span class="lang-current" id="lang-current">ID</span>
+                        <span class="lang-arrow">▾</span>
+                    </button>
+                    <div class="lang-menu" id="lang-menu">
+                        <div class="lang-search-box">
+                            <input type="text" id="lang-search" placeholder="Cari bahasa..." autocomplete="off" />
+                        </div>
+                        <div class="lang-list-scroll" id="lang-list-scroll">
+                            <button class="lang-option active" data-lang="id"><span class="flag">🇮🇩</span> Indonesia
+                                (ID)</button>
+                            <button class="lang-option" data-lang="en"><span class="flag">🇬🇧</span> English
+                                (EN)</button>
+                            <button class="lang-option" data-lang="ja"><span class="flag">🇯🇵</span> 日本語
+                                (Japanese)</button>
+                            <button class="lang-option" data-lang="ko"><span class="flag">🇰🇷</span> 한국어
+                                (Korean)</button>
+                            <button class="lang-option" data-lang="zh-CN"><span class="flag">🇨🇳</span> 简体中文
+                                (Chinese)</button>
+                            <button class="lang-option" data-lang="ar"><span class="flag">🇸🇦</span> العربية
+                                (Arabic)</button>
+                            <button class="lang-option" data-lang="es"><span class="flag">🇪🇸</span> Español
+                                (Spanish)</button>
+                            <button class="lang-option" data-lang="fr"><span class="flag">🇫🇷</span> Français
+                                (French)</button>
+                            <button class="lang-option" data-lang="de"><span class="flag">🇩🇪</span> Deutsch
+                                (German)</button>
+                            <button class="lang-option" data-lang="ru"><span class="flag">🇷🇺</span> Русский
+                                (Russian)</button>
+                            <button class="lang-option" data-lang="it"><span class="flag">🇮🇹</span> Italiano
+                                (Italian)</button>
+                            <button class="lang-option" data-lang="pt"><span class="flag">🇵🇹</span> Português
+                                (Portuguese)</button>
+                            <button class="lang-option" data-lang="nl"><span class="flag">🇳🇱</span> Nederlands
+                                (Dutch)</button>
+                            <button class="lang-option" data-lang="tr"><span class="flag">🇹🇷</span> Türkçe
+                                (Turkish)</button>
+                            <button class="lang-option" data-lang="th"><span class="flag">🇹🇭</span> ไทย
+                                (Thai)</button>
+                            <button class="lang-option" data-lang="vi"><span class="flag">🇻🇳</span> Tiếng Việt
+                                (Vietnamese)</button>
+                            <button class="lang-option" data-lang="ms"><span class="flag">🇲🇾</span> Bahasa
+                                Melayu</button>
+                            <button class="lang-option" data-lang="jw"><span class="flag">🇮🇩</span> Basa Jawa
+                                (Javanese)</button>
+                            <button class="lang-option" data-lang="su"><span class="flag">🇮🇩</span> Basa Sunda
+                                (Sundanese)</button>
+                            <button class="lang-option" data-lang="hi"><span class="flag">🇮🇳</span> हिन्दी
+                                (Hindi)</button>
+                            <button class="lang-option" data-lang="tl"><span class="flag">🇵🇭</span> Tagalog
+                                (Filipino)</button>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="#contact" class="nav-cta">Get in Touch</a>
+            </div>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hidden Google Translate Element -->
+    <div id="google_translate_element" style="display:none;"></div>
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="home">
+        <div class="hero-bg-text">
+            <div class="hero-bg-line" id="hero-line-1">PORTFOLIO</div>
+            <div class="hero-bg-line" id="hero-line-2">PORTFOLIO</div>
+            <div class="hero-bg-line" id="hero-line-3">PORTFOLIO</div>
+            <div class="hero-bg-line" id="hero-line-4">PORTFOLIO</div>
+        </div>
+
+        <span class="hero-stars">☘︎</span>
+        <span class="hero-stars-2">☘︎</span>
+
+        <div class="container">
+            <div class="hero-left">
+                <div class="hero-image-wrapper" id="hero-interactive-card">
+                    <!-- Glowing Background Orbit Ring & Ambient Aura -->
+                    <div class="hero-photo-ambient"></div>
+                    <div class="hero-orbit-ring">
+                        <span class="orbit-particle p1"></span>
+                        <span class="orbit-particle p2"></span>
+                    </div>
+
+                    <!-- Main Image Frame with 3D Hologram Glare & Corner Brackets -->
+                    <div class="hero-card-3d">
+                        <img src="assets/images/hero-dev.jpg" alt="Adha Rafi Nurfaiz" id="hero-img">
+                        <div class="hero-lens-glare"></div>
+                        <div class="hero-corner c-tl"></div>
+                        <div class="hero-corner c-tr"></div>
+                        <div class="hero-corner c-bl"></div>
+                        <div class="hero-corner c-br"></div>
+                    </div>
+
+                    <!-- Floating Dynamic Badges -->
+                    <div class="hero-floating-badge badge-top-right">
+                        <span class="badge-dot-live"></span> Programming
+                    </div>
+                    <div class="hero-floating-badge badge-mid-left">
+                        SMK Telkom • PPLG
+                    </div>
+                    <div class="hero-quote" id="hero-quote">
+                        Saya suka membangun hal-hal yang hidup di internet. Selalu belajar, berkembang, dan menciptakan
+                        solusi terbaik.
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-right">
+                <h1 class="hero-title" id="hero-title">
+                    <span><span class="word">PORTFOLIO</span></span>
+                </h1>
+                <div class="hero-socials" id="hero-socials">
+                    <a href="https://github.com/AdhaRafi" target="_blank" rel="noopener noreferrer"
+                        class="hero-social-link">
+                        <span class="social-tag">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path
+                                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                            </svg>
+                            GitHub
+                        </span>
+                        AdhaRafi
+                    </a>
+                    <a href="https://www.instagram.com/rafiiwow_" target="_blank" rel="noopener noreferrer"
+                        class="hero-social-link">
+                        <span class="social-tag">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                            </svg>
+                            Instagram
+                        </span>
+                        @rafiiwow_
+                    </a>
+                    <a href="https://wa.me/6281548331020" target="_blank" rel="noopener noreferrer"
+                        class="hero-social-link">
+                        <span class="social-tag">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path
+                                    d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+                            </svg>
+                            WA
+                        </span>
+                        081548331020
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ MARQUEE ============ -->
+    <div class="marquee-section" id="marquee">
+        <div class="marquee-track">
+            <div class="marquee-item"><span class="marquee-clover">☘︎</span> SMK TELKOM PURWOKERTO</div>
+            <div class="marquee-item"><span class="marquee-clover">☘︎</span> WEB DEVELOPER</div>
+            <div class="marquee-item"><span class="marquee-clover">☘︎</span> UI/UX ENTHUSIAST</div>
+            <div class="marquee-item"><span class="marquee-clover">☘︎</span> PPLG STUDENT</div>
+            <div class="marquee-item"><span class="marquee-clover">☘︎</span> INTERACTIVE EXPERIENCES</div>
+            <div class="marquee-item"><span class="marquee-clover">☘︎</span> CRAFT & CODE</div>
+            <div class="marquee-item"><span class="marquee-clover">☘︎</span> OPEN TO COLLABORATE</div>
+            <!-- Duplicate for seamless infinite scroll -->
+            <div class="marquee-item"><span class="marquee-clover">☘︎</span> SMK TELKOM PURWOKERTO</div>
+            <div class="marquee-item"><span class="marquee-clover">☘︎</span> WEB DEVELOPER</div>
+            <div class="marquee-item"><span class="marquee-clover">☘︎</span> UI/UX ENTHUSIAST</div>
+            <div class="marquee-item"><span class="marquee-clover">☘︎</span> PPLG STUDENT</div>
+            <div class="marquee-item"><span class="marquee-clover">☘︎</span> INTERACTIVE EXPERIENCES</div>
+            <div class="marquee-item"><span class="marquee-clover">☘︎</span> CRAFT & CODE</div>
+            <div class="marquee-item"><span class="marquee-clover">☘︎</span> OPEN TO COLLABORATE</div>
+        </div>
+    </div>
+
+    <!-- ============ ABOUT ============ -->
+    <section class="about-section" id="about">
+        <div class="container">
+            <div class="about-top">
+                <!-- Left Text -->
+                <div class="anim-fade-left">
+                    <h2 class="about-hello">
+                        Hello,<br>I'm <span class="name-highlight">Adha Rafi</span> !
+                    </h2>
+                    <p class="about-text">
+                        Saya adalah <strong>Adha Rafi Nurfaiz</strong>, siswa SMK Telkom Purwokerto jurusan PPLG
+                        (Pengembangan Perangkat Lunak dan Gim). Saya memiliki passion di bidang coding, UI/UX design,
+                        dan terus belajar teknologi baru. Saya selalu mengutamakan kualitas dan pengalaman pengguna
+                        yang luar biasa dalam setiap project yang saya kerjakan.
+                    </p>
+                    <a href="#contact" class="about-link">
+                        <span class="link-icon"></span>
+                        Rafii
+                    </a>
+                </div>
+
+                <!-- Right Photo + Card -->
+                <div class="about-photo-area anim-fade-right">
+                    <div class="about-photo-wrapper" id="about-interactive-card">
+                        <div class="about-photo-ambient"></div>
+                        <div class="about-photo-frame">
+                            <img src="assets/images/hero-dev.jpg" alt="Adha Rafi" class="about-photo">
+                            <div class="about-lens-glare"></div>
+                            <div class="about-corner c-tl"></div>
+                            <div class="about-corner c-tr"></div>
+                            <div class="about-corner c-bl"></div>
+                            <div class="about-corner c-br"></div>
+                        </div>
+                        <div class="about-badge">🎓 SMK Telkom</div>
+                        <div class="about-badge-bottom">💻 Developer & UI/UX</div>
+                        <div class="contact-card-mini">
+                            <h4>Contact</h4>
+                            <p>📍 Purwokerto, Indonesia</p>
+                            <p>📱 081548331020</p>
+                            <p>📷 @rafiiwow_</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ SKILLS (Rintacoders Style) ============ -->
+    <section class="skills-section" id="skills">
+        <div class="container">
+            <div class="skills-header anim-fade-up">
+                <p class="skills-sub-badge">MY TECH STACK </p>
+                <h2>Skills & Technologies</h2>
+                <p>Teknologi, bahasa pemrograman, dan tools yang saya gunakan untuk membangun project berkualitas.</p>
+            </div>
+
+            <!-- Animated Multi-Row Tech Stack Marquee (Rintacoders Style) -->
+            <div class="tech-marquee-wrapper anim-fade-up">
+
+                <!-- Row 1: Left -->
+                <div class="tech-marquee-row">
+                    <div class="tech-marquee-track track-left">
+                        <!-- Original -->
+                        <div class="tech-pill-icon"><span class="tpi-icon" style="background:#E34F26"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z" />
+                                </svg></span> HTML5</div>
+                        <div class="tech-pill-icon"><span class="tpi-icon" style="background:#1572B6"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm17.09 4.413L5.41 4.41l.213 2.622 10.125.002-.255 2.716h-6.64l.24 2.573h6.182l-.366 3.523-2.91.804-2.956-.81-.188-2.11h-2.61l.29 3.855L12 19.288l5.373-1.53L18.59 4.414z" />
+                                </svg></span> CSS3</div>
+                        <div class="tech-pill-icon"><span class="tpi-icon" style="background:#F7DF1E"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path
+                                        d="M0 0h24v24H0V0zm22.034 18.276c-.175-1.095-.888-2.015-3.003-2.873-.736-.345-1.554-.585-1.797-1.14-.091-.33-.105-.51-.046-.705.15-.646.915-.84 1.515-.66.39.12.75.42.976.9 1.034-.676 1.034-.676 1.755-1.125-.27-.42-.404-.601-.586-.78-.63-.705-1.469-1.065-2.834-1.034l-.705.089c-.676.165-1.32.525-1.71 1.005-1.14 1.291-.811 3.541.569 4.471 1.365 1.02 3.361 1.244 3.616 2.205.24 1.17-.87 1.545-1.966 1.41-.811-.18-1.26-.586-1.755-1.336l-1.83 1.051c.21.48.45.689.81 1.109 1.74 1.756 6.09 1.666 6.871-1.004.029-.09.24-.705.074-1.65l.046.067zm-8.983-7.245h-2.248c0 1.938-.009 3.864-.009 5.805 0 1.232.063 2.363-.138 2.711-.33.689-1.18.601-1.566.48-.396-.196-.597-.466-.83-.855-.063-.105-.11-.196-.127-.196l-1.825 1.125c.305.63.75 1.172 1.324 1.517.855.51 2.004.675 3.207.405.783-.226 1.458-.691 1.811-1.411.51-.93.402-2.07.397-3.346.012-2.054 0-4.109 0-6.179l.004-.056z" />
+                                </svg></span> JavaScript</div>
+                        <div class="tech-pill-icon"><span class="tpi-icon" style="background:#777BB4"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M7.01 10.207h-.944l-.515 2.648h.838c.556 0 .97-.105 1.242-.314.272-.21.455-.559.55-1.049.092-.47.05-.802-.124-.995-.175-.193-.523-.29-1.047-.29zM12 .297c-6.63 0-12 5.373-12 12s5.37 12 12 12 12-5.373 12-12S18.63.297 12 .297zm-1.376 15.26H8.85l-.696 3.578H6.543l2.19-11.252h3.53c.988 0 1.72.248 2.196.743.476.495.608 1.201.395 2.119-.29 1.255-.895 2.151-1.813 2.688a4.578 4.578 0 0 1-2.417.624zm6.97-.043h-2.31l-1.58-4.51-.876 4.51H11.3l2.188-11.252h1.525l-.67 3.45c.41-.452.884-.789 1.42-1.009.538-.22 1.113-.33 1.723-.33.697 0 1.249.196 1.655.588.405.392.523.967.352 1.724l-1.072 5.502c-.001.001-.001.002-.002.004-.085.44-.224.818-.416 1.134a2.54 2.54 0 0 1-.778.811 2.77 2.77 0 0 1-1.153.41l-.009.001z" />
+                                </svg></span> PHP</div>
+                        <div class="tech-pill-icon"><span class="tpi-icon" style="background:#3776AB"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M11.914 0C5.82 0 6.2 2.656 6.2 2.656l.007 2.752h5.814v.826H3.89S0 5.789 0 11.969c0 6.18 3.403 5.96 3.403 5.96h2.03v-2.867s-.109-3.402 3.35-3.402h5.766s3.24.052 3.24-3.13V3.13S18.28 0 11.914 0zm-3.21 1.814a1.036 1.036 0 1 1 .001 2.073 1.036 1.036 0 0 1-.001-2.073z" />
+                                    <path
+                                        d="M12.086 24c6.094 0 5.714-2.656 5.714-2.656l-.007-2.752h-5.814v-.826H20.11S24 18.211 24 12.031c0-6.18-3.403-5.96-3.403-5.96h-2.03v2.867s.109 3.402-3.35 3.402H9.451s-3.24-.052-3.24 3.13V20.87S5.72 24 12.086 24zm3.21-1.814a1.036 1.036 0 1 1-.001-2.073 1.036 1.036 0 0 1 .001 2.073z" />
+                                </svg></span> Python</div>
+                        <div class="tech-pill-icon"><span class="tpi-icon" style="background:#4479A1"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M16.405 5.501c-.115 0-.193.014-.274.033v.013h.014c.054.104.146.19.214.29.054.104.1.21.154.314l.014-.015c.094-.066.14-.172.14-.333-.04-.047-.046-.094-.062-.14-.015-.043-.064-.077-.2-.162zM5.48 13.813c-.094 0-.188.014-.274.04.04.054.08.114.12.165.06.104.114.215.167.328l.016-.015c.085-.065.13-.17.13-.33-.04-.047-.047-.1-.06-.144-.017-.045-.063-.09-.1-.044zM6.62 3.72c.45.062.887.32 1.21.643.306.306.525.687.637 1.1.175-.092.346-.2.5-.326-.32-.48-.806-.826-1.36-.962-.325-.08-.65-.07-.987-.06zM7.063 2.27c.44.06.87.305 1.192.625.304.302.52.68.635 1.086.17-.089.342-.198.496-.32-.32-.48-.8-.822-1.35-.958-.325-.08-.65-.07-.973-.06zM7.505.822c.44.058.87.3 1.19.62.304.303.522.677.636 1.08.172-.09.345-.2.5-.32-.318-.48-.8-.82-1.35-.958-.322-.08-.647-.068-.972-.058zM10.81 5.31c0-1.2-.49-2.33-1.34-3.13A4.34 4.34 0 0 0 6.41 1c-.74 0-1.46.19-2.094.547.52.48.896 1.103 1.085 1.78.055.2.092.41.11.62.41-.17.85-.27 1.31-.27 1.94 0 3.47 1.53 3.47 3.47v.042c.18-.02.36-.042.54-.07v-.64zM5.52 15.81c.004-.073.008-.146.008-.22C5.53 13.66 4 12.13 2.09 12.13c-.36 0-.71.06-1.03.17.01.38.06.77.15 1.15.257 1.07.86 2.04 1.7 2.76.84.72 1.9 1.16 3 1.25.14.01.28.015.42.015 1.86 0 3.49-.97 4.41-2.43-.22-.33-.42-.68-.6-1.05a4.97 4.97 0 0 1-4.62 1.82zM11.44 10.12c0-1.69-.87-3.22-2.22-4.12-.42.77-.65 1.66-.65 2.59 0 1.03.27 2 .77 2.83.33-.1.65-.24.94-.41.43-.26.82-.59 1.15-.97zm.49.34c-.38.28-.78.52-1.2.7.27.3.57.57.9.8.69.48 1.5.76 2.33.77-.02-.18-.07-.35-.14-.5-.49-1.16-1.13-1.57-1.89-1.77zM1.37 11.71C1.13 11.25 1 10.74 1 10.2c0-1.6.86-3.07 2.21-3.95.09.3.15.62.17.94-.96.63-1.6 1.7-1.6 2.92 0 .23.03.45.07.67-.17.31-.33.62-.48.93z" />
+                                </svg></span> MySQL</div>
+                        <div class="tech-pill-icon"><span class="tpi-icon" style="background:#F24E1E"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M15.852 8.981h-4.588V0h4.588c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.491-4.49 4.491zM12.735 7.51h3.117c1.665 0 3.019-1.355 3.019-3.019s-1.354-3.019-3.019-3.019h-3.117V7.51zm0 1.471H8.148c-2.476 0-4.49-2.014-4.49-4.49S5.672 0 8.148 0h4.588v8.981zm-4.587-7.51c-1.665 0-3.019 1.355-3.019 3.019s1.354 3.019 3.019 3.019h3.117V1.471H8.148zm4.587 15.019H8.148c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h4.588v8.98zM8.148 8.981c-1.665 0-3.019 1.354-3.019 3.019s1.354 3.019 3.019 3.019h3.117V8.981H8.148zm-4.49 7.51c0-2.476 2.014-4.49 4.49-4.49v4.49h-4.49zm12.194 0h-4.588v-8.981h4.588c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.491-4.49 4.491zm0-7.51h-3.117v6.039h3.117c1.665 0 3.019-1.355 3.019-3.019s-1.354-3.02-3.019-3.02z" />
+                                </svg></span> Figma</div>
+                        <div class="tech-pill-icon"><span class="tpi-icon"
+                                style="background:transparent;padding:0;overflow:hidden;"><img
+                                    src="assets/images/canvaa.png" alt="Canva"></span> Canva</div>
+                        <!-- Duplicate -->
+                        <div class="tech-pill-icon"><span class="tpi-icon" style="background:#E34F26"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z" />
+                                </svg></span> HTML5</div>
+                        <div class="tech-pill-icon"><span class="tpi-icon" style="background:#1572B6"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm17.09 4.413L5.41 4.41l.213 2.622 10.125.002-.255 2.716h-6.64l.24 2.573h6.182l-.366 3.523-2.91.804-2.956-.81-.188-2.11h-2.61l.29 3.855L12 19.288l5.373-1.53L18.59 4.414z" />
+                                </svg></span> CSS3</div>
+                        <div class="tech-pill-icon"><span class="tpi-icon" style="background:#F7DF1E"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path
+                                        d="M0 0h24v24H0V0zm22.034 18.276c-.175-1.095-.888-2.015-3.003-2.873-.736-.345-1.554-.585-1.797-1.14-.091-.33-.105-.51-.046-.705.15-.646.915-.84 1.515-.66.39.12.75.42.976.9 1.034-.676 1.034-.676 1.755-1.125-.27-.42-.404-.601-.586-.78-.63-.705-1.469-1.065-2.834-1.034l-.705.089c-.676.165-1.32.525-1.71 1.005-1.14 1.291-.811 3.541.569 4.471 1.365 1.02 3.361 1.244 3.616 2.205.24 1.17-.87 1.545-1.966 1.41-.811-.18-1.26-.586-1.755-1.336l-1.83 1.051c.21.48.45.689.81 1.109 1.74 1.756 6.09 1.666 6.871-1.004.029-.09.24-.705.074-1.65l.046.067zm-8.983-7.245h-2.248c0 1.938-.009 3.864-.009 5.805 0 1.232.063 2.363-.138 2.711-.33.689-1.18.601-1.566.48-.396-.196-.597-.466-.83-.855-.063-.105-.11-.196-.127-.196l-1.825 1.125c.305.63.75 1.172 1.324 1.517.855.51 2.004.675 3.207.405.783-.226 1.458-.691 1.811-1.411.51-.93.402-2.07.397-3.346.012-2.054 0-4.109 0-6.179l.004-.056z" />
+                                </svg></span> JavaScript</div>
+                        <div class="tech-pill-icon"><span class="tpi-icon" style="background:#777BB4"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M7.01 10.207h-.944l-.515 2.648h.838c.556 0 .97-.105 1.242-.314.272-.21.455-.559.55-1.049.092-.47.05-.802-.124-.995-.175-.193-.523-.29-1.047-.29zM12 .297c-6.63 0-12 5.373-12 12s5.37 12 12 12 12-5.373 12-12S18.63.297 12 .297zm-1.376 15.26H8.85l-.696 3.578H6.543l2.19-11.252h3.53c.988 0 1.72.248 2.196.743.476.495.608 1.201.395 2.119-.29 1.255-.895 2.151-1.813 2.688a4.578 4.578 0 0 1-2.417.624zm6.97-.043h-2.31l-1.58-4.51-.876 4.51H11.3l2.188-11.252h1.525l-.67 3.45c.41-.452.884-.789 1.42-1.009.538-.22 1.113-.33 1.723-.33.697 0 1.249.196 1.655.588.405.392.523.967.352 1.724l-1.072 5.502c-.001.001-.001.002-.002.004-.085.44-.224.818-.416 1.134a2.54 2.54 0 0 1-.778.811 2.77 2.77 0 0 1-1.153.41l-.009.001z" />
+                                </svg></span> PHP</div>
+                        <div class="tech-pill-icon"><span class="tpi-icon" style="background:#3776AB"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M11.914 0C5.82 0 6.2 2.656 6.2 2.656l.007 2.752h5.814v.826H3.89S0 5.789 0 11.969c0 6.18 3.403 5.96 3.403 5.96h2.03v-2.867s-.109-3.402 3.35-3.402h5.766s3.24.052 3.24-3.13V3.13S18.28 0 11.914 0zm-3.21 1.814a1.036 1.036 0 1 1 .001 2.073 1.036 1.036 0 0 1-.001-2.073z" />
+                                    <path
+                                        d="M12.086 24c6.094 0 5.714-2.656 5.714-2.656l-.007-2.752h-5.814v-.826H20.11S24 18.211 24 12.031c0-6.18-3.403-5.96-3.403-5.96h-2.03v2.867s.109 3.402-3.35 3.402H9.451s-3.24-.052-3.24 3.13V20.87S5.72 24 12.086 24zm3.21-1.814a1.036 1.036 0 1 1-.001-2.073 1.036 1.036 0 0 1 .001 2.073z" />
+                                </svg></span> Python</div>
+                        <div class="tech-pill-icon"><span class="tpi-icon" style="background:#4479A1"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M16.405 5.501c-.115 0-.193.014-.274.033v.013h.014c.054.104.146.19.214.29.054.104.1.21.154.314l.014-.015c.094-.066.14-.172.14-.333-.04-.047-.046-.094-.062-.14-.015-.043-.064-.077-.2-.162zM5.48 13.813c-.094 0-.188.014-.274.04.04.054.08.114.12.165.06.104.114.215.167.328l.016-.015c.085-.065.13-.17.13-.33-.04-.047-.047-.1-.06-.144-.017-.045-.063-.09-.1-.044zM6.62 3.72c.45.062.887.32 1.21.643.306.306.525.687.637 1.1.175-.092.346-.2.5-.326-.32-.48-.806-.826-1.36-.962-.325-.08-.65-.07-.987-.06zM7.063 2.27c.44.06.87.305 1.192.625.304.302.52.68.635 1.086.17-.089.342-.198.496-.32-.32-.48-.8-.822-1.35-.958-.325-.08-.65-.07-.973-.06zM7.505.822c.44.058.87.3 1.19.62.304.303.522.677.636 1.08.172-.09.345-.2.5-.32-.318-.48-.8-.82-1.35-.958-.322-.08-.647-.068-.972-.058zM10.81 5.31c0-1.2-.49-2.33-1.34-3.13A4.34 4.34 0 0 0 6.41 1c-.74 0-1.46.19-2.094.547.52.48.896 1.103 1.085 1.78.055.2.092.41.11.62.41-.17.85-.27 1.31-.27 1.94 0 3.47 1.53 3.47 3.47v.042c.18-.02.36-.042.54-.07v-.64zM5.52 15.81c.004-.073.008-.146.008-.22C5.53 13.66 4 12.13 2.09 12.13c-.36 0-.71.06-1.03.17.01.38.06.77.15 1.15.257 1.07.86 2.04 1.7 2.76.84.72 1.9 1.16 3 1.25.14.01.28.015.42.015 1.86 0 3.49-.97 4.41-2.43-.22-.33-.42-.68-.6-1.05a4.97 4.97 0 0 1-4.62 1.82zM11.44 10.12c0-1.69-.87-3.22-2.22-4.12-.42.77-.65 1.66-.65 2.59 0 1.03.27 2 .77 2.83.33-.1.65-.24.94-.41.43-.26.82-.59 1.15-.97zm.49.34c-.38.28-.78.52-1.2.7.27.3.57.57.9.8.69.48 1.5.76 2.33.77-.02-.18-.07-.35-.14-.5-.49-1.16-1.13-1.57-1.89-1.77zM1.37 11.71C1.13 11.25 1 10.74 1 10.2c0-1.6.86-3.07 2.21-3.95.09.3.15.62.17.94-.96.63-1.6 1.7-1.6 2.92 0 .23.03.45.07.67-.17.31-.33.62-.48.93z" />
+                                </svg></span> MySQL</div>
+                        <div class="tech-pill-icon"><span class="tpi-icon" style="background:#F24E1E"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M15.852 8.981h-4.588V0h4.588c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.491-4.49 4.491zM12.735 7.51h3.117c1.665 0 3.019-1.355 3.019-3.019s-1.354-3.019-3.019-3.019h-3.117V7.51zm0 1.471H8.148c-2.476 0-4.49-2.014-4.49-4.49S5.672 0 8.148 0h4.588v8.981zm-4.587-7.51c-1.665 0-3.019 1.355-3.019 3.019s1.354 3.019 3.019 3.019h3.117V1.471H8.148zm4.587 15.019H8.148c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h4.588v8.98zM8.148 8.981c-1.665 0-3.019 1.354-3.019 3.019s1.354 3.019 3.019 3.019h3.117V8.981H8.148zm-4.49 7.51c0-2.476 2.014-4.49 4.49-4.49v4.49h-4.49zm12.194 0h-4.588v-8.981h4.588c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.491-4.49 4.491zm0-7.51h-3.117v6.039h3.117c1.665 0 3.019-1.355 3.019-3.019s-1.354-3.02-3.019-3.02z" />
+                                </svg></span> Figma</div>
+                        <div class="tech-pill-icon"><span class="tpi-icon"
+                                style="background:transparent;padding:0;overflow:hidden;"><img
+                                    src="assets/images/canvaa.png" alt="Canva"></span> Canva</div>
+                    </div>
+                </div>
+
+                <!-- Row 2: Right (reverse direction) -->
+                <div class="tech-marquee-row">
+                    <div class="tech-marquee-track track-right">
+                        <!-- Original -->
+                        <div class="tech-pill-icon style2"><span class="tpi-icon" style="background:#F05032"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M23.546 10.93L13.067.452c-.604-.603-1.582-.603-2.188 0L8.708 2.627l2.76 2.76c.645-.215 1.379-.07 1.889.441.516.515.658 1.258.438 1.9l2.658 2.66c.645-.223 1.387-.078 1.9.435.721.72.721 1.884 0 2.604-.719.719-1.881.719-2.6 0-.539-.541-.674-1.337-.404-1.996L12.86 8.955v6.525c.176.086.342.203.488.348.713.721.713 1.883 0 2.6-.719.721-1.889.721-2.609 0-.719-.719-.719-1.879 0-2.598.182-.18.387-.316.605-.406V8.835c-.217-.091-.424-.222-.608-.406-.545-.545-.676-1.342-.396-2.009L7.636 3.7.45 10.881c-.6.605-.6 1.584 0 2.189l10.48 10.477c.604.604 1.582.604 2.186 0l10.43-10.43c.605-.603.605-1.582 0-2.187" />
+                                </svg></span> Git</div>
+                        <div class="tech-pill-icon style2"><span class="tpi-icon" style="background:#24292E"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                                </svg></span> GitHub</div>
+                        <div class="tech-pill-icon style2"><span class="tpi-icon" style="background:#007ACC"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z" />
+                                </svg></span> VS Code</div>
+                        <div class="tech-pill-icon style2"><span class="tpi-icon" style="background:#7952B3"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M11.77 11.24H9.956V8.202h2.152c1.17 0 1.834.522 1.834 1.466 0 1.008-.773 1.572-2.174 1.572zm.324 1.206H9.956v3.348h2.231c1.459 0 2.232-.585 2.232-1.685s-.795-1.663-2.325-1.663zM24 11.39v1.218c-1.128.108-1.817.944-2.226 2.268-.407 1.319-.463 2.937-.42 4.186.045 1.3-.968 2.5-2.337 2.5H4.985c-1.37 0-2.383-1.2-2.337-2.5.043-1.249-.013-2.867-.42-4.186-.41-1.324-1.1-2.16-2.228-2.268V11.39c1.128-.108 1.819-.944 2.227-2.268.408-1.319.464-2.937.42-4.186C2.603 3.637 3.616 2.437 4.985 2.437H19.017c1.37 0 2.382 1.2 2.337 2.499-.043 1.249.012 2.867.42 4.186.408 1.324 1.098 2.16 2.226 2.268zm-7.927 2.817c0-1.354-.953-2.333-2.368-2.557v-.059c1.04-.286 1.863-1.158 1.863-2.299 0-1.572-1.321-2.649-3.408-2.649H8.037v10.886h4.158c2.348 0 3.878-1.132 3.878-3.322z" />
+                                </svg></span> Bootstrap</div>
+                        <div class="tech-pill-icon style2"><span class="tpi-icon" style="background:#2496ED"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M13.983 11.078h2.119a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.119a.185.185 0 0 0-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 0 0 .186-.186V3.574a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 0 0 .186-.186V6.29a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.887c0 .102.082.186.185.186m-2.93 1.086l1.328-2.282H7.227a.186.186 0 0 0-.185.186v1.887c0 .078.046.145.115.17l.599.223zm6.09-3.802h2.12a.186.186 0 0 0 .185-.186V3.574a.186.186 0 0 0-.186-.185h-2.119a.185.185 0 0 0-.185.185v1.888c0 .102.083.185.185.185m2.954 2.715h-2.12a.185.185 0 0 0-.185.186v1.887c0 .102.082.186.185.186h2.12a.186.186 0 0 0 .185-.186V8.363a.186.186 0 0 0-.186-.186M0 9.862C.068 6.65 2.195 3.947 5.2 3.202l-.002.004a.22.22 0 0 0-.027.097v5.476l1.8-.002c.082 0 .165.033.226.09l1.266 1.276a.272.272 0 0 0 .192.079h1.73a.272.272 0 0 0 .192-.079l1.268-1.276a.317.317 0 0 1 .225-.09h1.8V3.303a.22.22 0 0 0-.027-.097l-.002-.004C16.9 3.947 19.027 6.65 19.096 9.862c0 5.194-3.85 9.514-8.89 10.128-.077.01-.154.01-.232 0C4.85 19.376 0 15.056 0 9.862" />
+                                </svg></span> Docker</div>
+                        <!-- Duplicate -->
+                        <div class="tech-pill-icon style2"><span class="tpi-icon" style="background:#F05032"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M23.546 10.93L13.067.452c-.604-.603-1.582-.603-2.188 0L8.708 2.627l2.76 2.76c.645-.215 1.379-.07 1.889.441.516.515.658 1.258.438 1.9l2.658 2.66c.645-.223 1.387-.078 1.9.435.721.72.721 1.884 0 2.604-.719.719-1.881.719-2.6 0-.539-.541-.674-1.337-.404-1.996L12.86 8.955v6.525c.176.086.342.203.488.348.713.721.713 1.883 0 2.6-.719.721-1.889.721-2.609 0-.719-.719-.719-1.879 0-2.598.182-.18.387-.316.605-.406V8.835c-.217-.091-.424-.222-.608-.406-.545-.545-.676-1.342-.396-2.009L7.636 3.7.45 10.881c-.6.605-.6 1.584 0 2.189l10.48 10.477c.604.604 1.582.604 2.186 0l10.43-10.43c.605-.603.605-1.582 0-2.187" />
+                                </svg></span> Git</div>
+                        <div class="tech-pill-icon style2"><span class="tpi-icon" style="background:#24292E"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                                </svg></span> GitHub</div>
+                        <div class="tech-pill-icon style2"><span class="tpi-icon" style="background:#007ACC"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z" />
+                                </svg></span> VS Code</div>
+                        <div class="tech-pill-icon style2"><span class="tpi-icon" style="background:#7952B3"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M11.77 11.24H9.956V8.202h2.152c1.17 0 1.834.522 1.834 1.466 0 1.008-.773 1.572-2.174 1.572zm.324 1.206H9.956v3.348h2.231c1.459 0 2.232-.585 2.232-1.685s-.795-1.663-2.325-1.663zM24 11.39v1.218c-1.128.108-1.817.944-2.226 2.268-.407 1.319-.463 2.937-.42 4.186.045 1.3-.968 2.5-2.337 2.5H4.985c-1.37 0-2.383-1.2-2.337-2.5.043-1.249-.013-2.867-.42-4.186-.41-1.324-1.1-2.16-2.228-2.268V11.39c1.128-.108 1.819-.944 2.227-2.268.408-1.319.464-2.937.42-4.186C2.603 3.637 3.616 2.437 4.985 2.437H19.017c1.37 0 2.382 1.2 2.337 2.499-.043 1.249.012 2.867.42 4.186.408 1.324 1.098 2.16 2.226 2.268zm-7.927 2.817c0-1.354-.953-2.333-2.368-2.557v-.059c1.04-.286 1.863-1.158 1.863-2.299 0-1.572-1.321-2.649-3.408-2.649H8.037v10.886h4.158c2.348 0 3.878-1.132 3.878-3.322z" />
+                                </svg></span> Bootstrap</div>
+                        <div class="tech-pill-icon style2"><span class="tpi-icon" style="background:#2496ED"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M13.983 11.078h2.119a.186.186 0 0 0 .186-.185V9.006a.186.186 0 0 0-.186-.186h-2.119a.185.185 0 0 0-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 0 0 .186-.186V3.574a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 0 0 .186-.186V6.29a.186.186 0 0 0-.186-.185h-2.118a.185.185 0 0 0-.185.185v1.887c0 .102.082.186.185.186m-2.93 1.086l1.328-2.282H7.227a.186.186 0 0 0-.185.186v1.887c0 .078.046.145.115.17l.599.223zm6.09-3.802h2.12a.186.186 0 0 0 .185-.186V3.574a.186.186 0 0 0-.186-.185h-2.119a.185.185 0 0 0-.185.185v1.888c0 .102.083.185.185.185m2.954 2.715h-2.12a.185.185 0 0 0-.185.186v1.887c0 .102.082.186.185.186h2.12a.186.186 0 0 0 .185-.186V8.363a.186.186 0 0 0-.186-.186M0 9.862C.068 6.65 2.195 3.947 5.2 3.202l-.002.004a.22.22 0 0 0-.027.097v5.476l1.8-.002c.082 0 .165.033.226.09l1.266 1.276a.272.272 0 0 0 .192.079h1.73a.272.272 0 0 0 .192-.079l1.268-1.276a.317.317 0 0 1 .225-.09h1.8V3.303a.22.22 0 0 0-.027-.097l-.002-.004C16.9 3.947 19.027 6.65 19.096 9.862c0 5.194-3.85 9.514-8.89 10.128-.077.01-.154.01-.232 0C4.85 19.376 0 15.056 0 9.862" />
+                                </svg></span> Docker</div>
+                    </div>
+                </div>
+
+                <!-- Row 3: Left again -->
+                <div class="tech-marquee-row">
+                    <div class="tech-marquee-track track-left track-slow">
+                        <!-- Original -->
+                        <div class="tech-pill-icon style3"><span class="tpi-icon" style="background:#E34F26"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z" />
+                                </svg></span> HTML5</div>
+                        <div class="tech-pill-icon style3"><span class="tpi-icon" style="background:#F7DF1E"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path
+                                        d="M0 0h24v24H0V0zm22.034 18.276c-.175-1.095-.888-2.015-3.003-2.873-.736-.345-1.554-.585-1.797-1.14-.091-.33-.105-.51-.046-.705.15-.646.915-.84 1.515-.66.39.12.75.42.976.9 1.034-.676 1.034-.676 1.755-1.125-.27-.42-.404-.601-.586-.78-.63-.705-1.469-1.065-2.834-1.034l-.705.089c-.676.165-1.32.525-1.71 1.005-1.14 1.291-.811 3.541.569 4.471 1.365 1.02 3.361 1.244 3.616 2.205.24 1.17-.87 1.545-1.966 1.41-.811-.18-1.26-.586-1.755-1.336l-1.83 1.051c.21.48.45.689.81 1.109 1.74 1.756 6.09 1.666 6.871-1.004.029-.09.24-.705.074-1.65l.046.067zm-8.983-7.245h-2.248c0 1.938-.009 3.864-.009 5.805 0 1.232.063 2.363-.138 2.711-.33.689-1.18.601-1.566.48-.396-.196-.597-.466-.83-.855-.063-.105-.11-.196-.127-.196l-1.825 1.125c.305.63.75 1.172 1.324 1.517.855.51 2.004.675 3.207.405.783-.226 1.458-.691 1.811-1.411.51-.93.402-2.07.397-3.346.012-2.054 0-4.109 0-6.179l.004-.056z" />
+                                </svg></span> JavaScript</div>
+                        <div class="tech-pill-icon style3"><span class="tpi-icon" style="background:#777BB4"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M7.01 10.207h-.944l-.515 2.648h.838c.556 0 .97-.105 1.242-.314.272-.21.455-.559.55-1.049.092-.47.05-.802-.124-.995-.175-.193-.523-.29-1.047-.29zM12 .297c-6.63 0-12 5.373-12 12s5.37 12 12 12 12-5.373 12-12S18.63.297 12 .297zm-1.376 15.26H8.85l-.696 3.578H6.543l2.19-11.252h3.53c.988 0 1.72.248 2.196.743.476.495.608 1.201.395 2.119-.29 1.255-.895 2.151-1.813 2.688a4.578 4.578 0 0 1-2.417.624zm6.97-.043h-2.31l-1.58-4.51-.876 4.51H11.3l2.188-11.252h1.525l-.67 3.45c.41-.452.884-.789 1.42-1.009.538-.22 1.113-.33 1.723-.33.697 0 1.249.196 1.655.588.405.392.523.967.352 1.724l-1.072 5.502c-.001.001-.001.002-.002.004-.085.44-.224.818-.416 1.134a2.54 2.54 0 0 1-.778.811 2.77 2.77 0 0 1-1.153.41l-.009.001z" />
+                                </svg></span> PHP</div>
+                        <div class="tech-pill-icon style3"><span class="tpi-icon" style="background:#4479A1"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M16.405 5.501c-.115 0-.193.014-.274.033v.013h.014c.054.104.146.19.214.29.054.104.1.21.154.314l.014-.015c.094-.066.14-.172.14-.333-.04-.047-.046-.094-.062-.14-.015-.043-.064-.077-.2-.162zM5.48 13.813c-.094 0-.188.014-.274.04.04.054.08.114.12.165.06.104.114.215.167.328l.016-.015c.085-.065.13-.17.13-.33-.04-.047-.047-.1-.06-.144-.017-.045-.063-.09-.1-.044zM6.62 3.72c.45.062.887.32 1.21.643.306.306.525.687.637 1.1.175-.092.346-.2.5-.326-.32-.48-.806-.826-1.36-.962-.325-.08-.65-.07-.987-.06zM7.063 2.27c.44.06.87.305 1.192.625.304.302.52.68.635 1.086.17-.089.342-.198.496-.32-.32-.48-.8-.822-1.35-.958-.325-.08-.65-.07-.973-.06zM7.505.822c.44.058.87.3 1.19.62.304.303.522.677.636 1.08.172-.09.345-.2.5-.32-.318-.48-.8-.82-1.35-.958-.322-.08-.647-.068-.972-.058zM10.81 5.31c0-1.2-.49-2.33-1.34-3.13A4.34 4.34 0 0 0 6.41 1c-.74 0-1.46.19-2.094.547.52.48.896 1.103 1.085 1.78.055.2.092.41.11.62.41-.17.85-.27 1.31-.27 1.94 0 3.47 1.53 3.47 3.47v.042c.18-.02.36-.042.54-.07v-.64zM5.52 15.81c.004-.073.008-.146.008-.22C5.53 13.66 4 12.13 2.09 12.13c-.36 0-.71.06-1.03.17.01.38.06.77.15 1.15.257 1.07.86 2.04 1.7 2.76.84.72 1.9 1.16 3 1.25.14.01.28.015.42.015 1.86 0 3.49-.97 4.41-2.43-.22-.33-.42-.68-.6-1.05a4.97 4.97 0 0 1-4.62 1.82zM11.44 10.12c0-1.69-.87-3.22-2.22-4.12-.42.77-.65 1.66-.65 2.59 0 1.03.27 2 .77 2.83.33-.1.65-.24.94-.41.43-.26.82-.59 1.15-.97zm.49.34c-.38.28-.78.52-1.2.7.27.3.57.57.9.8.69.48 1.5.76 2.33.77-.02-.18-.07-.35-.14-.5-.49-1.16-1.13-1.57-1.89-1.77zM1.37 11.71C1.13 11.25 1 10.74 1 10.2c0-1.6.86-3.07 2.21-3.95.09.3.15.62.17.94-.96.63-1.6 1.7-1.6 2.92 0 .23.03.45.07.67-.17.31-.33.62-.48.93z" />
+                                </svg></span> MySQL</div>
+                        <div class="tech-pill-icon style3"><span class="tpi-icon" style="background:#F24E1E"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M15.852 8.981h-4.588V0h4.588c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.491-4.49 4.491zM12.735 7.51h3.117c1.665 0 3.019-1.355 3.019-3.019s-1.354-3.019-3.019-3.019h-3.117V7.51zm0 1.471H8.148c-2.476 0-4.49-2.014-4.49-4.49S5.672 0 8.148 0h4.588v8.981zm-4.587-7.51c-1.665 0-3.019 1.355-3.019 3.019s1.354 3.019 3.019 3.019h3.117V1.471H8.148zm4.587 15.019H8.148c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h4.588v8.98zM8.148 8.981c-1.665 0-3.019 1.354-3.019 3.019s1.354 3.019 3.019 3.019h3.117V8.981H8.148zm-4.49 7.51c0-2.476 2.014-4.49 4.49-4.49v4.49h-4.49zm12.194 0h-4.588v-8.981h4.588c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.491-4.49 4.491zm0-7.51h-3.117v6.039h3.117c1.665 0 3.019-1.355 3.019-3.019s-1.354-3.02-3.019-3.02z" />
+                                </svg></span> Figma</div>
+                        <div class="tech-pill-icon style3"><span class="tpi-icon" style="background:#24292E"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                                </svg></span> GitHub</div>
+                        <div class="tech-pill-icon style3"><span class="tpi-icon" style="background:#F05032"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M23.546 10.93L13.067.452c-.604-.603-1.582-.603-2.188 0L8.708 2.627l2.76 2.76c.645-.215 1.379-.07 1.889.441.516.515.658 1.258.438 1.9l2.658 2.66c.645-.223 1.387-.078 1.9.435.721.72.721 1.884 0 2.604-.719.719-1.881.719-2.6 0-.539-.541-.674-1.337-.404-1.996L12.86 8.955v6.525c.176.086.342.203.488.348.713.721.713 1.883 0 2.6-.719.721-1.889.721-2.609 0-.719-.719-.719-1.879 0-2.598.182-.18.387-.316.605-.406V8.835c-.217-.091-.424-.222-.608-.406-.545-.545-.676-1.342-.396-2.009L7.636 3.7.45 10.881c-.6.605-.6 1.584 0 2.189l10.48 10.477c.604.604 1.582.604 2.186 0l10.43-10.43c.605-.603.605-1.582 0-2.187" />
+                                </svg></span> Git</div>
+                        <div class="tech-pill-icon style3"><span class="tpi-icon" style="background:#3776AB"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M11.914 0C5.82 0 6.2 2.656 6.2 2.656l.007 2.752h5.814v.826H3.89S0 5.789 0 11.969c0 6.18 3.403 5.96 3.403 5.96h2.03v-2.867s-.109-3.402 3.35-3.402h5.766s3.24.052 3.24-3.13V3.13S18.28 0 11.914 0zm-3.21 1.814a1.036 1.036 0 1 1 .001 2.073 1.036 1.036 0 0 1-.001-2.073z" />
+                                    <path
+                                        d="M12.086 24c6.094 0 5.714-2.656 5.714-2.656l-.007-2.752h-5.814v-.826H20.11S24 18.211 24 12.031c0-6.18-3.403-5.96-3.403-5.96h-2.03v2.867s.109 3.402-3.35 3.402H9.451s-3.24-.052-3.24 3.13V20.87S5.72 24 12.086 24zm3.21-1.814a1.036 1.036 0 1 1-.001-2.073 1.036 1.036 0 0 1 .001 2.073z" />
+                                </svg></span> Python</div>
+                        <div class="tech-pill-icon style3"><span class="tpi-icon" style="background:#007ACC"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z" />
+                                </svg></span> VS Code</div>
+                        <!-- Duplicate -->
+                        <div class="tech-pill-icon style3"><span class="tpi-icon" style="background:#E34F26"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z" />
+                                </svg></span> HTML5</div>
+                        <div class="tech-pill-icon style3"><span class="tpi-icon" style="background:#F7DF1E"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path
+                                        d="M0 0h24v24H0V0zm22.034 18.276c-.175-1.095-.888-2.015-3.003-2.873-.736-.345-1.554-.585-1.797-1.14-.091-.33-.105-.51-.046-.705.15-.646.915-.84 1.515-.66.39.12.75.42.976.9 1.034-.676 1.034-.676 1.755-1.125-.27-.42-.404-.601-.586-.78-.63-.705-1.469-1.065-2.834-1.034l-.705.089c-.676.165-1.32.525-1.71 1.005-1.14 1.291-.811 3.541.569 4.471 1.365 1.02 3.361 1.244 3.616 2.205.24 1.17-.87 1.545-1.966 1.41-.811-.18-1.26-.586-1.755-1.336l-1.83 1.051c.21.48.45.689.81 1.109 1.74 1.756 6.09 1.666 6.871-1.004.029-.09.24-.705.074-1.65l.046.067zm-8.983-7.245h-2.248c0 1.938-.009 3.864-.009 5.805 0 1.232.063 2.363-.138 2.711-.33.689-1.18.601-1.566.48-.396-.196-.597-.466-.83-.855-.063-.105-.11-.196-.127-.196l-1.825 1.125c.305.63.75 1.172 1.324 1.517.855.51 2.004.675 3.207.405.783-.226 1.458-.691 1.811-1.411.51-.93.402-2.07.397-3.346.012-2.054 0-4.109 0-6.179l.004-.056z" />
+                                </svg></span> JavaScript</div>
+                        <div class="tech-pill-icon style3"><span class="tpi-icon" style="background:#777BB4"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M7.01 10.207h-.944l-.515 2.648h.838c.556 0 .97-.105 1.242-.314.272-.21.455-.559.55-1.049.092-.47.05-.802-.124-.995-.175-.193-.523-.29-1.047-.29zM12 .297c-6.63 0-12 5.373-12 12s5.37 12 12 12 12-5.373 12-12S18.63.297 12 .297zm-1.376 15.26H8.85l-.696 3.578H6.543l2.19-11.252h3.53c.988 0 1.72.248 2.196.743.476.495.608 1.201.395 2.119-.29 1.255-.895 2.151-1.813 2.688a4.578 4.578 0 0 1-2.417.624zm6.97-.043h-2.31l-1.58-4.51-.876 4.51H11.3l2.188-11.252h1.525l-.67 3.45c.41-.452.884-.789 1.42-1.009.538-.22 1.113-.33 1.723-.33.697 0 1.249.196 1.655.588.405.392.523.967.352 1.724l-1.072 5.502c-.001.001-.001.002-.002.004-.085.44-.224.818-.416 1.134a2.54 2.54 0 0 1-.778.811 2.77 2.77 0 0 1-1.153.41l-.009.001z" />
+                                </svg></span> PHP</div>
+                        <div class="tech-pill-icon style3"><span class="tpi-icon" style="background:#4479A1"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M16.405 5.501c-.115 0-.193.014-.274.033v.013h.014c.054.104.146.19.214.29.054.104.1.21.154.314l.014-.015c.094-.066.14-.172.14-.333-.04-.047-.046-.094-.062-.14-.015-.043-.064-.077-.2-.162zM5.48 13.813c-.094 0-.188.014-.274.04.04.054.08.114.12.165.06.104.114.215.167.328l.016-.015c.085-.065.13-.17.13-.33-.04-.047-.047-.1-.06-.144-.017-.045-.063-.09-.1-.044zM6.62 3.72c.45.062.887.32 1.21.643.306.306.525.687.637 1.1.175-.092.346-.2.5-.326-.32-.48-.806-.826-1.36-.962-.325-.08-.65-.07-.987-.06zM7.063 2.27c.44.06.87.305 1.192.625.304.302.52.68.635 1.086.17-.089.342-.198.496-.32-.32-.48-.8-.822-1.35-.958-.325-.08-.65-.07-.973-.06zM7.505.822c.44.058.87.3 1.19.62.304.303.522.677.636 1.08.172-.09.345-.2.5-.32-.318-.48-.8-.82-1.35-.958-.322-.08-.647-.068-.972-.058zM10.81 5.31c0-1.2-.49-2.33-1.34-3.13A4.34 4.34 0 0 0 6.41 1c-.74 0-1.46.19-2.094.547.52.48.896 1.103 1.085 1.78.055.2.092.41.11.62.41-.17.85-.27 1.31-.27 1.94 0 3.47 1.53 3.47 3.47v.042c.18-.02.36-.042.54-.07v-.64zM5.52 15.81c.004-.073.008-.146.008-.22C5.53 13.66 4 12.13 2.09 12.13c-.36 0-.71.06-1.03.17.01.38.06.77.15 1.15.257 1.07.86 2.04 1.7 2.76.84.72 1.9 1.16 3 1.25.14.01.28.015.42.015 1.86 0 3.49-.97 4.41-2.43-.22-.33-.42-.68-.6-1.05a4.97 4.97 0 0 1-4.62 1.82zM11.44 10.12c0-1.69-.87-3.22-2.22-4.12-.42.77-.65 1.66-.65 2.59 0 1.03.27 2 .77 2.83.33-.1.65-.24.94-.41.43-.26.82-.59 1.15-.97zm.49.34c-.38.28-.78.52-1.2.7.27.3.57.57.9.8.69.48 1.5.76 2.33.77-.02-.18-.07-.35-.14-.5-.49-1.16-1.13-1.57-1.89-1.77zM1.37 11.71C1.13 11.25 1 10.74 1 10.2c0-1.6.86-3.07 2.21-3.95.09.3.15.62.17.94-.96.63-1.6 1.7-1.6 2.92 0 .23.03.45.07.67-.17.31-.33.62-.48.93z" />
+                                </svg></span> MySQL</div>
+                        <div class="tech-pill-icon style3"><span class="tpi-icon" style="background:#F24E1E"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M15.852 8.981h-4.588V0h4.588c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.491-4.49 4.491zM12.735 7.51h3.117c1.665 0 3.019-1.355 3.019-3.019s-1.354-3.019-3.019-3.019h-3.117V7.51zm0 1.471H8.148c-2.476 0-4.49-2.014-4.49-4.49S5.672 0 8.148 0h4.588v8.981zm-4.587-7.51c-1.665 0-3.019 1.355-3.019 3.019s1.354 3.019 3.019 3.019h3.117V1.471H8.148zm4.587 15.019H8.148c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h4.588v8.98zM8.148 8.981c-1.665 0-3.019 1.354-3.019 3.019s1.354 3.019 3.019 3.019h3.117V8.981H8.148zm-4.49 7.51c0-2.476 2.014-4.49 4.49-4.49v4.49h-4.49zm12.194 0h-4.588v-8.981h4.588c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.491-4.49 4.491zm0-7.51h-3.117v6.039h3.117c1.665 0 3.019-1.355 3.019-3.019s-1.354-3.02-3.019-3.02z" />
+                                </svg></span> Figma</div>
+                        <div class="tech-pill-icon style3"><span class="tpi-icon" style="background:#24292E"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                                </svg></span> GitHub</div>
+                        <div class="tech-pill-icon style3"><span class="tpi-icon" style="background:#F05032"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M23.546 10.93L13.067.452c-.604-.603-1.582-.603-2.188 0L8.708 2.627l2.76 2.76c.645-.215 1.379-.07 1.889.441.516.515.658 1.258.438 1.9l2.658 2.66c.645-.223 1.387-.078 1.9.435.721.72.721 1.884 0 2.604-.719.719-1.881.719-2.6 0-.539-.541-.674-1.337-.404-1.996L12.86 8.955v6.525c.176.086.342.203.488.348.713.721.713 1.883 0 2.6-.719.721-1.889.721-2.609 0-.719-.719-.719-1.879 0-2.598.182-.18.387-.316.605-.406V8.835c-.217-.091-.424-.222-.608-.406-.545-.545-.676-1.342-.396-2.009L7.636 3.7.45 10.881c-.6.605-.6 1.584 0 2.189l10.48 10.477c.604.604 1.582.604 2.186 0l10.43-10.43c.605-.603.605-1.582 0-2.187" />
+                                </svg></span> Git</div>
+                        <div class="tech-pill-icon style3"><span class="tpi-icon" style="background:#007ACC"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fff">
+                                    <path
+                                        d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z" />
+                                </svg></span> VS Code</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 2x2 Feature Tech Cards (Rintacoders Style) -->
+            <div class="tech-cards-grid stagger-children" id="tech-cards-grid">
+                <!-- Card 1: Frontend -->
+                <div class="tech-card">
+                    <div class="tech-card-header">
+                        <div class="tech-card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <polyline points="16 18 22 12 16 6"></polyline>
+                                <polyline points="8 6 2 12 8 18"></polyline>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3>Frontend Development</h3>
+                            <p class="tech-card-sub">HTML5, CSS3, JavaScript, Bootstrap</p>
+                        </div>
+                    </div>
+                    <p class="tech-card-desc">Membangun antarmuka website modern, responsif, interaktif dengan performa
+                        optimal di semua ukuran layar.</p>
+                    <div class="tech-tag-group">
+                        <span class="tech-tag-badge">HTML5</span>
+                        <span class="tech-tag-badge">CSS3</span>
+                        <span class="tech-tag-badge">JavaScript</span>
+                        <span class="tech-tag-badge">Bootstrap</span>
+                        <span class="tech-tag-badge">Responsive UI</span>
+                    </div>
+                </div>
+
+                <!-- Card 2: Backend & Database -->
+                <div class="tech-card">
+                    <div class="tech-card-header">
+                        <div class="tech-card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3>Backend & Database</h3>
+                            <p class="tech-card-sub">PHP, Python, MySQL, REST API</p>
+                        </div>
+                    </div>
+                    <p class="tech-card-desc">Mengembangkan logika server, manajemen database relational (MySQL),
+                        integrasi CRUD, dan komunikasi API data.</p>
+                    <div class="tech-tag-group">
+                        <span class="tech-tag-badge">PHP</span>
+                        <span class="tech-tag-badge">Python</span>
+                        <span class="tech-tag-badge">MySQL</span>
+                        <span class="tech-tag-badge">REST API</span>
+                        <span class="tech-tag-badge">CRUD System</span>
+                    </div>
+                </div>
+
+                <!-- Card 3: UI/UX & Design -->
+                <div class="tech-card">
+                    <div class="tech-card-header">
+                        <div class="tech-card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="13.5" cy="6.5" r=".5"></circle>
+                                <circle cx="17.5" cy="10.5" r=".5"></circle>
+                                <circle cx="8.5" cy="7.5" r=".5"></circle>
+                                <circle cx="6.5" cy="12.5" r=".5"></circle>
+                                <path
+                                    d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3>UI/UX & Product Design</h3>
+                            <p class="tech-card-sub">Figma, Canva, Wireframing, Prototyping</p>
+                        </div>
+                    </div>
+                    <p class="tech-card-desc">Merancang tata letak visual, prototipe interaktif, design system, dan
+                        pengalaman pengguna (user journey) yang intuitif.</p>
+                    <div class="tech-tag-group">
+                        <span class="tech-tag-badge">Figma</span>
+                        <span class="tech-tag-badge">Canva</span>
+                        <span class="tech-tag-badge">Wireframing</span>
+                        <span class="tech-tag-badge">Prototyping</span>
+                        <span class="tech-tag-badge">Design System</span>
+                    </div>
+                </div>
+
+                <!-- Card 4: Tools & Workflow -->
+                <div class="tech-card">
+                    <div class="tech-card-header">
+                        <div class="tech-card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3>Tools & Workflow</h3>
+                            <p class="tech-card-sub">VS Code, Git, GitHub, Chrome DevTools</p>
+                        </div>
+                    </div>
+                    <p class="tech-card-desc">Version control kolaboratif dengan Git/GitHub, debugging performa web, dan
+                        optimalisasi workflow development.</p>
+                    <div class="tech-tag-group">
+                        <span class="tech-tag-badge">VS Code</span>
+                        <span class="tech-tag-badge">Git</span>
+                        <span class="tech-tag-badge">GitHub</span>
+                        <span class="tech-tag-badge">DevTools</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Proficiency Bars -->
+            <div class="skills-bars-container anim-fade-up">
+                <h3 class="skills-bars-title">Coding Level</h3>
+                <div class="coding-list" id="coding-bars">
+                    <div class="coding-item">
+                        <span class="coding-label">HTML / CSS</span>
+                        <div class="coding-bar">
+                            <div class="coding-fill green" data-width="92%"></div>
+                        </div>
+                        <span class="coding-percent">92%</span>
+                    </div>
+                    <div class="coding-item">
+                        <span class="coding-label">JavaScript</span>
+                        <div class="coding-bar">
+                            <div class="coding-fill orange" data-width="84%"></div>
+                        </div>
+                        <span class="coding-percent">84%</span>
+                    </div>
+                    <div class="coding-item">
+                        <span class="coding-label">PHP & MySQL</span>
+                        <div class="coding-bar">
+                            <div class="coding-fill green" data-width="76%"></div>
+                        </div>
+                        <span class="coding-percent">76%</span>
+                    </div>
+                    <div class="coding-item">
+                        <span class="coding-label">UI/UX Design (Figma)</span>
+                        <div class="coding-bar">
+                            <div class="coding-fill yellow" data-width="88%"></div>
+                        </div>
+                        <span class="coding-percent">88%</span>
+                    </div>
+                    <div class="coding-item">
+                        <span class="coding-label">Python Basics</span>
+                        <div class="coding-bar">
+                            <div class="coding-fill dark" data-width="68%"></div>
+                        </div>
+                        <span class="coding-percent">68%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Soft Skills Pills -->
+            <div style="margin-top: 40px;" class="anim-fade-up">
+                <div class="skill-tags stagger-children" id="soft-skills" style="justify-content: center;">
+                    <span class="skill-tag">💡 #CreativeProblemSolving</span>
+                    <span class="skill-tag">🤝 #Teamwork & Collaboration</span>
+                    <span class="skill-tag">⚡ #FastRespon</span>
+                    <span class="skill-tag">🏫 #SMK Telkom Purwokerto</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ PORTFOLIO / PROJECTS (Rintacoders Style) ============ -->
+    <section class="projects-section" id="portfolio">
+        <div class="container">
+            <!-- Mega Interactive Animated Portfolio Header -->
+            <div class="projects-hero-banner anim-fade-up">
+                <div class="portfolio-ambient-glow"></div>
+                <div class="projects-badge-pill">
+                    <span class="badge-Clover">☘︎</span>
+                    <span class="badge-text">2026 WORKS & EXPLORATIONS</span>
+                    <span class="badge-live-dot"></span>
+                </div>
+
+                <h2 class="projects-mega-title" id="portfolio-title">
+                    <span class="title-word" data-word="SELECTED">
+                        <span class="char">S</span><span class="char">E</span><span class="char">L</span><span
+                            class="char">E</span><span class="char">C</span><span class="char">T</span><span
+                            class="char">E</span><span class="char">D</span>
+                    </span>
+                    <span class="title-word title-highlight" data-word="PROJECTS">
+                        <span class="char">P</span><span class="char">R</span><span class="char">O</span><span
+                            class="char">J</span><span class="char">E</span><span class="char">C</span><span
+                            class="char">T</span><span class="char">S</span>
+                        <span class="title-accent-brush">☘︎</span>
+                    </span>
+                </h2>
+
+                <div class="portfolio-laser-line">
+                    <div class="laser-scanner"></div>
+                </div>
+
+                <p class="projects-lead-desc">
+                    Eksplorasi karya digital pilihan menggabungkan arsitektur kode yang bersih, interaktivitas modern,
+                    dan pengalaman visual yang berkesan.
+                </p>
+
+                <!-- Category Filters -->
+                <div class="project-filters" id="project-filters">
+                    <button class="project-filter-btn active" data-filter="all">
+                        <span class="filter-dot"></span> All Projects
+                    </button>
+                    <button class="project-filter-btn" data-filter="web">
+                        <span class="filter-dot"></span> Web Development
+                    </button>
+                    <button class="project-filter-btn" data-filter="uiux">
+                        <span class="filter-dot"></span> UI/UX Design
+                    </button>
+                    <button class="project-filter-btn" data-filter="esport">
+                        <span class="filter-dot"></span> Gaming & Esport
+                    </button>
+                </div>
+            </div>
+
+            <!-- Blueprint Showcase Stack (Rintacoders Style) -->
+            <div class="projects-blueprint-stack" id="projects-blueprint-stack">
+
+                <!-- Project 1: PasarNusa (Real Flagship Project) -->
+                <div class="blueprint-card-wrapper anim-fade-up" data-category="web">
+                    <!-- Blueprint Corner Markers (Rintacoders Signature) -->
+                    <div class="blueprint-dashed-frame">
+                        <div class="blueprint-marker top-left"></div>
+                        <div class="blueprint-marker top-right"></div>
+                        <div class="blueprint-marker bottom-left"></div>
+                        <div class="blueprint-marker bottom-right"></div>
+                        <div class="blueprint-anchor-pin"></div>
+                    </div>
+
+                    <div class="project-showcase-card">
+                        <!-- Left Preview Graphic -->
+                        <div class="project-visual-box">
+                            <div class="project-browser-bar">
+                                <span class="browser-dot red"></span>
+                                <span class="browser-dot yellow"></span>
+                                <span class="browser-dot green"></span>
+                                <span class="browser-url">github.com/AdhaRafi/pasarnusa</span>
+                            </div>
+                            <div class="project-preview-content">
+                                <div class="project-mockup-graphic pasarnusa-app">
+                                    <div class="mockup-header-nav">
+                                        <div class="mockup-logo">🛒 PASARNUSA</div>
+                                        <span class="mockup-midtrans-badge">💳 Midtrans Active</span>
+                                    </div>
+                                    <div class="mockup-hero-banner">
+                                        <span class="mockup-badge">Google OAuth 2.0</span>
+                                        <h4>Digital Marketplace & UMKM Pasar</h4>
+                                    </div>
+                                    <div class="mockup-grid-preview">
+                                        <div class="mockup-card-item"></div>
+                                        <div class="mockup-card-item"></div>
+                                        <div class="mockup-card-item"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="project-status-pill">● Open Source • GitHub</span>
+                        </div>
+
+                        <!-- Right Info -->
+                        <div class="project-details-box">
+                            <span class="project-category-badge">E-COMMERCE • FULLSTACK & PAYMENT GATEWAY</span>
+                            <h3 class="project-title">PasarNusa — Marketplace & Digital Payment</h3>
+                            <p class="project-desc">Platform e-commerce digitalisasi UMKM pasar tradisional yang
+                                dilengkapi integrasi Google OAuth 2.0 (Single Sign-On), Midtrans Payment Gateway untuk
+                                pembayaran digital otomatis, manajemen admin toko, dan keranjang belanja dinamis.</p>
+
+                            <div class="project-tech-tags">
+                                <span class="p-tech-pill">PHP Native</span>
+                                <span class="p-tech-pill">MySQL Database</span>
+                                <span class="p-tech-pill">Google OAuth 2.0</span>
+                                <span class="p-tech-pill">Midtrans Payment API</span>
+                                <span class="p-tech-pill">Composer</span>
+                                <span class="p-tech-pill">Multi-Merchant</span>
+                            </div>
+
+                            <div class="project-action-row">
+                                <a href="https://github.com/AdhaRafi/pasarnusa" target="_blank"
+                                    rel="noopener noreferrer" class="btn-project-primary">
+                                    <span>GitHub Repo</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path
+                                            d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                                        </path>
+                                    </svg>
+                                </a>
+                                <a href="https://github.com/AdhaRafi/pasarnusa" target="_blank"
+                                    rel="noopener noreferrer" class="btn-project-secondary">
+                                    <span>Lihat Kode ↗</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2: Web Portal Sekolah SMK Telkom -->
+                <div class="blueprint-card-wrapper anim-fade-up" data-category="web">
+                    <div class="blueprint-dashed-frame">
+                        <div class="blueprint-marker top-left"></div>
+                        <div class="blueprint-marker top-right"></div>
+                        <div class="blueprint-marker bottom-left"></div>
+                        <div class="blueprint-marker bottom-right"></div>
+                        <div class="blueprint-anchor-pin"></div>
+                    </div>
+
+                    <div class="project-showcase-card">
+                        <div class="project-visual-box">
+                            <div class="project-browser-bar">
+                                <span class="browser-dot red"></span>
+                                <span class="browser-dot yellow"></span>
+                                <span class="browser-dot green"></span>
+                                <span class="browser-url">smktelkom-pwt.sch.id</span>
+                            </div>
+                            <div class="project-preview-content">
+                                <div class="project-mockup-graphic web-portal">
+                                    <div class="mockup-header-nav">
+                                        <div class="mockup-logo">🏫 SMK TELKOM</div>
+                                        <div class="mockup-nav-items">
+                                            <span></span><span></span><span></span>
+                                        </div>
+                                    </div>
+                                    <div class="mockup-hero-banner">
+                                        <span class="mockup-badge">PPDB & Info Portal</span>
+                                        <h4>Portal Sistem Informasi Sekolah</h4>
+                                    </div>
+                                    <div class="mockup-grid-preview">
+                                        <div class="mockup-card-item"></div>
+                                        <div class="mockup-card-item"></div>
+                                        <div class="mockup-card-item"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="project-status-pill">● Completed</span>
+                        </div>
+
+                        <div class="project-details-box">
+                            <span class="project-category-badge">WEB DEVELOPMENT • FULLSTACK</span>
+                            <h3 class="project-title">Portal Informasi SMK Telkom</h3>
+                            <p class="project-desc">Website portal komprehensif untuk menyajikan profil sekolah, sistem
+                                pengumuman agenda, galeri kegiatan siswa jurusan PPLG, serta form pendaftaran online
+                                terintegrasi database.</p>
+
+                            <div class="project-tech-tags">
+                                <span class="p-tech-pill">HTML5 / CSS3</span>
+                                <span class="p-tech-pill">PHP Native</span>
+                                <span class="p-tech-pill">MySQL Database</span>
+                                <span class="p-tech-pill">Bootstrap 5</span>
+                                <span class="p-tech-pill">Responsive UI</span>
+                            </div>
+
+                            <div class="project-action-row">
+                                <a href="https://github.com/AdhaRafi" target="_blank" rel="noopener noreferrer"
+                                    class="btn-project-primary">
+                                    <span>Source Code</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path
+                                            d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                                        </path>
+                                    </svg>
+                                </a>
+                                <a href="https://github.com/AdhaRafi" target="_blank" rel="noopener noreferrer"
+                                    class="btn-project-secondary">
+                                    <span>Live Preview ↗</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2: Free Fire Tournament Platform & Scrim -->
+                <div class="blueprint-card-wrapper anim-fade-up" data-category="esport">
+                    <div class="blueprint-dashed-frame">
+                        <div class="blueprint-marker top-left"></div>
+                        <div class="blueprint-marker top-right"></div>
+                        <div class="blueprint-marker bottom-left"></div>
+                        <div class="blueprint-marker bottom-right"></div>
+                        <div class="blueprint-anchor-pin"></div>
+                    </div>
+
+                    <div class="project-showcase-card">
+                        <div class="project-visual-box">
+                            <div class="project-browser-bar">
+                                <span class="browser-dot red"></span>
+                                <span class="browser-dot yellow"></span>
+                                <span class="browser-dot green"></span>
+                                <span class="browser-url">ff-tournament-hub.dev</span>
+                            </div>
+                            <div class="project-preview-content">
+                                <div class="project-mockup-graphic esports-hub">
+                                    <div class="mockup-header-nav">
+                                        <div class="mockup-logo">🏆 FF CHAMPIONSHIP</div>
+                                        <span class="esports-live-tag">● LIVE BRACKET</span>
+                                    </div>
+                                    <div class="mockup-leaderboard">
+                                        <div class="lb-row gold"><span>🥇 #1 Adha Team (Juara 1)</span> <strong>32
+                                                Pts</strong></div>
+                                        <div class="lb-row"><span>🥈 #2 Alpha Squad</span> <strong>24 Pts</strong></div>
+                                        <div class="lb-row"><span>🥉 #3 Phoenix Rises</span> <strong>19 Pts</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="project-status-pill">● Championship Hub</span>
+                        </div>
+
+                        <div class="project-details-box">
+                            <span class="project-category-badge">ESPORTS & GAMING • WEB APP</span>
+                            <h3 class="project-title">Free Fire Tournament & Leaderboard Hub</h3>
+                            <p class="project-desc">Platform pendaftaran tim esport Free Fire dengan kalkulasi poin
+                                otomatis, sistem standing leaderboard real-time, jadwal match tournament, dan galeri
+                                piala prestasi Juara 1.</p>
+
+                            <div class="project-tech-tags">
+                                <span class="p-tech-pill">JavaScript ES6</span>
+                                <span class="p-tech-pill">Interactive DOM</span>
+                                <span class="p-tech-pill">Local Storage</span>
+                                <span class="p-tech-pill">Dark Mode UI</span>
+                                <span class="p-tech-pill">Esport Branding</span>
+                            </div>
+
+                            <div class="project-action-row">
+                                <a href="https://github.com/AdhaRafi" target="_blank" rel="noopener noreferrer"
+                                    class="btn-project-primary">
+                                    <span>Source Code</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path
+                                            d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                                        </path>
+                                    </svg>
+                                </a>
+                                <a href="https://github.com/AdhaRafi" target="_blank" rel="noopener noreferrer"
+                                    class="btn-project-secondary">
+                                    <span>Live Preview ↗</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3: E-Commerce Store PPLG -->
+                <div class="blueprint-card-wrapper anim-fade-up" data-category="web">
+                    <div class="blueprint-dashed-frame">
+                        <div class="blueprint-marker top-left"></div>
+                        <div class="blueprint-marker top-right"></div>
+                        <div class="blueprint-marker bottom-left"></div>
+                        <div class="blueprint-marker bottom-right"></div>
+                        <div class="blueprint-anchor-pin"></div>
+                    </div>
+
+                    <div class="project-showcase-card">
+                        <div class="project-visual-box">
+                            <div class="project-browser-bar">
+                                <span class="browser-dot red"></span>
+                                <span class="browser-dot yellow"></span>
+                                <span class="browser-dot green"></span>
+                                <span class="browser-url">pplg-store.shop</span>
+                            </div>
+                            <div class="project-preview-content">
+                                <div class="project-mockup-graphic ecommerce-store">
+                                    <div class="mockup-header-nav">
+                                        <div class="mockup-logo">🛒 PPLG STORE</div>
+                                        <span class="mockup-cart-badge">🛍️ 3 Items</span>
+                                    </div>
+                                    <div class="mockup-products-grid">
+                                        <div class="m-product-card">
+                                            <div class="m-product-img"></div>
+                                            <span>Code Hoodie</span>
+                                        </div>
+                                        <div class="m-product-card">
+                                            <div class="m-product-img"></div>
+                                            <span>Dev Stickers</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="project-status-pill">● Completed</span>
+                        </div>
+
+                        <div class="project-details-box">
+                            <span class="project-category-badge">E-COMMERCE • WEB APPLICATION</span>
+                            <h3 class="project-title">Toko Online & Katalog Produk PPLG</h3>
+                            <p class="project-desc">Aplikasi web e-commerce interaktif dengan keranjang belanja dinamis,
+                                filter kategori produk, kalkulasi total harga otomatis, dan direct checkout via WhatsApp
+                                link order.</p>
+
+                            <div class="project-tech-tags">
+                                <span class="p-tech-pill">JavaScript</span>
+                                <span class="p-tech-pill">PHP & MySQL</span>
+                                <span class="p-tech-pill">Cart State</span>
+                                <span class="p-tech-pill">WhatsApp API</span>
+                                <span class="p-tech-pill">Tailwind CSS</span>
+                            </div>
+
+                            <div class="project-action-row">
+                                <a href="https://github.com/AdhaRafi" target="_blank" rel="noopener noreferrer"
+                                    class="btn-project-primary">
+                                    <span>Source Code</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path
+                                            d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                                        </path>
+                                    </svg>
+                                </a>
+                                <a href="https://github.com/AdhaRafi" target="_blank" rel="noopener noreferrer"
+                                    class="btn-project-secondary">
+                                    <span>Live Preview ↗</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4: UI/UX Design System & App Prototype -->
+                <div class="blueprint-card-wrapper anim-fade-up" data-category="uiux">
+                    <div class="blueprint-dashed-frame">
+                        <div class="blueprint-marker top-left"></div>
+                        <div class="blueprint-marker top-right"></div>
+                        <div class="blueprint-marker bottom-left"></div>
+                        <div class="blueprint-marker bottom-right"></div>
+                        <div class="blueprint-anchor-pin"></div>
+                    </div>
+
+                    <div class="project-showcase-card">
+                        <div class="project-visual-box">
+                            <div class="project-browser-bar">
+                                <span class="browser-dot red"></span>
+                                <span class="browser-dot yellow"></span>
+                                <span class="browser-dot green"></span>
+                                <span class="browser-url">figma.com/@adharafi</span>
+                            </div>
+                            <div class="project-preview-content">
+                                <div class="project-mockup-graphic figma-prototype">
+                                    <div class="figma-artboard-wrap">
+                                        <div class="figma-phone-screen">
+                                            <div class="phone-notch"></div>
+                                            <div class="phone-widget"></div>
+                                            <div class="phone-list-item"></div>
+                                            <div class="phone-list-item"></div>
+                                        </div>
+                                        <div class="figma-palette-box">
+                                            <span style="background:#000000"></span>
+                                            <span style="background:#4C4A4A"></span>
+                                            <span style="background:#9F9C9C"></span>
+                                            <span style="background:#DDDDDD"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="project-status-pill">● Figma Design</span>
+                        </div>
+
+                        <div class="project-details-box">
+                            <span class="project-category-badge">UI/UX DESIGN • FIGMA PROTOTYPE</span>
+                            <h3 class="project-title">Desain UI/UX Mobile App & Design System</h3>
+                            <p class="project-desc">Perancangan sistematis UI/UX mencakup user persona, wireframing
+                                low-fidelity hingga high-fidelity, interactive clickable prototype, dan atomic design
+                                token kit di Figma.</p>
+
+                            <div class="project-tech-tags">
+                                <span class="p-tech-pill">Figma Pro</span>
+                                <span class="p-tech-pill">Canva</span>
+                                <span class="p-tech-pill">Wireframing</span>
+                                <span class="p-tech-pill">Design Tokens</span>
+                                <span class="p-tech-pill">Atomic Design</span>
+                            </div>
+
+                            <div class="project-action-row">
+                                <a href="https://www.instagram.com/rafiiwow_" target="_blank" rel="noopener noreferrer"
+                                    class="btn-project-primary">
+                                    <span>Lihat Desain</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                    </svg>
+                                </a>
+                                <a href="https://github.com/AdhaRafi" target="_blank" rel="noopener noreferrer"
+                                    class="btn-project-secondary">
+                                    <span>Case Study ↗</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ EXPERIENCE ============ -->
+    <section class="resume-section" id="experience">
+        <div class="container">
+            <div class="resume-grid">
+                <!-- Education -->
+                <div>
+                    <h2 class="section-label anim-fade-up">Education</h2>
+                    <div class="timeline" id="timeline-edu">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-year">2026 - Sekarang</div>
+                            <div class="timeline-title">SMK Telkom Purwokerto</div>
+                            <div class="timeline-desc">Jurusan PPLG (Pengembangan Perangkat Lunak dan Gim)</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-year">2022 - 2025</div>
+                            <div class="timeline-title">SMP Telkom Purwokerto</div>
+                            <div class="timeline-desc">Pendidikan menengah pertama</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-year">2016 - 2022</div>
+                            <div class="timeline-title">SD Islam Al-Azhar 39 Purwokerto</div>
+                            <div class="timeline-desc">Pendidikan menengah dasar</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Experience -->
+                <div>
+                    <h2 class="section-label anim-fade-up">Experience</h2>
+                    <div class="timeline" id="timeline-exp">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-year">2026 - Sekarang</div>
+                            <div class="timeline-title">Belajar Web Development</div>
+                            <div class="timeline-desc">Mempelajari HTML, CSS, JavaScript, dan framework modern secara
+                                mandiri dan di
+                                sekolah.</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-year">2025</div>
+                            <div class="timeline-title">UI/UX Design Enthusiast</div>
+                            <div class="timeline-desc">Belajar desain antarmuka menggunakan Figma dan menerapkan prinsip
+                                UX.</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-year">2023</div>
+                            <div class="timeline-title">Mulai Coding</div>
+                            <div class="timeline-desc">Memulai perjalanan coding dari dasar: HTML, CSS, dan logika
+                                pemrograman.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ SERVICES ============ -->
+    <section class="services-section" id="services">
+        <div class="container">
+            <div class="services-header anim-fade-up">
+                <h2>Services</h2>
+                <p>Layanan yang bisa saya tawarkan untuk membantu project kamu</p>
+            </div>
+
+            <div class="services-grid stagger-children" id="services-grid">
+                <div class="service-card">
+                    <div class="service-num">01</div>
+                    <div class="service-icon-wrap">🌐</div>
+                    <h3>Website Development</h3>
+                    <p>Pembuatan website modern, responsive, dan performanya cepat menggunakan teknologi terbaru.</p>
+                    <div class="service-arrow">→</div>
+                </div>
+                <div class="service-card">
+                    <div class="service-num">02</div>
+                    <div class="service-icon-wrap">🎨</div>
+                    <h3>UI/UX Design</h3>
+                    <p>Desain antarmuka yang modern, intuitif, dan user-friendly. Dari wireframe hingga prototype.</p>
+                    <div class="service-arrow">→</div>
+                </div>
+                <div class="service-card">
+                    <div class="service-num">03</div>
+                    <div class="service-icon-wrap">💻</div>
+                    <h3>Frontend Development</h3>
+                    <p>Membangun tampilan website interaktif dengan HTML, CSS, dan JavaScript yang clean dan optimal.
+                    </p>
+                    <div class="service-arrow">→</div>
+                </div>
+                <div class="service-card">
+                    <div class="service-num">04</div>
+                    <div class="service-icon-wrap">🛠</div>
+                    <h3>Bug Fixing & Debugging</h3>
+                    <p>Membantu menemukan dan memperbaiki bug pada website atau aplikasi yang sudah ada.</p>
+                    <div class="service-arrow">→</div>
+                </div>
+                <div class="service-card">
+                    <div class="service-num">05</div>
+                    <div class="service-icon-wrap">📱</div>
+                    <h3>Responsive Design</h3>
+                    <p>Memastikan website tampil sempurna di semua perangkat, dari desktop hingga mobile.</p>
+                    <div class="service-arrow">→</div>
+                </div>
+                <div class="service-card">
+                    <div class="service-num">06</div>
+                    <div class="service-icon-wrap">⚙️</div>
+                    <h3>Konsultasi IT</h3>
+                    <p>Konsultasi seputar teknologi, pemilihan stack, dan perencanaan project digital.</p>
+                    <div class="service-arrow">→</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ ACHIEVEMENTS ============ -->
+    <section class="achievements-section" id="achievements">
+        <div class="container">
+            <div class="achievements-header anim-fade-up">
+                <h2>Achievements</h2>
+                <p>Pencapaian yang pernah saya raih</p>
+            </div>
+
+            <div class="achievements-grid stagger-children" id="achievements-grid">
+                <div class="achievement-card">
+                    <div class="achievement-icon">🏆</div>
+                    <h3>Juara 1 Free Fire</h3>
+                    <p>Meraih juara pertama di turnamen Free Fire. Foto segera ditambahkan!</p>
+                    <img src="assets/images/Juara.jpeg" alt="Juara Free Fire" class="achievement-img">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ STATS ============ -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-item anim-fade-up">
+                    <div class="stat-number" data-target="5">0</div>
+                    <div class="stat-label">Projects Done</div>
+                </div>
+                <div class="stat-item anim-fade-up">
+                    <div class="stat-number" data-target="10">0</div>
+                    <div class="stat-label">Skills Learned</div>
+                </div>
+                <div class="stat-item anim-fade-up">
+                    <div class="stat-number" data-target="1">0</div>
+                    <div class="stat-label">Years Learning</div>
+                </div>
+                <div class="stat-item anim-fade-up">
+                    <div class="stat-number" data-target="1">0</div>
+                    <div class="stat-label">Achievements</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ TESTIMONIALS ============ -->
+    <section class="testimonials-section" id="testimonials">
+        <div class="container">
+            <div class="testimonials-header anim-fade-up">
+                <span class="section-tag">💬 Testimonials & Feedback</span>
+                <h2>What People Say</h2>
+                <p>Saran, ulasan, dan testimoni langsung dari teman, rekan, dan pengunjung.</p>
+            </div>
+
+            <!-- Testimonial Submission Form -->
+            <div class="testi-form-card anim-fade-up">
+                <div class="testi-form-header">
+                    <h3>Beri Ulasan / Testimoni</h3>
+                    <p>Pesan kamu akan langsung tampil secara live di kartu testimoni di bawah!</p>
+                </div>
+                <form class="testi-form" id="testi-form">
+                    <!-- Rating selector -->
+                    <div class="testi-rating-picker">
+                        <span class="rating-label">Rating:</span>
+                        <div class="star-rating" id="star-rating">
+                            <span class="star active" data-value="1">★</span>
+                            <span class="star active" data-value="2">★</span>
+                            <span class="star active" data-value="3">★</span>
+                            <span class="star active" data-value="4">★</span>
+                            <span class="star active" data-value="5">★</span>
+                        </div>
+                        <span class="rating-value-text" id="rating-text">5.0 (Sempurna! 🌟)</span>
+                        <input type="hidden" id="testi-rating" value="5">
+                    </div>
+
+                    <div class="testi-form-row">
+                        <div class="testi-input-box">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            <input type="text" id="testi-name" placeholder="Nama kamu" maxlength="40" required>
+                        </div>
+                        <div class="testi-input-box">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="8.5" cy="7" r="4"></circle>
+                                <line x1="20" y1="8" x2="20" y2="14"></line>
+                                <line x1="23" y1="11" x2="17" y2="11"></line>
+                            </svg>
+                            <input type="text" id="testi-role" placeholder="Hubungan (cth: Teman SMK, Klien)"
+                                maxlength="30">
+                        </div>
+                    </div>
+
+                    <!-- Role Quick Chips -->
+                    <div class="testi-chips">
+                        <span class="chip-label">Pilihan cepat:</span>
+                        <button type="button" class="testi-chip" data-role="Teman SMK">Teman SMK</button>
+                        <button type="button" class="testi-chip" data-role="Klien">Klien</button>
+                        <button type="button" class="testi-chip" data-role="Guru">Guru</button>
+                        <button type="button" class="testi-chip" data-role="Visitor">Visitor</button>
+                    </div>
+
+                    <div class="testi-input-box testi-textarea-box">
+                        <textarea id="testi-message"
+                            placeholder="Tulis saran atau testimoni kamu di sini... (max 280 karakter)" maxlength="280"
+                            required></textarea>
+                    </div>
+
+                    <div class="testi-form-footer">
+                        <div class="testi-status" id="testi-status"></div>
+                        <button type="submit" class="testi-submit-btn" id="testi-submit-btn">
+                            Kirim Testimoni <span>✨</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Testimonials Grid Container -->
+            <div class="testimonials-grid stagger-children" id="testimonials-grid">
+                <!-- Dynamic cards will be rendered here from Firebase / LocalStorage -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ HOBBIES ============ -->
+    <section class="extras-section">
+        <div class="container">
+            <div class="extras-grid">
+                <div class="anim-fade-left">
+                    <h2 class="section-label">Language</h2>
+                    <div class="lang-list">
+                        <div class="lang-item">
+                            <h4>Indonesia</h4>
+                            <p>Native</p>
+                        </div>
+                        <div class="lang-item">
+                            <h4>English</h4>
+                            <p>Basic</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="anim-fade-right">
+                    <h2 class="section-label">Hobbies & Interests</h2>
+                    <div class="hobbies-grid stagger-children" id="hobbies-grid">
+                        <div class="hobby-item">
+                            <span class="hobby-icon">💻</span>
+                            <span>Coding</span>
+                        </div>
+                        <div class="hobby-item">
+                            <span class="hobby-icon">🎮</span>
+                            <span>Gaming</span>
+                        </div>
+                        <div class="hobby-item">
+                            <span class="hobby-icon">🎨</span>
+                            <span>Design</span>
+                        </div>
+                        <div class="hobby-item">
+                            <span class="hobby-icon">✂️</span>
+                            <span>Handicraft</span>
+                        </div>
+                        <div class="hobby-item">
+                            <span class="hobby-icon">🎵</span>
+                            <span>Music</span>
+                        </div>
+                        <div class="hobby-item">
+                            <span class="hobby-icon">☕</span>
+                            <span>Coffee</span>
+                        </div>
+                        <div class="hobby-item">
+                            <span class="hobby-icon">📚</span>
+                            <span>Learning</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="contact-left anim-fade-left">
+                    <h2>Let's build<br>something great<br>together <span class="Clover">☘︎</span></h2>
+                    <p>Punya project atau ide yang ingin diwujudkan? Jangan ragu untuk menghubungi saya!</p>
+
+                    <div class="contact-details">
+                        <a href="https://www.instagram.com/rafiiwow_" target="_blank" rel="noopener noreferrer"
+                            class="contact-detail-item">
+                            <div class="contact-detail-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4>Instagram</h4>
+                                <p>@rafiiwow_ ↗</p>
+                            </div>
+                        </a>
+
+                        <a href="https://wa.me/6281548331020" target="_blank" rel="noopener noreferrer"
+                            class="contact-detail-item">
+                            <div class="contact-detail-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="currentColor">
+                                    <path
+                                        d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4>WhatsApp</h4>
+                                <p>081548331020 ↗</p>
+                            </div>
+                        </a>
+
+                        <a href="https://github.com/AdhaRafi" target="_blank" rel="noopener noreferrer"
+                            class="contact-detail-item">
+                            <div class="contact-detail-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="currentColor">
+                                    <path
+                                        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4>GitHub</h4>
+                                <p>github.com/AdhaRafi ↗</p>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="social-row">
+                        <a href="https://github.com/AdhaRafi" target="_blank" rel="noopener noreferrer"
+                            class="social-circle" aria-label="GitHub">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                fill="currentColor">
+                                <path
+                                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                            </svg>
+                        </a>
+                        <a href="https://www.instagram.com/rafiiwow_" target="_blank" rel="noopener noreferrer"
+                            class="social-circle" aria-label="Instagram">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                            </svg>
+                        </a>
+                        <a href="https://wa.me/6281548331020" target="_blank" rel="noopener noreferrer"
+                            class="social-circle" aria-label="WhatsApp">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                fill="currentColor">
+                                <path
+                                    d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <form class="contact-form anim-fade-right" id="contact-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" id="form-name" name="name" placeholder="Your name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="form-email" name="email" placeholder="Your email" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="form-subject" name="subject" placeholder="Subject">
+                    </div>
+                    <div class="form-group">
+                        <textarea id="form-message" name="message" placeholder="Tell me about your project..."
+                            required></textarea>
+                    </div>
+                    <button type="submit" class="btn-send" id="btn-send">
+                        Send Message <span>→</span>
+                    </button>
+                    <div class="form-status" id="form-status"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <span class="Clover">☘︎</span> RafiKuy.
+                    </div>
+                    <p>Siswa SMK Telkom Purwokerto, Developer & UI/UX Enthusiast. Membangun solusi digital yang modern
+                        dan
+                        berkualitas.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Navigation</h4>
+                    <a href="#home">Home</a>
+                    <a href="#about">About</a>
+                    <a href="#skills">Skills</a>
+                    <a href="#portfolio">Portfolio</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Sections</h4>
+                    <a href="#experience">Experience</a>
+                    <a href="#services">Services</a>
+                    <a href="#achievements">Achievements</a>
+                    <a href="#testimonials">Testimonials</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Connect</h4>
+                    <a href="https://github.com/AdhaRafi" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+                    <a href="https://www.instagram.com/rafiiwow_" target="_blank" rel="noopener noreferrer">Instagram
+                        ↗</a>
+                    <a href="https://wa.me/6281548331020" target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Adha Rafi Nurfaiz. All rights reserved.</p>
+                <a href="#home" class="back-to-top">Back to Top ↑</a>
+            </div>
+        </div>
+    </footer>
+    <!-- Google Translate Element Init -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'id',
+                includedLanguages: 'id,en,ja,ko,zh-CN,ar,es,fr,de,ru,it,pt,nl,tr,th,vi,ms,jw,su,hi,tl',
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript"
+        src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <script src="script.js"></script>
+
+    <!-- ============ THANK YOU MODAL POPUP ============ -->
+    <div class="testi-modal-backdrop" id="testi-thankyou-modal" aria-hidden="true">
+        <canvas class="testi-confetti-canvas" id="testi-confetti-canvas"></canvas>
+        <div class="testi-modal-card">
+            <button type="button" class="testi-modal-x" id="modal-x-btn" aria-label="Close">✕</button>
+            <div class="testi-modal-icon-wrap">
+                <span class="testi-modal-icon" id="modal-icon">🔥</span>
+            </div>
+            <div class="testi-modal-stars" id="modal-stars">★★★★★</div>
+            <h3 class="testi-modal-title" id="modal-title">Waduh Bintang 5! Gokil Banget! 🔥</h3>
+            <p class="testi-modal-body" id="modal-body">
+                Makasih banyak ya! Support dan ulasan dari kamu bikin aku makin semangat ngoding & improve web ini.
+            </p>
+            <div class="testi-modal-badge" id="modal-badge">☘︎ RafiKuy Community</div>
+            <button type="button" class="testi-modal-close-btn" id="modal-close-btn">
+                Sama-sama! ☘️
+            </button>
+        </div>
+    </div>
+
+    <!-- FLOATING WA BUTTON -->
+    <a href="https://wa.me/6281548331020?text=Halo%20Adha%20Rafi%2C%20saya%20ingin%20menghubungi%20kamu."
+        target="_blank" rel="noopener noreferrer" class="wa-float" aria-label="Chat WhatsApp" id="wa-float-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="white">
+            <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+        </svg>
+        <span class="wa-float-label">Chat WA</span>
+    </a>
+</body>
+
+</html>
