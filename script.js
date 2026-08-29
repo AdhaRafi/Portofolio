@@ -870,6 +870,136 @@
       return temp.innerHTML;
     }
 
+    // --- PROFANITY / TOXIC WORDS SHIELD ---
+    const TOXIC_WORDS = [
+      'anjing', 'babi', 'kontol', 'memek', 'pantek', 'bangsat', 'goblok', 'tolol',
+      'itil', 'ngentot', 'asu', 'bajingan', 'kampret', 'perek', 'lonte', 'jembut',
+      'pepek', 'titit', 'bego', 'idiot', 'puki', 'tai', 'fuck', 'shit', 'bitch', 'asshole'
+    ];
+
+    function containsProfanity(text) {
+      if (!text) return false;
+      const lower = text.toLowerCase();
+      const clean = lower.replace(/[^a-z0-9]/g, '');
+      const words = lower.split(/\s+/);
+      return TOXIC_WORDS.some(bad => words.includes(bad) || clean.includes(bad));
+    }
+
+    // --- ADMIN MODE & MODERATION SYSTEM ---
+    const ADMIN_PINS = ['rafikuy2026', '2026', 'admin123', 'adha2026'];
+    let isAdminMode = sessionStorage.getItem('rafikuy_is_admin') === 'true';
+    const adminFloatingBar = document.getElementById('admin-floating-bar');
+    const adminLogoutBtn = document.getElementById('admin-logout-btn');
+    const adminSecretTrigger = document.getElementById('admin-secret-trigger');
+
+    function updateAdminUI() {
+      if (adminFloatingBar) {
+        adminFloatingBar.style.display = isAdminMode ? 'block' : 'none';
+      }
+      refreshAdminButtons();
+    }
+
+    function toggleAdminMode(activate) {
+      isAdminMode = activate;
+      if (activate) {
+        sessionStorage.setItem('rafikuy_is_admin', 'true');
+        alert("👑 Selamat datang di Mode Admin, Adha Rafi!\n\nKamu sekarang bisa menghapus ulasan apapun dengan tombol merah di kartu.");
+      } else {
+        sessionStorage.removeItem('rafikuy_is_admin');
+        alert("Mode Admin dinonaktifkan.");
+      }
+      updateAdminUI();
+    }
+
+    function promptAdminLogin() {
+      const pin = prompt("👑 Masukkan PIN Admin untuk Moderasi Ulasan:\n(Default PIN: rafikuy2026 atau 2026)");
+      if (pin === null) return;
+      if (ADMIN_PINS.includes(pin.trim().toLowerCase())) {
+        toggleAdminMode(true);
+      } else {
+        alert("❌ PIN Admin salah! Akses ditolak.");
+      }
+    }
+
+    if (adminSecretTrigger) {
+      adminSecretTrigger.addEventListener('click', promptAdminLogin);
+    }
+
+    if (adminLogoutBtn) {
+      adminLogoutBtn.addEventListener('click', () => toggleAdminMode(false));
+    }
+
+    // Keyboard shortcut: Ctrl + Shift + A
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+        e.preventDefault();
+        if (isAdminMode) {
+          toggleAdminMode(false);
+        } else {
+          promptAdminLogin();
+        }
+      }
+    });
+
+    // Check URL hash #admin
+    if (window.location.hash === '#admin') {
+      setTimeout(promptAdminLogin, 500);
+    }
+
+    // Delete comment function (Firebase + LocalStorage)
+    function deleteTestimonial(id, authorName) {
+      const confirmed = confirm(`👑 Hapus ulasan dari "${authorName}"?\n\nTindakan ini tidak bisa dibatalkan.`);
+      if (!confirmed) return;
+
+      const card = document.getElementById(`testi-card-${id}`);
+      if (card) {
+        card.classList.add('deleting');
+        setTimeout(() => {
+          card.remove();
+          renderedTestiIds.delete(id);
+        }, 400);
+      }
+
+      // Delete from Firebase
+      if (isFirebaseActive && dbRef) {
+        dbRef.child(id).remove().catch(err => console.error("Firebase delete error:", err));
+      }
+
+      // Delete from LocalStorage
+      try {
+        let localItems = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        localItems = localItems.filter(item => item.id !== id);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(localItems));
+      } catch (e) {}
+    }
+
+    function refreshAdminButtons() {
+      const cards = testimonialsGrid ? testimonialsGrid.querySelectorAll('.testimonial-card') : [];
+      cards.forEach(card => {
+        const existingBtn = card.querySelector('.admin-delete-btn');
+        if (isAdminMode) {
+          if (!existingBtn) {
+            const id = card.id.replace('testi-card-', '');
+            const nameEl = card.querySelector('.testimonial-info h4');
+            const authorName = nameEl ? nameEl.textContent : 'Visitor';
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'admin-delete-btn';
+            btn.innerHTML = '🗑️ Hapus';
+            btn.title = 'Hapus komentar ini';
+            btn.onclick = (e) => {
+              e.stopPropagation();
+              deleteTestimonial(id, authorName);
+            };
+            card.appendChild(btn);
+          }
+        } else {
+          if (existingBtn) existingBtn.remove();
+        }
+      });
+    }
+
     function renderStarsString(count) {
       const num = Math.max(1, Math.min(5, parseInt(count || 5, 10)));
       return '★'.repeat(num) + '☆'.repeat(5 - num);
@@ -906,6 +1036,20 @@
           </div>
         </div>
       `;
+
+      if (isAdminMode) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'admin-delete-btn';
+        btn.innerHTML = '🗑️ Hapus';
+        btn.title = 'Hapus komentar ini';
+        btn.onclick = (e) => {
+          e.stopPropagation();
+          deleteTestimonial(id, name);
+        };
+        card.appendChild(btn);
+      }
+
       return card;
     }
 
@@ -968,6 +1112,19 @@
             addTestimonialToGrid(snapshot.key, val, true);
           }
         });
+
+        // Listen for deleted testimonials in realtime across all devices!
+        dbRef.on('child_removed', (snapshot) => {
+          const id = snapshot.key;
+          const card = document.getElementById(`testi-card-${id}`);
+          if (card) {
+            card.classList.add('deleting');
+            setTimeout(() => {
+              card.remove();
+              renderedTestiIds.delete(id);
+            }, 400);
+          }
+        });
       }
     } catch (err) {
       console.warn("Firebase initialization note (using local storage fallback if needed):", err);
@@ -1023,6 +1180,9 @@
       });
     }
 
+    // Update Admin UI on start
+    updateAdminUI();
+
     // --- FORM SUBMISSION ---
     if (testiForm) {
       testiForm.addEventListener('submit', (e) => {
@@ -1037,6 +1197,15 @@
           if (testiStatus) {
             testiStatus.className = 'testi-status error';
             testiStatus.textContent = 'Harap isi nama dan testimoni kamu!';
+          }
+          return;
+        }
+
+        // Automatic Profanity / Toxic Words Filter
+        if (containsProfanity(name) || containsProfanity(message)) {
+          if (testiStatus) {
+            testiStatus.className = 'testi-status error';
+            testiStatus.textContent = 'Eits! Ulasan kamu mengandung kata yang kurang sopan. Yuk gunakan kata yang positif! 😊';
           }
           return;
         }
