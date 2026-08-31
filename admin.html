@@ -867,26 +867,31 @@
             // --- DATABASE CONNECTION (called after auth confirmed) ---
             function initDatabase() {
                 try {
-                    const db = firebase.database();
-                    dbRef = db.ref('testimonials_messages');
-                    isFirebaseActive = true;
-
-                    // Realtime listener for entire list
-                    dbRef.on('value', (snapshot) => {
-                        const val = snapshot.val();
-                        testimonialsData = [];
-                        if (val) {
-                            Object.keys(val).forEach(key => {
-                                testimonialsData.push({
-                                    id: key,
-                                    ...val[key]
-                                });
-                            });
+                    if (window.firebase) {
+                        if (!firebase.apps.length) {
+                            firebase.initializeApp(firebaseConfig);
                         }
-                        // Sort newest first
-                        testimonialsData.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-                        renderDashboard();
-                    });
+                        const db = firebase.database();
+                        dbRef = db.ref('testimonials_messages');
+                        isFirebaseActive = true;
+
+                        // Realtime listener for entire list
+                        dbRef.on('value', (snapshot) => {
+                            const val = snapshot.val();
+                            testimonialsData = [];
+                            if (val) {
+                                Object.keys(val).forEach(key => {
+                                    testimonialsData.push({
+                                        id: key,
+                                        ...val[key]
+                                    });
+                                });
+                            }
+                            // Sort newest first
+                            testimonialsData.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                            renderDashboard();
+                        });
+                    }
                 } catch (err) {
                     console.error('Firebase DB error in admin panel:', err);
                     isFirebaseActive = false;
