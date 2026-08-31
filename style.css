@@ -2455,6 +2455,30 @@ body {
   justify-content: center;
 }
 
+.project-preview-content.project-img-preview {
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+}
+
+.project-real-img {
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.project-showcase-card:hover .project-real-img {
+  transform: scale(1.05);
+}
+
 /* Mockup Graphic Styling */
 .project-mockup-graphic {
   width: 100%;
