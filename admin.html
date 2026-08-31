@@ -751,6 +751,119 @@
 
         .empty-state p {
             font-size: 0.82rem;
+        }        /* Admin Navigation Tabs */
+        .admin-nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 12px;
+        }
+
+        .tab-btn {
+            background: var(--surface-2);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            padding: 9px 18px;
+            border-radius: var(--radius-xs);
+            font-family: var(--font-body);
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .tab-btn:hover {
+            background: var(--surface-3);
+            color: var(--text-primary);
+            border-color: var(--border-focus);
+        }
+
+        .tab-btn.active {
+            background: #FFFFFF;
+            color: #121214;
+            border-color: #FFFFFF;
+            box-shadow: 0 4px 14px rgba(255, 255, 255, 0.15);
+        }
+
+        .tab-badge {
+            background: rgba(0, 0, 0, 0.2);
+            color: inherit;
+            padding: 2px 7px;
+            border-radius: 12px;
+            font-size: 0.72rem;
+            font-family: var(--font-mono);
+            font-weight: 700;
+        }
+
+        .tab-btn.active .tab-badge {
+            background: #121214;
+            color: #FFFFFF;
+        }
+
+        /* Message Action Buttons */
+        .msg-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-reply-email {
+            background: rgba(59, 130, 246, 0.12);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #60A5FA;
+            padding: 7px 12px;
+            border-radius: var(--radius-xs);
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+        }
+
+        .btn-reply-email:hover {
+            background: #3B82F6;
+            color: #FFFFFF;
+        }
+
+        .btn-reply-wa {
+            background: rgba(37, 211, 102, 0.12);
+            border: 1px solid rgba(37, 211, 102, 0.3);
+            color: #25D366;
+            padding: 7px 12px;
+            border-radius: var(--radius-xs);
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+        }
+
+        .btn-reply-wa:hover {
+            background: #25D366;
+            color: #121214;
+        }
+
+        .msg-subject-pill {
+            font-size: 0.76rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-subtle);
+            color: #E4E4E7;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 6px;
         }
 
         @keyframes shake {
@@ -777,7 +890,7 @@
                 gap: 14px;
             }
 
-            .btn-delete-item {
+            .btn-delete-item, .btn-reply-email, .btn-reply-wa {
                 width: 100%;
                 justify-content: center;
             }
@@ -801,7 +914,7 @@
         <div class="login-card" id="login-card">
             <div class="login-brand-icon">☘</div>
             <h1 class="login-title">Admin Console</h1>
-            <p class="login-subtitle">Enter admin passphrase to manage guestbook testimonials.</p>
+            <p class="login-subtitle">Enter admin passphrase to manage guestbook testimonials & messages.</p>
 
             <form id="admin-login-form">
                 <div class="input-group">
@@ -872,16 +985,28 @@
 
         <!-- Main Content -->
         <main class="admin-content">
+            <!-- Navigation Tabs -->
+            <div class="admin-nav-tabs">
+                <button type="button" class="tab-btn active" id="tab-btn-testi">
+                    <span>⭐ Testimonials</span>
+                    <span class="tab-badge" id="badge-testi-count">0</span>
+                </button>
+                <button type="button" class="tab-btn" id="tab-btn-messages">
+                    <span>📬 Pesan Kontak (Inbox)</span>
+                    <span class="tab-badge" id="badge-msg-count">0</span>
+                </button>
+            </div>
+
             <div class="content-header">
-                <h1>Testimonials Stream</h1>
-                <p>Manage and moderate community reviews submitted via your portfolio.</p>
+                <h1 id="view-title">Testimonials Stream</h1>
+                <p id="view-desc">Manage and moderate community reviews submitted via your portfolio.</p>
             </div>
 
             <!-- Stats KPI Cards -->
-            <div class="stats-grid">
+            <div class="stats-grid" id="stats-grid-container">
                 <div class="stat-card">
                     <div class="stat-label">
-                        <span>Total Reviews</span>
+                        <span id="stat-label-1">Total Reviews</span>
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                         </svg>
@@ -890,7 +1015,7 @@
                     <div class="stat-meta">Synced from Firebase RTDB</div>
                 </div>
 
-                <div class="stat-card">
+                <div class="stat-card" id="card-stat-avg">
                     <div class="stat-label">
                         <span>Average Rating</span>
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -901,15 +1026,15 @@
                     <div class="stat-meta">Overall audience satisfaction</div>
                 </div>
 
-                <div class="stat-card">
+                <div class="stat-card" id="card-stat-extra">
                     <div class="stat-label">
-                        <span>5-Star Ratings</span>
+                        <span id="stat-label-3">5-Star Ratings</span>
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
                         </svg>
                     </div>
                     <div class="stat-number" id="stat-five-star">0</div>
-                    <div class="stat-meta">Top feedback responses</div>
+                    <div class="stat-meta" id="stat-meta-3">Top feedback responses</div>
                 </div>
             </div>
 
@@ -920,9 +1045,9 @@
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
-                    <input type="text" id="search-input" placeholder="Search by name, role, or keyword...">
+                    <input type="text" id="search-input" placeholder="Search by name, role, email, or message...">
                 </div>
-                <div class="filter-group">
+                <div class="filter-group" id="filter-group-wrap">
                     <select class="filter-select" id="rating-filter">
                         <option value="all">All Ratings (1 - 5 ★)</option>
                         <option value="5">5 Stars only</option>
@@ -933,7 +1058,7 @@
                 </div>
             </div>
 
-            <!-- Testimonial List Stream Container -->
+            <!-- Stream Container -->
             <div class="testi-list" id="testi-list-container">
                 <div class="empty-state">
                     <svg class="empty-icon-svg" viewBox="0 0 24 24">
@@ -941,7 +1066,7 @@
                         <polyline points="12 6 12 12 16 14"></polyline>
                     </svg>
                     <h3>Connecting to Firebase...</h3>
-                    <p>Loading realtime guestbook testimonials.</p>
+                    <p>Loading realtime items.</p>
                 </div>
             </div>
         </main>
@@ -951,7 +1076,6 @@
     <script>
         (function () {
             // --- SECURITY CONFIGURATION (SHA-256 HASHED) ---
-            // Passwords: 'rafikuy2026', '2026', 'adha2026', 'admin123', 'Rafikuy2026', 'Adha2026'
             const VALID_HASHES = [
                 '6371e0e55a691223d098a443b690236eb7394b86c32e202596498e9b7070bd18', // rafikuy2026
                 'b8003fafb0e41ee9b5f27266b61bd1b50affc366a2dfcbefaa35ed5c051540aa', // Rafikuy2026
@@ -962,13 +1086,46 @@
             ];
             const AUTH_KEY = 'rafikuy_admin_session_auth';
 
-            // SHA-256 helper via Web Crypto API
             async function sha256(str) {
                 const buffer = new TextEncoder().encode(str);
                 const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
                 const hashArray = Array.from(new Uint8Array(hashBuffer));
                 return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
             }
+
+            // --- DOM ELEMENTS ---
+            const loginScreen = document.getElementById('login-screen');
+            const dashboardScreen = document.getElementById('dashboard-screen');
+            const loginForm = document.getElementById('admin-login-form');
+            const passwordInput = document.getElementById('admin-password');
+            const togglePwdBtn = document.getElementById('toggle-pwd-btn');
+            const loginCard = document.getElementById('login-card');
+            const toast = document.getElementById('toast');
+            const logoutBtn = document.getElementById('logout-btn');
+
+            const tabBtnTesti = document.getElementById('tab-btn-testi');
+            const tabBtnMessages = document.getElementById('tab-btn-messages');
+            const badgeTestiCount = document.getElementById('badge-testi-count');
+            const badgeMsgCount = document.getElementById('badge-msg-count');
+
+            const viewTitle = document.getElementById('view-title');
+            const viewDesc = document.getElementById('view-desc');
+            const statLabel1 = document.getElementById('stat-label-1');
+            const statTotal = document.getElementById('stat-total');
+            const statAvg = document.getElementById('stat-avg');
+            const statFiveStar = document.getElementById('stat-five-star');
+            const cardStatAvg = document.getElementById('card-stat-avg');
+            const statLabel3 = document.getElementById('stat-label-3');
+            const statMeta3 = document.getElementById('stat-meta-3');
+
+            const searchInput = document.getElementById('search-input');
+            const ratingFilter = document.getElementById('rating-filter');
+            const filterGroupWrap = document.getElementById('filter-group-wrap');
+            const testiListContainer = document.getElementById('testi-list-container');
+
+            let currentView = 'testimonials'; // 'testimonials' | 'messages'
+            let testimonialsData = [];
+            let messagesData = [];
 
             // --- FIREBASE CONFIGURATION ---
             const firebaseConfig = {
@@ -982,105 +1139,106 @@
                 measurementId: "G-TKM46KHW3H"
             };
 
-            let dbRef = null;
             let isFirebaseActive = false;
-            let testimonialsData = [];
+            let dbTestiRef = null;
+            let dbMsgRef = null;
 
-            // --- DOM ELEMENTS ---
-            const loginScreen = document.getElementById('login-screen');
-            const dashboardScreen = document.getElementById('dashboard-screen');
-            const loginForm = document.getElementById('admin-login-form');
-            const passwordInput = document.getElementById('admin-password');
-            const togglePwdBtn = document.getElementById('toggle-pwd-btn');
-            const loginCard = document.getElementById('login-card');
-            const loginSubmitBtn = document.getElementById('login-submit-btn');
-            const logoutBtn = document.getElementById('logout-btn');
-            const toastEl = document.getElementById('toast');
+            // --- TAB SWITCHING ---
+            if (tabBtnTesti && tabBtnMessages) {
+                tabBtnTesti.addEventListener('click', () => {
+                    currentView = 'testimonials';
+                    tabBtnTesti.classList.add('active');
+                    tabBtnMessages.classList.remove('active');
+                    viewTitle.textContent = 'Testimonials Stream';
+                    viewDesc.textContent = 'Manage and moderate community reviews submitted via your portfolio.';
+                    if (filterGroupWrap) filterGroupWrap.style.display = 'block';
+                    if (cardStatAvg) cardStatAvg.style.display = 'block';
+                    if (statLabel1) statLabel1.textContent = 'Total Reviews';
+                    if (statLabel3) statLabel3.textContent = '5-Star Ratings';
+                    if (statMeta3) statMeta3.textContent = 'Top feedback responses';
+                    renderDashboard();
+                });
 
-            const statTotal = document.getElementById('stat-total');
-            const statAvg = document.getElementById('stat-avg');
-            const statFiveStar = document.getElementById('stat-five-star');
-            const searchInput = document.getElementById('search-input');
-            const ratingFilter = document.getElementById('rating-filter');
-            const testiListContainer = document.getElementById('testi-list-container');
-
-            // --- TOAST HELPER ---
-            function showToast(msg, type = 'info') {
-                if (!toastEl) return;
-                toastEl.textContent = msg;
-                toastEl.className = `toast ${type} show`;
-                setTimeout(() => {
-                    toastEl.className = 'toast';
-                }, 3200);
+                tabBtnMessages.addEventListener('click', () => {
+                    currentView = 'messages';
+                    tabBtnMessages.classList.add('active');
+                    tabBtnTesti.classList.remove('active');
+                    viewTitle.textContent = 'Contact Messages Inbox';
+                    viewDesc.textContent = 'Direct inquiries sent from visitors using your portfolio contact form.';
+                    if (filterGroupWrap) filterGroupWrap.style.display = 'none';
+                    if (cardStatAvg) cardStatAvg.style.display = 'none';
+                    if (statLabel1) statLabel1.textContent = 'Total Messages';
+                    if (statLabel3) statLabel3.textContent = 'Latest Inquiries';
+                    if (statMeta3) statMeta3.textContent = 'Direct portfolio contacts';
+                    renderDashboard();
+                });
             }
 
-            // --- CHECK & INITIALIZE AUTH ---
+            // --- AUTH LOGIC ---
             function checkSession() {
                 const authed = sessionStorage.getItem(AUTH_KEY) === 'true';
                 if (authed) {
-                    loginScreen.style.display = 'none';
-                    dashboardScreen.style.display = 'flex';
-                    initDatabase();
+                    showDashboard();
                 } else {
-                    loginScreen.style.display = 'flex';
-                    dashboardScreen.style.display = 'none';
+                    showLogin();
                 }
             }
 
-            // --- TOGGLE PASSWORD VISIBILITY ---
+            function showLogin() {
+                if (loginScreen) loginScreen.style.display = 'flex';
+                if (dashboardScreen) dashboardScreen.style.display = 'none';
+                if (passwordInput) {
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                }
+            }
+
+            function showDashboard() {
+                if (loginScreen) loginScreen.style.display = 'none';
+                if (dashboardScreen) dashboardScreen.style.display = 'block';
+                initDatabase();
+            }
+
+            function showToast(msg, type = 'info') {
+                if (!toast) return;
+                toast.textContent = msg;
+                toast.className = `toast show ${type}`;
+                setTimeout(() => {
+                    toast.className = 'toast';
+                }, 3200);
+            }
+
+            // Toggle Password Visibility
             if (togglePwdBtn && passwordInput) {
                 togglePwdBtn.addEventListener('click', () => {
                     const isPwd = passwordInput.type === 'password';
                     passwordInput.type = isPwd ? 'text' : 'password';
-                    togglePwdBtn.innerHTML = isPwd 
-                        ? `<svg viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`
-                        : `<svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
                 });
             }
 
-            // --- LOGIN SUBMISSION (Secure SHA-256 Hash Matching) ---
+            // Form Submit Login
             if (loginForm) {
                 loginForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
-                    const password = (passwordInput ? passwordInput.value : '').trim();
+                    const pwd = passwordInput.value;
+                    const hashed = await sha256(pwd);
 
-                    if (!password) return;
-
-                    if (loginSubmitBtn) {
-                        loginSubmitBtn.disabled = true;
-                        loginSubmitBtn.innerHTML = 'Verifying...';
-                    }
-
-                    try {
-                        const inputHash = await sha256(password);
-                        const isMatch = VALID_HASHES.includes(inputHash);
-
-                        if (isMatch) {
-                            sessionStorage.setItem(AUTH_KEY, 'true');
-                            showToast('Authenticated successfully.', 'success');
-                            checkSession();
-                        } else {
-                            loginCard.classList.add('shake');
-                            setTimeout(() => loginCard.classList.remove('shake'), 400);
-                            showToast('Invalid passphrase. Please try again.', 'error');
-                            if (passwordInput) {
-                                passwordInput.value = '';
-                                passwordInput.focus();
-                            }
-                        }
-                    } catch (err) {
-                        console.error('Auth error:', err);
-                        showToast('Authentication failed.', 'error');
-                    } finally {
-                        if (loginSubmitBtn) {
-                            loginSubmitBtn.disabled = false;
-                            loginSubmitBtn.innerHTML = `<span>Continue</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`;
-                        }
+                    if (VALID_HASHES.includes(hashed)) {
+                        sessionStorage.setItem(AUTH_KEY, 'true');
+                        showToast('Access Granted! Welcome Rafi.', 'success');
+                        showDashboard();
+                    } else {
+                        loginCard.classList.remove('shake');
+                        void loginCard.offsetWidth;
+                        loginCard.classList.add('shake');
+                        showToast('Invalid passphrase. Try again.', 'error');
+                        passwordInput.value = '';
+                        passwordInput.focus();
                     }
                 });
             }
 
-            // --- LOGOUT ---
+            // Logout
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', () => {
                     sessionStorage.removeItem(AUTH_KEY);
@@ -1089,7 +1247,7 @@
                 });
             }
 
-            // --- DATABASE CONNECTION (called after auth confirmed) ---
+            // --- DATABASE CONNECTION ---
             function initDatabase() {
                 try {
                     if (window.firebase) {
@@ -1097,24 +1255,36 @@
                             firebase.initializeApp(firebaseConfig);
                         }
                         const db = firebase.database();
-                        dbRef = db.ref('testimonials_messages');
+                        dbTestiRef = db.ref('testimonials_messages');
+                        dbMsgRef = db.ref('contact_messages');
                         isFirebaseActive = true;
 
-                        // Realtime listener for entire list
-                        dbRef.on('value', (snapshot) => {
+                        // 1. Listener for Testimonials
+                        dbTestiRef.on('value', (snapshot) => {
                             const val = snapshot.val();
                             testimonialsData = [];
                             if (val) {
                                 Object.keys(val).forEach(key => {
-                                    testimonialsData.push({
-                                        id: key,
-                                        ...val[key]
-                                    });
+                                    testimonialsData.push({ id: key, ...val[key] });
                                 });
                             }
-                            // Sort newest first
                             testimonialsData.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-                            renderDashboard();
+                            if (badgeTestiCount) badgeTestiCount.textContent = testimonialsData.length;
+                            if (currentView === 'testimonials') renderDashboard();
+                        });
+
+                        // 2. Listener for Contact Messages
+                        dbMsgRef.on('value', (snapshot) => {
+                            const val = snapshot.val();
+                            messagesData = [];
+                            if (val) {
+                                Object.keys(val).forEach(key => {
+                                    messagesData.push({ id: key, ...val[key] });
+                                });
+                            }
+                            messagesData.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                            if (badgeMsgCount) badgeMsgCount.textContent = messagesData.length;
+                            if (currentView === 'messages') renderDashboard();
                         });
                     }
                 } catch (err) {
@@ -1126,38 +1296,49 @@
 
             function loadFromLocalStorageFallback() {
                 try {
-                    const local = JSON.parse(localStorage.getItem('rafikuy_testimonials_list') || '[]');
-                    testimonialsData = local;
+                    testimonialsData = JSON.parse(localStorage.getItem('rafikuy_testimonials_list') || '[]');
+                    messagesData = JSON.parse(localStorage.getItem('rafikuy_contact_inbox') || '[]');
+                    if (badgeTestiCount) badgeTestiCount.textContent = testimonialsData.length;
+                    if (badgeMsgCount) badgeMsgCount.textContent = messagesData.length;
                     renderDashboard();
                 } catch (e) {
                     testimonialsData = [];
+                    messagesData = [];
                     renderDashboard();
                 }
             }
 
             // --- RENDER DASHBOARD & STATS ---
             function renderDashboard() {
-                const total = testimonialsData.length;
-                let fiveStars = 0;
-                let sumRatings = 0;
+                if (currentView === 'testimonials') {
+                    const total = testimonialsData.length;
+                    let fiveStars = 0;
+                    let sumRatings = 0;
 
-                testimonialsData.forEach(t => {
-                    const r = parseInt(t.rating || 5, 10);
-                    if (r === 5) fiveStars++;
-                    sumRatings += r;
-                });
+                    testimonialsData.forEach(t => {
+                        const r = parseInt(t.rating || 5, 10);
+                        if (r === 5) fiveStars++;
+                        sumRatings += r;
+                    });
 
-                const avg = total > 0 ? (sumRatings / total).toFixed(1) : '5.0';
+                    const avg = total > 0 ? (sumRatings / total).toFixed(1) : '5.0';
 
-                if (statTotal) statTotal.textContent = total;
-                if (statFiveStar) statFiveStar.textContent = fiveStars;
-                if (statAvg) statAvg.textContent = avg;
+                    if (statTotal) statTotal.textContent = total;
+                    if (statFiveStar) statFiveStar.textContent = fiveStars;
+                    if (statAvg) statAvg.textContent = avg;
 
-                applyFilterAndRenderList();
+                    applyFilterAndRenderTestimonials();
+                } else {
+                    const total = messagesData.length;
+                    if (statTotal) statTotal.textContent = total;
+                    if (statFiveStar) statFiveStar.textContent = total;
+
+                    applyFilterAndRenderMessages();
+                }
             }
 
-            // --- FILTER & SEARCH ---
-            function applyFilterAndRenderList() {
+            // --- RENDER TESTIMONIALS ---
+            function applyFilterAndRenderTestimonials() {
                 const searchQ = (searchInput ? searchInput.value : '').toLowerCase().trim();
                 const filterVal = ratingFilter ? ratingFilter.value : 'all';
 
@@ -1228,7 +1409,6 @@
                         </button>
                     `;
 
-                    // Bind delete action
                     const delBtn = card.querySelector('.btn-delete-item');
                     if (delBtn) {
                         delBtn.addEventListener('click', () => {
@@ -1240,48 +1420,151 @@
                 });
             }
 
+            // --- RENDER CONTACT MESSAGES ---
+            function applyFilterAndRenderMessages() {
+                const searchQ = (searchInput ? searchInput.value : '').toLowerCase().trim();
+
+                let filtered = messagesData.filter(item => {
+                    const matchName = (item.name || '').toLowerCase().includes(searchQ);
+                    const matchEmail = (item.email || '').toLowerCase().includes(searchQ);
+                    const matchSub = (item.subject || '').toLowerCase().includes(searchQ);
+                    const matchMsg = (item.message || '').toLowerCase().includes(searchQ);
+                    return matchName || matchEmail || matchSub || matchMsg;
+                });
+
+                if (!testiListContainer) return;
+
+                if (filtered.length === 0) {
+                    testiListContainer.innerHTML = `
+                        <div class="empty-state">
+                            <svg class="empty-icon-svg" viewBox="0 0 24 24">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                            <h3>No messages yet</h3>
+                            <p>Direct inquiries submitted through your portfolio contact form will appear here in real time.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                testiListContainer.innerHTML = '';
+
+                filtered.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'testi-item';
+                    card.id = `msg-card-${item.id}`;
+
+                    const name = sanitize(item.name || 'Anonymous');
+                    const initial = name.charAt(0).toUpperCase() || 'P';
+                    const email = sanitize(item.email || '');
+                    const subject = sanitize(item.subject || 'Pesan Portfolio');
+                    const msg = sanitize(item.message || '');
+                    const dateStr = formatDate(item.timestamp || Date.now());
+
+                    const replyEmailUrl = `mailto:${email}?subject=Re:%20${encodeURIComponent(subject)}&body=Halo%20${encodeURIComponent(name)},%0D%0A%0D%0ATerima%20kasih%20telah%20menghubungi%20saya...`;
+                    const waText = `Halo ${name}, saya Adha Rafi. Terima kasih telah menghubungi saya mengenai "${subject}".`;
+                    const replyWaUrl = `https://wa.me/?text=${encodeURIComponent(waText)}`;
+
+                    card.innerHTML = `
+                        <div class="testi-main">
+                            <div class="testi-header-row">
+                                <div class="testi-avatar" style="background: rgba(16, 185, 129, 0.15); color: #34D399; border-color: rgba(16, 185, 129, 0.3);">${initial}</div>
+                                <span class="testi-author-name">${name}</span>
+                                <a href="mailto:${email}" class="testi-role-badge" title="Click to email" style="color: #60A5FA; text-decoration: none;">✉ ${email}</a>
+                                <span class="testi-date">${dateStr}</span>
+                            </div>
+                            <div style="margin-top: 6px;">
+                                <div class="msg-subject-pill">📌 ${subject}</div>
+                                <div class="testi-quote-text" style="border-left-color: #34D399; white-space: pre-line;">${msg}</div>
+                            </div>
+                        </div>
+                        <div class="msg-actions">
+                            <a href="${replyEmailUrl}" class="btn-reply-email" title="Reply via Email">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                    <polyline points="22,6 12,13 2,6"></polyline>
+                                </svg>
+                                <span>Balas Email</span>
+                            </a>
+                            <button type="button" class="btn-delete-item" data-id="${item.id}" data-name="${name}" title="Hapus Pesan">
+                                <svg viewBox="0 0 24 24">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                </svg>
+                                <span>Hapus</span>
+                            </button>
+                        </div>
+                    `;
+
+                    const delBtn = card.querySelector('.btn-delete-item');
+                    if (delBtn) {
+                        delBtn.addEventListener('click', () => {
+                            deleteMessage(item.id, name);
+                        });
+                    }
+
+                    testiListContainer.appendChild(card);
+                });
+            }
+
             // --- DELETE TESTIMONIAL ACTION ---
             function deleteTestimonial(id, authorName) {
-                const ok = confirm(`Delete review from "${authorName}"?\n\nThis will permanently remove it from your portfolio in realtime.`);
+                const ok = confirm(`Hapus ulasan dari "${authorName}"?\n\nIni akan menghapus ulasan dari website portfolio secara realtime.`);
                 if (!ok) return;
 
                 const cardEl = document.getElementById(`admin-card-${id}`);
-                if (cardEl) {
-                    cardEl.classList.add('deleting');
+                if (cardEl) cardEl.classList.add('deleting');
+
+                if (isFirebaseActive && dbTestiRef) {
+                    dbTestiRef.child(id).remove()
+                        .then(() => showToast(`Ulasan "${authorName}" telah dihapus`, 'success'))
+                        .catch((err) => showToast('Gagal menghapus dari Firebase: ' + err.message, 'error'));
                 }
 
-                // Delete from Firebase Realtime Database
-                if (isFirebaseActive && dbRef) {
-                    dbRef.child(id).remove()
-                        .then(() => {
-                            showToast(`Review by "${authorName}" deleted`, 'success');
-                        })
-                        .catch((err) => {
-                            console.error("Firebase delete error:", err);
-                            showToast('Failed to delete from Firebase: ' + err.message, 'error');
-                        });
-                }
-
-                // Delete from LocalStorage fallback
                 try {
                     let local = JSON.parse(localStorage.getItem('rafikuy_testimonials_list') || '[]');
                     local = local.filter(item => item.id !== id);
                     localStorage.setItem('rafikuy_testimonials_list', JSON.stringify(local));
                 } catch (e) {}
 
-                // Remove locally from array immediately for snappiness
                 testimonialsData = testimonialsData.filter(item => item.id !== id);
-                setTimeout(() => {
-                    renderDashboard();
-                }, 300);
+                setTimeout(() => renderDashboard(), 300);
+            }
+
+            // --- DELETE MESSAGE ACTION ---
+            function deleteMessage(id, senderName) {
+                const ok = confirm(`Hapus pesan dari "${senderName}"?`);
+                if (!ok) return;
+
+                const cardEl = document.getElementById(`msg-card-${id}`);
+                if (cardEl) cardEl.classList.add('deleting');
+
+                if (isFirebaseActive && dbMsgRef) {
+                    dbMsgRef.child(id).remove()
+                        .then(() => showToast(`Pesan dari "${senderName}" telah dihapus`, 'success'))
+                        .catch((err) => showToast('Gagal menghapus dari Firebase: ' + err.message, 'error'));
+                }
+
+                try {
+                    let local = JSON.parse(localStorage.getItem('rafikuy_contact_inbox') || '[]');
+                    local = local.filter(item => item.id !== id);
+                    localStorage.setItem('rafikuy_contact_inbox', JSON.stringify(local));
+                } catch (e) {}
+
+                messagesData = messagesData.filter(item => item.id !== id);
+                setTimeout(() => renderDashboard(), 300);
             }
 
             // --- SEARCH & FILTER LISTENERS ---
             if (searchInput) {
-                searchInput.addEventListener('input', applyFilterAndRenderList);
+                searchInput.addEventListener('input', () => {
+                    if (currentView === 'testimonials') applyFilterAndRenderTestimonials();
+                    else applyFilterAndRenderMessages();
+                });
             }
             if (ratingFilter) {
-                ratingFilter.addEventListener('change', applyFilterAndRenderList);
+                ratingFilter.addEventListener('change', applyFilterAndRenderTestimonials);
             }
 
             // --- UTILS ---
@@ -1302,7 +1585,7 @@
                         minute: '2-digit'
                     });
                 } catch (e) {
-                    return 'Just now';
+                    return 'Baru saja';
                 }
             }
 

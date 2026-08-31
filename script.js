@@ -723,36 +723,119 @@
   }
   initTypeEffect();
 
-  // ===== CONTACT FORM SIMULATION =====
+  // --- SHARED FIREBASE CONFIGURATION ---
+  const firebaseConfig = {
+    apiKey: "AIzaSyDgKukalNyaze2DuvseEvdtLssJ26cIXQI",
+    authDomain: "portofoliorafi-e36ca.firebaseapp.com",
+    databaseURL: "https://portofoliorafi-e36ca-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "portofoliorafi-e36ca",
+    storageBucket: "portofoliorafi-e36ca.firebasestorage.app",
+    messagingSenderId: "762905359847",
+    appId: "1:762905359847:web:d7d65f4ec7a932348bf942",
+    measurementId: "G-TKM46KHW3H"
+  };
+
+  // Helper to safely get or initialize Firebase Database
+  function getFirebaseDb() {
+    try {
+      if (window.firebase && firebaseConfig.apiKey !== "AIzaSyDemoKeyForAdhaRafiPortfolioGuestbook") {
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+        }
+        return firebase.database();
+      }
+    } catch (err) {
+      console.warn("Firebase connection note:", err);
+    }
+    return null;
+  }
+
+  // ===== CONTACT FORM INTEGRATION (FIREBASE & WHATSAPP) =====
   const contactForm = document.getElementById('contact-form');
   if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
+    contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = document.getElementById('btn-send');
       const status = document.getElementById('form-status');
-      const originalHTML = btn.innerHTML;
+      const nameInput = document.getElementById('form-name');
+      const emailInput = document.getElementById('form-email');
+      const subjectInput = document.getElementById('form-subject');
+      const msgInput = document.getElementById('form-message');
 
-      btn.innerHTML = 'Mengirim...';
+      const name = nameInput ? nameInput.value.trim() : '';
+      const email = emailInput ? emailInput.value.trim() : '';
+      const subject = (subjectInput && subjectInput.value.trim()) ? subjectInput.value.trim() : 'Pesan dari Form Kontak Portfolio';
+      const message = msgInput ? msgInput.value.trim() : '';
+
+      if (!name || !email || !message) {
+        if (status) {
+          status.className = 'form-status error';
+          status.innerHTML = '⚠️ Mohon isi nama, email, dan pesan Anda.';
+        }
+        return;
+      }
+
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = '<span>Mengirim...</span>';
       btn.disabled = true;
 
-      setTimeout(() => {
-        btn.innerHTML = '✓ Pesan Terkirim!';
-        btn.style.background = '#2F2E2E';
-        btn.style.color = '#FFFFFF';
-        if (status) {
-          status.innerHTML = 'Terima kasih! Pesan Anda telah diterima.';
-          status.style.color = '#DDDDDD';
-        }
-        contactForm.reset();
+      // 1. Simpan ke Firebase Realtime Database
+      const contactPayload = {
+        name: name,
+        email: email,
+        subject: subject,
+        message: message,
+        timestamp: Date.now(),
+        dateFormatted: new Date().toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' })
+      };
 
-        setTimeout(() => {
-          btn.innerHTML = originalHTML;
-          btn.style.background = '';
-          btn.style.color = '';
-          btn.disabled = false;
-          if (status) status.innerHTML = '';
-        }, 3500);
-      }, 1000);
+      try {
+        const db = getFirebaseDb();
+        if (db) {
+          await db.ref('contact_messages').push(contactPayload);
+        }
+      } catch (err) {
+        console.warn('Firebase contact save note:', err);
+      }
+
+      // 2. Backup ke LocalStorage
+      try {
+        const localInbox = JSON.parse(localStorage.getItem('rafikuy_contact_inbox') || '[]');
+        localInbox.unshift(contactPayload);
+        localStorage.setItem('rafikuy_contact_inbox', JSON.stringify(localInbox.slice(0, 50)));
+      } catch (e) {}
+
+      // 3. Format pesan WhatsApp
+      const waNumber = '6281548331020';
+      const waText = `Halo Adha Rafi! 👋\n\nSaya menghubungi Anda melalui form kontak di portfolio:\n\n👤 *Nama:* ${name}\n📧 *Email:* ${email}\n📌 *Subjek:* ${subject}\n\n💬 *Pesan:*\n${message}`;
+      const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(waText)}`;
+
+      // 4. Update UI Status & Tombol
+      btn.classList.add('btn-success-state');
+      btn.innerHTML = '✓ Pesan Terkirim!';
+      if (status) {
+        status.className = 'form-status success';
+        status.innerHTML = '✓ Pesan berhasil dikirim & tersimpan! Menghubungkan ke WhatsApp Rafi...';
+      }
+
+      // 5. Otomatis buka WhatsApp
+      setTimeout(() => {
+        window.open(waUrl, '_blank');
+      }, 500);
+
+      // 6. Reset form
+      contactForm.reset();
+
+      // 7. Kembalikan state tombol setelah beberapa detik
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.classList.remove('btn-success-state');
+        btn.disabled = false;
+        if (status) {
+          status.innerHTML = '';
+          status.className = 'form-status';
+        }
+      }, 6000);
     });
   }
 
@@ -972,28 +1055,13 @@
       });
     }, 60000);
 
-    // --- FIREBASE CONFIGURATION ---
-    const firebaseConfig = {
-      apiKey: "AIzaSyDgKukalNyaze2DuvseEvdtLssJ26cIXQI",
-      authDomain: "portofoliorafi-e36ca.firebaseapp.com",
-      databaseURL: "https://portofoliorafi-e36ca-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "portofoliorafi-e36ca",
-      storageBucket: "portofoliorafi-e36ca.firebasestorage.app",
-      messagingSenderId: "762905359847",
-      appId: "1:762905359847:web:d7d65f4ec7a932348bf942",
-      measurementId: "G-TKM46KHW3H"
-    };
-
     let isFirebaseActive = false;
     let dbRef = null;
 
     // Connect to Firebase Realtime Database
     try {
-      if (window.firebase && firebaseConfig.apiKey !== "AIzaSyDemoKeyForAdhaRafiPortfolioGuestbook") {
-        if (!firebase.apps.length) {
-          firebase.initializeApp(firebaseConfig);
-        }
-        const db = firebase.database();
+      const db = getFirebaseDb();
+      if (db) {
         dbRef = db.ref('testimonials_messages');
         isFirebaseActive = true;
 
