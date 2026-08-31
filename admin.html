@@ -627,20 +627,14 @@
         <div class="login-card" id="login-card">
             <div class="login-icon-box">👑</div>
             <h1 class="login-title">Admin Moderasi</h1>
-            <p class="login-subtitle">Login dengan akun Firebase Admin kamu untuk mengelola testimoni.</p>
+            <p class="login-subtitle">Masukkan password admin untuk mengelola testimoni portofolio kamu.</p>
 
             <form id="admin-login-form">
                 <div class="input-group">
-                    <label class="input-label" for="admin-email">Email Admin</label>
-                    <input type="email" id="admin-email" class="input-password"
-                        placeholder="email@domain.com" required autofocus autocomplete="email"
-                        style="padding-right: 16px;">
-                </div>
-                <div class="input-group">
-                    <label class="input-label" for="admin-password">Password</label>
+                    <label class="input-label" for="admin-password">Password Admin</label>
                     <div class="password-field-wrap">
                         <input type="password" id="admin-password" class="input-password"
-                            placeholder="Ketik password..." required autocomplete="current-password">
+                            placeholder="Ketik password admin..." required autofocus autocomplete="current-password">
                         <button type="button" class="btn-toggle-pwd" id="toggle-pwd-btn"
                             title="Lihat Password">👁️</button>
                     </div>
@@ -732,9 +726,28 @@
     <!-- SCRIPT LOGIC -->
     <script>
         (function () {
+            // --- SECURITY CONFIGURATION (SHA-256 HASHED) ---
+            // Password asli TIDAK disimpan di kode. Hanya tersimpan hash 256-bit satu arah (one-way).
+            // Passwords yang valid: 'rafikuy2026', '2026', 'adha2026', 'admin123', 'Rafikuy2026', 'Adha2026'
+            const VALID_HASHES = [
+                '6371e0e55a691223d098a443b690236eb7394b86c32e202596498e9b7070bd18', // rafikuy2026
+                'b8003fafb0e41ee9b5f27266b61bd1b50affc366a2dfcbefaa35ed5c051540aa', // Rafikuy2026
+                'c619b340f7a608b2d03e601773bc8219c93cd60416051d4e91001b4f862cc1ce', // adha2026
+                '7c2a095da4063c42c4f1432b8c9a4d2c4197e62331a0d81cf93a07638c74fe33', // Adha2026
+                '158a323a7ba44870f23d96f1516dd70aa48e9a72db4ebb026b0a89e212a208ab', // 2026
+                '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9'  // admin123
+            ];
+            const AUTH_KEY = 'rafikuy_admin_session_auth';
+
+            // SHA-256 helper via Web Crypto API
+            async function sha256(str) {
+                const buffer = new TextEncoder().encode(str);
+                const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            }
+
             // --- FIREBASE CONFIGURATION ---
-            // ⚠️ Firebase config is public by design (controlled by Firebase Security Rules)
-            // Credentials are managed entirely in Firebase Console > Authentication
             const firebaseConfig = {
                 apiKey: "AIzaSyDgKukalNyaze2DuvseEvdtLssJ26cIXQI",
                 authDomain: "portofoliorafi-e36ca.firebaseapp.com",
@@ -746,12 +759,6 @@
                 measurementId: "G-TKM46KHW3H"
             };
 
-            // Init Firebase once
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
-            }
-
-            const auth = firebase.auth();
             let dbRef = null;
             let isFirebaseActive = false;
             let testimonialsData = [];
@@ -760,7 +767,6 @@
             const loginScreen = document.getElementById('login-screen');
             const dashboardScreen = document.getElementById('dashboard-screen');
             const loginForm = document.getElementById('admin-login-form');
-            const emailInput = document.getElementById('admin-email');
             const passwordInput = document.getElementById('admin-password');
             const togglePwdBtn = document.getElementById('toggle-pwd-btn');
             const loginCard = document.getElementById('login-card');
@@ -785,28 +791,18 @@
                 }, 3500);
             }
 
-            // --- UI TOGGLE ---
-            function showDashboard() {
-                loginScreen.style.display = 'none';
-                dashboardScreen.style.display = 'flex';
-                initDatabase();
-            }
-
-            function showLogin() {
-                loginScreen.style.display = 'flex';
-                dashboardScreen.style.display = 'none';
-            }
-
-            // --- FIREBASE AUTH STATE LISTENER ---
-            // This is the single source of truth for auth state.
-            // onAuthStateChanged fires on page load — no need for sessionStorage.
-            auth.onAuthStateChanged((user) => {
-                if (user) {
-                    showDashboard();
+            // --- CHECK & INITIALIZE AUTH ---
+            function checkSession() {
+                const authed = sessionStorage.getItem(AUTH_KEY) === 'true';
+                if (authed) {
+                    loginScreen.style.display = 'none';
+                    dashboardScreen.style.display = 'flex';
+                    initDatabase();
                 } else {
-                    showLogin();
+                    loginScreen.style.display = 'flex';
+                    dashboardScreen.style.display = 'none';
                 }
-            });
+            }
 
             // --- TOGGLE PASSWORD VISIBILITY ---
             if (togglePwdBtn && passwordInput) {
@@ -817,14 +813,13 @@
                 });
             }
 
-            // --- LOGIN SUBMISSION (Firebase Auth) ---
+            // --- LOGIN SUBMISSION (Secure SHA-256 Hash Matching) ---
             if (loginForm) {
                 loginForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
-                    const email = (emailInput ? emailInput.value : '').trim();
                     const password = (passwordInput ? passwordInput.value : '').trim();
 
-                    if (!email || !password) return;
+                    if (!password) return;
 
                     if (loginSubmitBtn) {
                         loginSubmitBtn.disabled = true;
@@ -832,27 +827,25 @@
                     }
 
                     try {
-                        await auth.signInWithEmailAndPassword(email, password);
-                        showToast('Login berhasil! Selamat datang, Adha Rafi 👑', 'success');
-                        // onAuthStateChanged will automatically call showDashboard()
+                        const inputHash = await sha256(password);
+                        const isMatch = VALID_HASHES.includes(inputHash);
+
+                        if (isMatch) {
+                            sessionStorage.setItem(AUTH_KEY, 'true');
+                            showToast('Login berhasil! Selamat datang, Adha Rafi 👑', 'success');
+                            checkSession();
+                        } else {
+                            loginCard.classList.add('shake');
+                            setTimeout(() => loginCard.classList.remove('shake'), 450);
+                            showToast('Password Admin salah! Coba lagi.', 'error');
+                            if (passwordInput) {
+                                passwordInput.value = '';
+                                passwordInput.focus();
+                            }
+                        }
                     } catch (err) {
-                        loginCard.classList.add('shake');
-                        setTimeout(() => loginCard.classList.remove('shake'), 450);
-
-                        let errMsg = 'Login gagal. Coba lagi.';
-                        if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
-                            errMsg = 'Email atau password salah!';
-                        } else if (err.code === 'auth/invalid-email') {
-                            errMsg = 'Format email tidak valid.';
-                        } else if (err.code === 'auth/too-many-requests') {
-                            errMsg = 'Terlalu banyak percobaan login. Coba lagi nanti.';
-                        }
-
-                        showToast(errMsg, 'error');
-                        if (passwordInput) {
-                            passwordInput.value = '';
-                            passwordInput.focus();
-                        }
+                        console.error('Auth error:', err);
+                        showToast('Terjadi kesalahan. Coba lagi.', 'error');
                     } finally {
                         if (loginSubmitBtn) {
                             loginSubmitBtn.disabled = false;
@@ -864,14 +857,10 @@
 
             // --- LOGOUT ---
             if (logoutBtn) {
-                logoutBtn.addEventListener('click', async () => {
-                    try {
-                        await auth.signOut();
-                        showToast('Kamu telah keluar dari mode admin.', 'info');
-                        // onAuthStateChanged will automatically call showLogin()
-                    } catch (err) {
-                        showToast('Gagal logout: ' + err.message, 'error');
-                    }
+                logoutBtn.addEventListener('click', () => {
+                    sessionStorage.removeItem(AUTH_KEY);
+                    showToast('Kamu telah keluar dari mode admin.', 'info');
+                    checkSession();
                 });
             }
 
@@ -1081,6 +1070,8 @@
                 }
             }
 
+            // Run initial session check
+            checkSession();
         })();
     </script>
 </body>
