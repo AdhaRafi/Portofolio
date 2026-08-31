@@ -5,19 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Adha Rafi — Admin Control Center 👑</title>
+    <title>Console — RafiKuy Testimonials</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&family=JetBrains+Mono:wght@500;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display&family=JetBrains+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 
     <style>
         *,
@@ -29,52 +28,80 @@
         }
 
         :root {
-            --bg-dark: #0f0f11;
-            --bg-card: #18181c;
-            --bg-card-hover: #222228;
-            --border: rgba(255, 255, 255, 0.1);
-            --border-focus: rgba(255, 215, 0, 0.4);
-            --gold: #FFD700;
-            --danger: #FF3B30;
-            --danger-hover: #D32F2F;
-            --text-main: #FFFFFF;
-            --text-muted: #9E9EA7;
-            --font-body: 'DM Sans', sans-serif;
-            --font-display: 'DM Serif Display', serif;
+            --bg: #09090b;
+            --surface-1: #121215;
+            --surface-2: #18181c;
+            --surface-3: #222228;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.16);
+            --border-focus: rgba(255, 255, 255, 0.3);
+            
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --text-tertiary: #71717a;
+            
+            --accent-emerald: #10b981;
+            --accent-emerald-bg: rgba(16, 185, 129, 0.1);
+            --accent-emerald-border: rgba(16, 185, 129, 0.25);
+            
+            --accent-amber: #f59e0b;
+            --accent-amber-bg: rgba(245, 158, 11, 0.1);
+            
+            --danger: #ef4444;
+            --danger-bg: rgba(239, 68, 68, 0.1);
+            --danger-border: rgba(239, 68, 68, 0.25);
+            --danger-hover: #dc2626;
+
+            --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-display: 'DM Serif Display', Georgia, serif;
             --font-mono: 'JetBrains Mono', monospace;
-            --radius-sm: 8px;
+
+            --radius-xs: 6px;
+            --radius-sm: 10px;
             --radius-md: 14px;
             --radius-lg: 20px;
+            
+            --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.35);
+            --shadow-card: 0 12px 36px rgba(0, 0, 0, 0.5);
+            --transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         body {
             font-family: var(--font-body);
-            background: var(--bg-dark);
-            color: var(--text-main);
+            background-color: var(--bg);
+            color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
+            background-image: 
+                radial-gradient(ellipse 60% 40% at 50% -20%, rgba(120, 119, 198, 0.08), transparent),
+                radial-gradient(ellipse 40% 30% at 90% 10%, rgba(255, 255, 255, 0.02), transparent);
+            -webkit-font-smoothing: antialiased;
         }
 
         /* ===== TOAST NOTIFICATION ===== */
         .toast {
             position: fixed;
-            top: 24px;
-            right: 24px;
-            background: #1f1f24;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            padding: 14px 22px;
-            border-radius: var(--radius-md);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            font-size: 0.9rem;
-            font-weight: 600;
+            bottom: 28px;
+            right: 28px;
+            background: var(--surface-2);
+            border: 1px solid var(--border-hover);
+            color: var(--text-primary);
+            padding: 12px 20px;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+            font-size: 0.88rem;
+            font-weight: 500;
             z-index: 9999;
-            transform: translateY(-20px);
+            transform: translateY(20px);
             opacity: 0;
-            transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+            transition: var(--transition);
             pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(12px);
         }
 
         .toast.show {
@@ -83,78 +110,91 @@
         }
 
         .toast.success {
-            border-color: #27C93F;
-            color: #E2FFE6;
+            border-color: var(--accent-emerald-border);
+            color: #ecfdf5;
         }
 
         .toast.error {
-            border-color: var(--danger);
-            color: #FFE5E5;
+            border-color: var(--danger-border);
+            color: #fef2f2;
         }
 
-        /* ===== LOGIN SCREEN ===== */
+        /* ===== 1. LOGIN SCREEN ===== */
         .login-wrapper {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 24px;
-            background: radial-gradient(circle at 50% 30%, rgba(255, 215, 0, 0.05) 0%, transparent 60%);
+            padding: 32px 20px;
         }
 
         .login-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
+            background: var(--surface-1);
+            border: 1px solid var(--border-subtle);
             border-radius: var(--radius-lg);
-            padding: 40px 36px;
-            max-width: 420px;
+            padding: 44px 38px;
+            max-width: 400px;
             width: 100%;
             text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-            animation: fadeIn 0.4s ease;
+            box-shadow: var(--shadow-card);
+            position: relative;
         }
 
-        .login-icon-box {
-            width: 64px;
-            height: 64px;
-            background: rgba(255, 215, 0, 0.1);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            border-radius: 50%;
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+        }
+
+        .login-brand-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--surface-2);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
             margin: 0 auto 20px;
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.15);
+            color: var(--text-primary);
+            font-size: 1.3rem;
         }
 
         .login-title {
-            font-family: var(--font-display);
-            font-size: 1.8rem;
-            margin-bottom: 8px;
-            color: #fff;
+            font-size: 1.45rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            margin-bottom: 6px;
         }
 
         .login-subtitle {
-            font-size: 0.88rem;
-            color: var(--text-muted);
+            font-size: 0.86rem;
+            color: var(--text-secondary);
             margin-bottom: 28px;
+            line-height: 1.5;
         }
 
         .input-group {
             position: relative;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             text-align: left;
         }
 
         .input-label {
             display: block;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
-            color: var(--text-muted);
+            color: var(--text-secondary);
             margin-bottom: 8px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.05em;
+            font-family: var(--font-mono);
         }
 
         .password-field-wrap {
@@ -165,20 +205,25 @@
 
         .input-password {
             width: 100%;
-            padding: 14px 44px 14px 16px;
-            background: #121215;
-            border: 1px solid var(--border);
+            padding: 12px 42px 12px 14px;
+            background: var(--surface-2);
+            border: 1px solid var(--border-subtle);
             border-radius: var(--radius-sm);
-            color: #fff;
+            color: var(--text-primary);
             font-family: var(--font-body);
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
+            font-size: 0.92rem;
+            transition: var(--transition);
         }
 
         .input-password:focus {
             outline: none;
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.15);
+            border-color: var(--border-focus);
+            background: var(--surface-3);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.04);
+        }
+
+        .input-password::placeholder {
+            color: var(--text-tertiary);
         }
 
         .btn-toggle-pwd {
@@ -186,47 +231,74 @@
             right: 12px;
             background: none;
             border: none;
-            color: var(--text-muted);
+            color: var(--text-tertiary);
             cursor: pointer;
-            font-size: 1.1rem;
             padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .btn-toggle-pwd:hover {
+            color: var(--text-primary);
+        }
+
+        .btn-toggle-pwd svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         .login-btn {
             width: 100%;
-            padding: 14px;
-            background: var(--gold);
-            color: #111;
+            padding: 12px 16px;
+            background: var(--text-primary);
+            color: var(--bg);
             font-family: var(--font-body);
-            font-size: 0.95rem;
-            font-weight: 700;
+            font-size: 0.9rem;
+            font-weight: 600;
             border: none;
             border-radius: var(--radius-sm);
             cursor: pointer;
-            transition: all 0.25s ease;
-            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.25);
+            transition: var(--transition);
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .login-btn:hover {
-            background: #FFE033;
-            transform: translateY(-2px);
-            box-shadow: 0 12px 28px rgba(255, 215, 0, 0.35);
+            background: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.12);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
         }
 
         .login-footer-link {
-            display: inline-block;
-            margin-top: 20px;
-            color: var(--text-muted);
-            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 24px;
+            color: var(--text-tertiary);
+            font-size: 0.82rem;
             text-decoration: none;
-            transition: color 0.2s;
+            transition: var(--transition);
         }
 
         .login-footer-link:hover {
-            color: #fff;
+            color: var(--text-secondary);
         }
 
-        /* ===== MAIN DASHBOARD SCREEN ===== */
+        /* ===== 2. DASHBOARD SCREEN ===== */
         .dashboard-wrapper {
             display: none;
             flex-direction: column;
@@ -235,10 +307,11 @@
 
         /* Top Header */
         .admin-header {
-            background: rgba(24, 24, 28, 0.85);
-            backdrop-filter: blur(14px);
-            border-bottom: 1px solid var(--border);
-            padding: 16px 28px;
+            background: rgba(18, 18, 21, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 14px 32px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -250,357 +323,458 @@
         .header-left {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
 
-        .header-logo-badge {
-            background: rgba(255, 215, 0, 0.12);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            color: var(--gold);
-            padding: 6px 12px;
-            border-radius: 8px;
+        .brand-logo {
+            font-size: 1.05rem;
             font-weight: 700;
-            font-size: 0.85rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: -0.01em;
+        }
+
+        .header-badge {
+            background: var(--surface-2);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            padding: 3px 8px;
+            border-radius: var(--radius-xs);
+            font-weight: 500;
+            font-size: 0.72rem;
+            font-family: var(--font-mono);
+            letter-spacing: 0.04em;
+        }
+
+        .header-live-pulse {
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            background: var(--accent-emerald-bg);
+            border: 1px solid var(--accent-emerald-border);
+            color: var(--accent-emerald);
+            padding: 3px 9px;
+            border-radius: var(--radius-xs);
+            font-size: 0.72rem;
+            font-family: var(--font-mono);
+            font-weight: 500;
         }
 
-        .header-title {
-            font-family: var(--font-display);
-            font-size: 1.3rem;
-            color: #fff;
+        .pulse-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--accent-emerald);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-emerald);
+            animation: pulseGlow 2s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
         }
 
         .header-right {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 10px;
         }
 
         .btn-header-link {
-            color: var(--text-muted);
+            color: var(--text-secondary);
             text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            padding: 8px 14px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border);
-            transition: all 0.2s;
+            font-size: 0.82rem;
+            font-weight: 500;
+            padding: 7px 12px;
+            border-radius: var(--radius-xs);
+            border: 1px solid var(--border-subtle);
+            background: var(--surface-2);
+            transition: var(--transition);
             display: inline-flex;
             align-items: center;
             gap: 6px;
         }
 
         .btn-header-link:hover {
-            background: rgba(255, 255, 255, 0.08);
-            color: #fff;
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+            background: var(--surface-3);
         }
 
         .btn-logout {
-            background: rgba(255, 59, 48, 0.12);
-            border: 1px solid rgba(255, 59, 48, 0.3);
-            color: #FF5A50;
-            padding: 8px 16px;
-            border-radius: var(--radius-sm);
-            font-size: 0.85rem;
-            font-weight: 700;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-tertiary);
+            padding: 7px 12px;
+            border-radius: var(--radius-xs);
+            font-size: 0.82rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .btn-logout:hover {
-            background: var(--danger);
-            color: #fff;
+            color: var(--danger);
+            background: var(--danger-bg);
+            border-color: var(--danger-border);
         }
 
         /* Main Container */
         .admin-content {
             flex: 1;
-            max-width: 1100px;
+            max-width: 960px;
             width: 100%;
             margin: 0 auto;
-            padding: 32px 24px 60px;
+            padding: 36px 24px 72px;
+        }
+
+        .content-header {
+            margin-bottom: 24px;
+        }
+
+        .content-header h1 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .content-header p {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
         }
 
         /* Stats Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
-            margin-bottom: 32px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 28px;
         }
 
         .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
+            background: var(--surface-1);
+            border: 1px solid var(--border-subtle);
             border-radius: var(--radius-md);
-            padding: 20px 24px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
+            padding: 18px 20px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
         }
 
-        .stat-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.06);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
+        .stat-card:hover {
+            border-color: var(--border-hover);
+            background: var(--surface-2);
         }
 
-        .stat-info h3 {
-            font-size: 1.7rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 2px;
-        }
-
-        .stat-info p {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            font-weight: 500;
+        .stat-label {
+            font-size: 0.74rem;
+            font-weight: 600;
+            color: var(--text-secondary);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.05em;
+            font-family: var(--font-mono);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-number {
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            letter-spacing: -0.03em;
+            line-height: 1;
+        }
+
+        .stat-meta {
+            margin-top: 8px;
+            font-size: 0.78rem;
+            color: var(--text-tertiary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         /* Action Toolbar */
         .toolbar {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
+            background: var(--surface-1);
+            border: 1px solid var(--border-subtle);
             border-radius: var(--radius-md);
-            padding: 16px 20px;
+            padding: 12px 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 16px;
+            gap: 12px;
             flex-wrap: wrap;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .search-box {
             position: relative;
             flex: 1;
             min-width: 240px;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box svg {
+            position: absolute;
+            left: 12px;
+            width: 16px;
+            height: 16px;
+            color: var(--text-tertiary);
+            pointer-events: none;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         .search-box input {
             width: 100%;
-            padding: 10px 16px 10px 38px;
-            background: #111114;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            color: #fff;
-            font-size: 0.9rem;
+            padding: 9px 12px 9px 36px;
+            background: var(--surface-2);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xs);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 0.88rem;
+            transition: var(--transition);
         }
 
         .search-box input:focus {
             outline: none;
-            border-color: var(--gold);
+            border-color: var(--border-focus);
+            background: var(--surface-3);
         }
 
-        .search-box span {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 0.9rem;
+        .search-box input::placeholder {
+            color: var(--text-tertiary);
         }
 
         .filter-group {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
         }
 
         .filter-select {
-            padding: 10px 14px;
-            background: #111114;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            color: #fff;
-            font-size: 0.88rem;
+            padding: 8px 12px;
+            background: var(--surface-2);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xs);
+            color: var(--text-secondary);
+            font-family: var(--font-body);
+            font-size: 0.82rem;
             cursor: pointer;
+            transition: var(--transition);
         }
 
         .filter-select:focus {
             outline: none;
-            border-color: var(--gold);
+            border-color: var(--border-focus);
+            color: var(--text-primary);
         }
 
-        /* Testimonials List */
+        /* Testimonials List Stream */
         .testi-list {
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 12px;
         }
 
         .testi-item {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
+            background: var(--surface-1);
+            border: 1px solid var(--border-subtle);
             border-radius: var(--radius-md);
-            padding: 22px 24px;
+            padding: 18px 20px;
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
-            gap: 20px;
-            transition: all 0.25s ease;
+            gap: 18px;
+            transition: var(--transition);
             position: relative;
-            overflow: hidden;
         }
 
         .testi-item:hover {
-            border-color: rgba(255, 255, 255, 0.2);
-            background: var(--bg-card-hover);
+            border-color: var(--border-hover);
+            background: var(--surface-2);
         }
 
         .testi-item.deleting {
             opacity: 0;
-            transform: scale(0.9) translateY(10px);
-            transition: all 0.35s ease;
+            transform: scale(0.96) translateY(8px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .testi-main {
             flex: 1;
+            min-width: 0;
         }
 
         .testi-header-row {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             flex-wrap: wrap;
         }
 
+        .testi-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface-3);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            font-size: 0.76rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: uppercase;
+            font-family: var(--font-mono);
+            flex-shrink: 0;
+        }
+
         .testi-author-name {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
         }
 
         .testi-role-badge {
-            font-size: 0.75rem;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            color: #bbb;
-            padding: 2px 10px;
-            border-radius: 12px;
+            font-size: 0.7rem;
+            background: var(--surface-3);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            padding: 2px 8px;
+            border-radius: 20px;
             font-weight: 500;
+            font-family: var(--font-mono);
         }
 
         .testi-stars-tag {
-            color: var(--gold);
-            font-size: 0.95rem;
-            letter-spacing: 2px;
+            color: var(--accent-amber);
+            font-size: 0.82rem;
+            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
         }
 
         .testi-date {
-            font-size: 0.78rem;
-            color: var(--text-muted);
+            font-size: 0.74rem;
+            color: var(--text-tertiary);
             margin-left: auto;
             font-family: var(--font-mono);
         }
 
         .testi-quote-text {
-            font-size: 0.92rem;
-            line-height: 1.6;
-            color: #D4D4D8;
-            background: rgba(0, 0, 0, 0.25);
-            padding: 12px 16px;
-            border-radius: var(--radius-sm);
-            border-left: 3px solid var(--gold);
-            margin-top: 10px;
+            font-size: 0.9rem;
+            line-height: 1.55;
+            color: #d4d4d8;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px 14px;
+            border-radius: var(--radius-xs);
+            border-left: 2px solid rgba(255, 255, 255, 0.2);
             word-break: break-word;
         }
 
         .btn-delete-item {
-            background: rgba(255, 59, 48, 0.15);
-            border: 1px solid rgba(255, 59, 48, 0.35);
-            color: #FF5A50;
-            padding: 10px 18px;
-            border-radius: var(--radius-sm);
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-tertiary);
+            padding: 7px 12px;
+            border-radius: var(--radius-xs);
             font-family: var(--font-body);
-            font-size: 0.85rem;
-            font-weight: 700;
+            font-size: 0.8rem;
+            font-weight: 500;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            transition: all 0.2s ease;
+            transition: var(--transition);
             flex-shrink: 0;
         }
 
+        .btn-delete-item svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
         .btn-delete-item:hover {
-            background: var(--danger);
-            color: #fff;
-            transform: scale(1.03);
-            box-shadow: 0 4px 14px rgba(255, 59, 48, 0.4);
+            background: var(--danger-bg);
+            border-color: var(--danger-border);
+            color: var(--danger);
         }
 
         .empty-state {
             text-align: center;
-            padding: 60px 20px;
-            background: var(--bg-card);
-            border: 1px dashed var(--border);
+            padding: 50px 20px;
+            background: var(--surface-1);
+            border: 1px dashed var(--border-subtle);
             border-radius: var(--radius-md);
-            color: var(--text-muted);
+            color: var(--text-tertiary);
         }
 
-        .empty-icon {
-            font-size: 2.5rem;
+        .empty-icon-svg {
+            width: 32px;
+            height: 32px;
             margin-bottom: 12px;
+            stroke: var(--text-tertiary);
+            fill: none;
+            stroke-width: 1.5;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
+        .empty-state h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .empty-state p {
+            font-size: 0.82rem;
         }
 
         @keyframes shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            20%,
-            60% {
-                transform: translateX(-8px);
-            }
-
-            40%,
-            80% {
-                transform: translateX(8px);
-            }
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
         }
 
         .shake {
-            animation: shake 0.4s ease;
+            animation: shake 0.35s ease;
         }
 
         @media (max-width: 768px) {
             .admin-header {
-                padding: 14px 18px;
+                padding: 12px 18px;
             }
 
-            .header-title {
-                display: none;
+            .stats-grid {
+                grid-template-columns: 1fr;
             }
 
             .testi-item {
                 flex-direction: column;
-                gap: 16px;
+                gap: 14px;
             }
 
             .btn-delete-item {
@@ -625,25 +799,41 @@
     <!-- ================= 1. LOGIN SCREEN ================= -->
     <div class="login-wrapper" id="login-screen">
         <div class="login-card" id="login-card">
-            <div class="login-icon-box">👑</div>
-            <h1 class="login-title">Admin Moderasi</h1>
-            <p class="login-subtitle">Masukkan password admin untuk mengelola testimoni portofolio kamu.</p>
+            <div class="login-brand-icon">☘</div>
+            <h1 class="login-title">Admin Console</h1>
+            <p class="login-subtitle">Enter admin passphrase to manage guestbook testimonials.</p>
 
             <form id="admin-login-form">
                 <div class="input-group">
-                    <label class="input-label" for="admin-password">Password Admin</label>
+                    <label class="input-label" for="admin-password">Passphrase</label>
                     <div class="password-field-wrap">
                         <input type="password" id="admin-password" class="input-password"
-                            placeholder="Ketik password admin..." required autofocus autocomplete="current-password">
-                        <button type="button" class="btn-toggle-pwd" id="toggle-pwd-btn"
-                            title="Lihat Password">👁️</button>
+                            placeholder="Enter password..." required autofocus autocomplete="current-password">
+                        <button type="button" class="btn-toggle-pwd" id="toggle-pwd-btn" aria-label="Toggle password visibility" title="Toggle password">
+                            <svg id="eye-icon" viewBox="0 0 24 24">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
                     </div>
                 </div>
 
-                <button type="submit" class="login-btn" id="login-submit-btn">Masuk Control Panel 🚀</button>
+                <button type="submit" class="login-btn" id="login-submit-btn">
+                    <span>Continue</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </button>
             </form>
 
-            <a href="index.html" class="login-footer-link">← Kembali ke Halaman Portofolio</a>
+            <a href="index.html" class="login-footer-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Back to Portfolio
+            </a>
         </div>
     </div>
 
@@ -652,72 +842,106 @@
         <!-- Top Navbar -->
         <header class="admin-header">
             <div class="header-left">
-                <span class="header-logo-badge">👑 OWNER</span>
-                <h2 class="header-title">Adha Rafi Moderation Panel</h2>
+                <div class="brand-logo">
+                    <span>☘</span> RafiKuy
+                </div>
+                <span class="header-badge">CONSOLE</span>
+                <span class="header-live-pulse">
+                    <span class="pulse-dot"></span> Live Sync
+                </span>
             </div>
             <div class="header-right">
-                <a href="index.html" class="btn-header-link" target="_blank">Lihat Website ↗</a>
-                <button type="button" class="btn-logout" id="logout-btn">Keluar ✕</button>
+                <a href="index.html" class="btn-header-link" target="_blank" rel="noopener noreferrer">
+                    <span>Live Site</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                </a>
+                <button type="button" class="btn-logout" id="logout-btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    <span>Sign Out</span>
+                </button>
             </div>
         </header>
 
         <!-- Main Content -->
         <main class="admin-content">
-            <!-- Stats -->
+            <div class="content-header">
+                <h1>Testimonials Stream</h1>
+                <p>Manage and moderate community reviews submitted via your portfolio.</p>
+            </div>
+
+            <!-- Stats KPI Cards -->
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-icon">💬</div>
-                    <div class="stat-info">
-                        <h3 id="stat-total">0</h3>
-                        <p>Total Testimoni</p>
+                    <div class="stat-label">
+                        <span>Total Reviews</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
                     </div>
+                    <div class="stat-number" id="stat-total">0</div>
+                    <div class="stat-meta">Synced from Firebase RTDB</div>
                 </div>
+
                 <div class="stat-card">
-                    <div class="stat-icon">⭐</div>
-                    <div class="stat-info">
-                        <h3 id="stat-avg">5.0</h3>
-                        <p>Rata-rata Bintang</p>
+                    <div class="stat-label">
+                        <span>Average Rating</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
                     </div>
+                    <div class="stat-number" id="stat-avg">5.0</div>
+                    <div class="stat-meta">Overall audience satisfaction</div>
                 </div>
+
                 <div class="stat-card">
-                    <div class="stat-icon">🔥</div>
-                    <div class="stat-info">
-                        <h3 id="stat-five-star">0</h3>
-                        <p>Rating Bintang 5</p>
+                    <div class="stat-label">
+                        <span>5-Star Ratings</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
+                        </svg>
                     </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🟢</div>
-                    <div class="stat-info">
-                        <h3 style="font-size: 1.1rem; color: #27C93F;">Live Sync</h3>
-                        <p>Firebase Database</p>
-                    </div>
+                    <div class="stat-number" id="stat-five-star">0</div>
+                    <div class="stat-meta">Top feedback responses</div>
                 </div>
             </div>
 
-            <!-- Toolbar (Search & Filter) -->
+            <!-- Action Toolbar (Search & Filter) -->
             <div class="toolbar">
                 <div class="search-box">
-                    <span>🔍</span>
-                    <input type="text" id="search-input" placeholder="Cari berdasarkan nama atau kata komentar...">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="search-input" placeholder="Search by name, role, or keyword...">
                 </div>
                 <div class="filter-group">
                     <select class="filter-select" id="rating-filter">
-                        <option value="all">Semua Rating (1 - 5 ★)</option>
-                        <option value="5">Hanya 5 Bintang ⭐</option>
-                        <option value="4">Hanya 4 Bintang ⭐</option>
-                        <option value="3">Hanya 3 Bintang ⭐</option>
-                        <option value="low">1 - 2 Bintang</option>
+                        <option value="all">All Ratings (1 - 5 ★)</option>
+                        <option value="5">5 Stars only</option>
+                        <option value="4">4 Stars only</option>
+                        <option value="3">3 Stars only</option>
+                        <option value="low">1 - 2 Stars</option>
                     </select>
                 </div>
             </div>
 
-            <!-- Testimonial List Container -->
+            <!-- Testimonial List Stream Container -->
             <div class="testi-list" id="testi-list-container">
-                <!-- Testimonials will load here in realtime -->
                 <div class="empty-state">
-                    <div class="empty-icon">⏳</div>
-                    <p>Menghubungkan ke Firebase & memuat testimoni...</p>
+                    <svg class="empty-icon-svg" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <h3>Connecting to Firebase...</h3>
+                    <p>Loading realtime guestbook testimonials.</p>
                 </div>
             </div>
         </main>
@@ -727,8 +951,7 @@
     <script>
         (function () {
             // --- SECURITY CONFIGURATION (SHA-256 HASHED) ---
-            // Password asli TIDAK disimpan di kode. Hanya tersimpan hash 256-bit satu arah (one-way).
-            // Passwords yang valid: 'rafikuy2026', '2026', 'adha2026', 'admin123', 'Rafikuy2026', 'Adha2026'
+            // Passwords: 'rafikuy2026', '2026', 'adha2026', 'admin123', 'Rafikuy2026', 'Adha2026'
             const VALID_HASHES = [
                 '6371e0e55a691223d098a443b690236eb7394b86c32e202596498e9b7070bd18', // rafikuy2026
                 'b8003fafb0e41ee9b5f27266b61bd1b50affc366a2dfcbefaa35ed5c051540aa', // Rafikuy2026
@@ -788,7 +1011,7 @@
                 toastEl.className = `toast ${type} show`;
                 setTimeout(() => {
                     toastEl.className = 'toast';
-                }, 3500);
+                }, 3200);
             }
 
             // --- CHECK & INITIALIZE AUTH ---
@@ -809,7 +1032,9 @@
                 togglePwdBtn.addEventListener('click', () => {
                     const isPwd = passwordInput.type === 'password';
                     passwordInput.type = isPwd ? 'text' : 'password';
-                    togglePwdBtn.textContent = isPwd ? '🙈' : '👁️';
+                    togglePwdBtn.innerHTML = isPwd 
+                        ? `<svg viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`
+                        : `<svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
                 });
             }
 
@@ -823,7 +1048,7 @@
 
                     if (loginSubmitBtn) {
                         loginSubmitBtn.disabled = true;
-                        loginSubmitBtn.textContent = 'Memverifikasi... ⏳';
+                        loginSubmitBtn.innerHTML = 'Verifying...';
                     }
 
                     try {
@@ -832,12 +1057,12 @@
 
                         if (isMatch) {
                             sessionStorage.setItem(AUTH_KEY, 'true');
-                            showToast('Login berhasil! Selamat datang, Adha Rafi 👑', 'success');
+                            showToast('Authenticated successfully.', 'success');
                             checkSession();
                         } else {
                             loginCard.classList.add('shake');
-                            setTimeout(() => loginCard.classList.remove('shake'), 450);
-                            showToast('Password Admin salah! Coba lagi.', 'error');
+                            setTimeout(() => loginCard.classList.remove('shake'), 400);
+                            showToast('Invalid passphrase. Please try again.', 'error');
                             if (passwordInput) {
                                 passwordInput.value = '';
                                 passwordInput.focus();
@@ -845,11 +1070,11 @@
                         }
                     } catch (err) {
                         console.error('Auth error:', err);
-                        showToast('Terjadi kesalahan. Coba lagi.', 'error');
+                        showToast('Authentication failed.', 'error');
                     } finally {
                         if (loginSubmitBtn) {
                             loginSubmitBtn.disabled = false;
-                            loginSubmitBtn.textContent = 'Masuk Control Panel 🚀';
+                            loginSubmitBtn.innerHTML = `<span>Continue</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`;
                         }
                     }
                 });
@@ -859,7 +1084,7 @@
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', () => {
                     sessionStorage.removeItem(AUTH_KEY);
-                    showToast('Kamu telah keluar dari mode admin.', 'info');
+                    showToast('Signed out from console.', 'info');
                     checkSession();
                 });
             }
@@ -912,7 +1137,6 @@
 
             // --- RENDER DASHBOARD & STATS ---
             function renderDashboard() {
-                // Update Stats
                 const total = testimonialsData.length;
                 let fiveStars = 0;
                 let sumRatings = 0;
@@ -938,13 +1162,11 @@
                 const filterVal = ratingFilter ? ratingFilter.value : 'all';
 
                 let filtered = testimonialsData.filter(item => {
-                    // Search check
                     const matchName = (item.name || '').toLowerCase().includes(searchQ);
                     const matchMsg = (item.message || '').toLowerCase().includes(searchQ);
                     const matchRole = (item.role || '').toLowerCase().includes(searchQ);
                     const matchesSearch = matchName || matchMsg || matchRole;
 
-                    // Rating check
                     const r = parseInt(item.rating || 5, 10);
                     let matchesRating = true;
                     if (filterVal === '5') matchesRating = r === 5;
@@ -960,9 +1182,12 @@
                 if (filtered.length === 0) {
                     testiListContainer.innerHTML = `
                         <div class="empty-state">
-                            <div class="empty-icon">📭</div>
-                            <h3>Tidak Ada Ulasan</h3>
-                            <p>Tidak ada testimoni yang cocok dengan pencarian atau filter kamu.</p>
+                            <svg class="empty-icon-svg" viewBox="0 0 24 24">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <h3>No reviews found</h3>
+                            <p>No testimonials match your current search or filter query.</p>
                         </div>
                     `;
                     return;
@@ -976,6 +1201,7 @@
                     card.id = `admin-card-${item.id}`;
 
                     const name = sanitize(item.name || 'Anonymous');
+                    const initial = name.charAt(0).toUpperCase() || 'A';
                     const role = sanitize(item.role || 'Visitor');
                     const msg = sanitize(item.message || '');
                     const ratingNum = parseInt(item.rating || 5, 10);
@@ -985,15 +1211,20 @@
                     card.innerHTML = `
                         <div class="testi-main">
                             <div class="testi-header-row">
+                                <div class="testi-avatar">${initial}</div>
                                 <span class="testi-author-name">${name}</span>
                                 <span class="testi-role-badge">${role}</span>
-                                <span class="testi-stars-tag" title="${ratingNum} Bintang">${starsStr}</span>
+                                <span class="testi-stars-tag" title="${ratingNum} Stars">${starsStr}</span>
                                 <span class="testi-date">${dateStr}</span>
                             </div>
                             <div class="testi-quote-text">"${msg}"</div>
                         </div>
-                        <button type="button" class="btn-delete-item" data-id="${item.id}" data-name="${name}">
-                            🗑️ Hapus
+                        <button type="button" class="btn-delete-item" data-id="${item.id}" data-name="${name}" title="Delete Testimonial">
+                            <svg viewBox="0 0 24 24">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                            <span>Delete</span>
                         </button>
                     `;
 
@@ -1011,7 +1242,7 @@
 
             // --- DELETE TESTIMONIAL ACTION ---
             function deleteTestimonial(id, authorName) {
-                const ok = confirm(`🚨 YAKIN HAPUS TESTIMONI DARI:\n"${authorName}"?\n\nTindakan ini permanen dan akan langsung menghilangkannya dari website portofolio.`);
+                const ok = confirm(`Delete review from "${authorName}"?\n\nThis will permanently remove it from your portfolio in realtime.`);
                 if (!ok) return;
 
                 const cardEl = document.getElementById(`admin-card-${id}`);
@@ -1023,11 +1254,11 @@
                 if (isFirebaseActive && dbRef) {
                     dbRef.child(id).remove()
                         .then(() => {
-                            showToast(`Ulasan dari "${authorName}" berhasil dihapus dari database 🗑️`, 'success');
+                            showToast(`Review by "${authorName}" deleted`, 'success');
                         })
                         .catch((err) => {
                             console.error("Firebase delete error:", err);
-                            showToast('Gagal menghapus dari Firebase: ' + err.message, 'error');
+                            showToast('Failed to delete from Firebase: ' + err.message, 'error');
                         });
                 }
 
@@ -1042,7 +1273,7 @@
                 testimonialsData = testimonialsData.filter(item => item.id !== id);
                 setTimeout(() => {
                     renderDashboard();
-                }, 350);
+                }, 300);
             }
 
             // --- SEARCH & FILTER LISTENERS ---
@@ -1071,7 +1302,7 @@
                         minute: '2-digit'
                     });
                 } catch (e) {
-                    return 'Baru saja';
+                    return 'Just now';
                 }
             }
 
