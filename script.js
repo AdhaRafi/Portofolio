@@ -750,7 +750,9 @@
     return null;
   }
 
-  // ===== CONTACT FORM INTEGRATION (FIREBASE & WHATSAPP) =====
+  // ===== CONTACT FORM INTEGRATION (EMAIL, FIREBASE & WHATSAPP) =====
+  const WEB3FORMS_ACCESS_KEY = "b703b213-845c-4e02-a2c8-ed5053222bdb";
+
   const contactForm = document.getElementById('contact-form');
   if (contactForm) {
     contactForm.addEventListener('submit', async (e) => {
@@ -764,19 +766,19 @@
 
       const name = nameInput ? nameInput.value.trim() : '';
       const email = emailInput ? emailInput.value.trim() : '';
-      const subject = (subjectInput && subjectInput.value.trim()) ? subjectInput.value.trim() : 'Pesan dari Form Kontak Portfolio';
+      const subject = (subjectInput && subjectInput.value.trim()) ? subjectInput.value.trim() : 'Pesan Baru dari Website Portfolio';
       const message = msgInput ? msgInput.value.trim() : '';
 
       if (!name || !email || !message) {
         if (status) {
           status.className = 'form-status error';
-          status.innerHTML = '⚠️ Mohon isi nama, email, dan pesan Anda.';
+          status.innerHTML = '⚠️ Mohon lengkapi nama, email, dan pesan Anda.';
         }
         return;
       }
 
       const originalHTML = btn.innerHTML;
-      btn.innerHTML = '<span>Mengirim...</span>';
+      btn.innerHTML = '<span>Mengirim ke Email...</span>';
       btn.disabled = true;
 
       // 1. Simpan ke Firebase Realtime Database
@@ -805,28 +807,49 @@
         localStorage.setItem('rafikuy_contact_inbox', JSON.stringify(localInbox.slice(0, 50)));
       } catch (e) {}
 
-      // 3. Format pesan WhatsApp
-      const waNumber = '6281548331020';
-      const waText = `Halo Adha Rafi! 👋\n\nSaya menghubungi Anda melalui form kontak di portfolio:\n\n👤 *Nama:* ${name}\n📧 *Email:* ${email}\n📌 *Subjek:* ${subject}\n\n💬 *Pesan:*\n${message}`;
-      const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(waText)}`;
+      // 3. Kirim Otomatis ke Email (Web3Forms API)
+      let emailSuccess = false;
+      try {
+        const res = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            access_key: WEB3FORMS_ACCESS_KEY,
+            name: name,
+            email: email,
+            subject: `[Portfolio] ${subject} - dari ${name}`,
+            message: message,
+            from_name: `${name} (Portfolio Website)`
+          })
+        });
+        const result = await res.json();
+        if (result.success) {
+          emailSuccess = true;
+        }
+      } catch (err) {
+        console.warn("Web3Forms email delivery error:", err);
+      }
 
       // 4. Update UI Status & Tombol
       btn.classList.add('btn-success-state');
       btn.innerHTML = '✓ Pesan Terkirim!';
+      
       if (status) {
         status.className = 'form-status success';
-        status.innerHTML = '✓ Pesan berhasil dikirim & tersimpan! Menghubungkan ke WhatsApp Rafi...';
+        if (emailSuccess) {
+          status.innerHTML = '✓ Terima kasih! Pesan Anda telah berhasil terkirim langsung ke inbox Email Rafi.';
+        } else {
+          status.innerHTML = '✓ Pesan Anda telah berhasil dikirim & disimpan!';
+        }
       }
 
-      // 5. Otomatis buka WhatsApp
-      setTimeout(() => {
-        window.open(waUrl, '_blank');
-      }, 500);
-
-      // 6. Reset form
+      // 5. Reset form
       contactForm.reset();
 
-      // 7. Kembalikan state tombol setelah beberapa detik
+      // 6. Kembalikan state tombol setelah 6 detik
       setTimeout(() => {
         btn.innerHTML = originalHTML;
         btn.classList.remove('btn-success-state');
