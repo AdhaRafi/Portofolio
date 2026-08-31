@@ -188,6 +188,9 @@
         preloader.style.display = 'none';
       }, 600);
     }
+    if (typeof initHeroAnimations === 'function') {
+      initHeroAnimations();
+    }
   }
 
   // Click/Tap anywhere to skip preloader immediately
@@ -205,11 +208,11 @@
     }
   }, 100);
 
-  // Absolute safety timeout: never stay stuck more than 2.2 seconds under any circumstances
+  // Absolute safety timeout: allow full spider animation to complete (~2.6s), then dismiss
   setTimeout(() => {
     clearInterval(checkReady);
     hidePreloader();
-  }, 2200);
+  }, 3000);
 
   // ===== CUSTOM CURSOR (Desktop Only) =====
   if (window.innerWidth > 768) {
@@ -371,10 +374,14 @@
   }
 
   // ===== HERO ANIMATIONS =====
+  let heroAnimated = false;
   function initHeroAnimations() {
+    if (heroAnimated) return;
+    heroAnimated = true;
+
     const words = document.querySelectorAll('.hero-title .word');
     words.forEach((w, i) => {
-      setTimeout(() => w.classList.add('visible'), i * 200);
+      setTimeout(() => w.classList.add('visible'), i * 150);
     });
 
     animateHeroBgText();
@@ -383,7 +390,7 @@
     socials.forEach((s, i) => {
       s.style.opacity = '0';
       s.style.transform = 'translateX(-20px)';
-      s.style.transition = `all 0.6s ease ${0.4 + i * 0.15}s`;
+      s.style.transition = `all 0.6s ease ${0.2 + i * 0.12}s`;
       setTimeout(() => {
         s.style.opacity = '1';
         s.style.transform = 'translateX(0)';
@@ -394,13 +401,17 @@
     if (quote) {
       quote.style.opacity = '0';
       quote.style.transform = 'translateY(20px)';
-      quote.style.transition = 'all 0.8s ease 0.8s';
+      quote.style.transition = 'all 0.8s ease 0.5s';
       setTimeout(() => {
         quote.style.opacity = '1';
         quote.style.transform = 'translateY(0)';
       }, 50);
     }
   }
+
+  // Automatic triggers for hero animations
+  setTimeout(initHeroAnimations, 1200);
+  window.addEventListener('load', () => setTimeout(initHeroAnimations, 300));
 
   // Hero BG text parallax on scroll
   function animateHeroBgText() {
@@ -1059,6 +1070,8 @@
       localTestimonials.forEach(item => {
         addTestimonialToGrid(item.id, item, false);
       });
+    }
+
     // --- FORM SUBMISSION ---
     if (testiForm) {
       testiForm.addEventListener('submit', (e) => {

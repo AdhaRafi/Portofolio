@@ -17,6 +17,7 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 
     <style>
         *,
@@ -626,14 +627,20 @@
         <div class="login-card" id="login-card">
             <div class="login-icon-box">👑</div>
             <h1 class="login-title">Admin Moderasi</h1>
-            <p class="login-subtitle">Masukkan password rahasia untuk mengelola testimoni portofolio kamu.</p>
+            <p class="login-subtitle">Login dengan akun Firebase Admin kamu untuk mengelola testimoni.</p>
 
             <form id="admin-login-form">
                 <div class="input-group">
-                    <label class="input-label" for="admin-password">Password Admin</label>
+                    <label class="input-label" for="admin-email">Email Admin</label>
+                    <input type="email" id="admin-email" class="input-password"
+                        placeholder="email@domain.com" required autofocus autocomplete="email"
+                        style="padding-right: 16px;">
+                </div>
+                <div class="input-group">
+                    <label class="input-label" for="admin-password">Password</label>
                     <div class="password-field-wrap">
                         <input type="password" id="admin-password" class="input-password"
-                            placeholder="Ketik password admin..." required autofocus autocomplete="current-password">
+                            placeholder="Ketik password..." required autocomplete="current-password">
                         <button type="button" class="btn-toggle-pwd" id="toggle-pwd-btn"
                             title="Lihat Password">👁️</button>
                     </div>
@@ -725,12 +732,9 @@
     <!-- SCRIPT LOGIC -->
     <script>
         (function () {
-            // --- SECURITY CONFIGURATION ---
-            // Accepted passwords:
-            const VALID_PASSWORDS = ['rafikuy2026', '2026', 'adha2026', 'admin123'];
-            const AUTH_KEY = 'rafikuy_admin_authenticated';
-
             // --- FIREBASE CONFIGURATION ---
+            // ⚠️ Firebase config is public by design (controlled by Firebase Security Rules)
+            // Credentials are managed entirely in Firebase Console > Authentication
             const firebaseConfig = {
                 apiKey: "AIzaSyDgKukalNyaze2DuvseEvdtLssJ26cIXQI",
                 authDomain: "portofoliorafi-e36ca.firebaseapp.com",
@@ -742,17 +746,25 @@
                 measurementId: "G-TKM46KHW3H"
             };
 
+            // Init Firebase once
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+
+            const auth = firebase.auth();
             let dbRef = null;
             let isFirebaseActive = false;
-            let testimonialsData = []; // Array of { id, name, role, rating, message, timestamp }
+            let testimonialsData = [];
 
             // --- DOM ELEMENTS ---
             const loginScreen = document.getElementById('login-screen');
             const dashboardScreen = document.getElementById('dashboard-screen');
             const loginForm = document.getElementById('admin-login-form');
+            const emailInput = document.getElementById('admin-email');
             const passwordInput = document.getElementById('admin-password');
             const togglePwdBtn = document.getElementById('toggle-pwd-btn');
             const loginCard = document.getElementById('login-card');
+            const loginSubmitBtn = document.getElementById('login-submit-btn');
             const logoutBtn = document.getElementById('logout-btn');
             const toastEl = document.getElementById('toast');
 
@@ -773,18 +785,28 @@
                 }, 3500);
             }
 
-            // --- AUTH CHECK ---
-            function checkAuth() {
-                const isAuthed = sessionStorage.getItem(AUTH_KEY) === 'true';
-                if (isAuthed) {
-                    loginScreen.style.display = 'none';
-                    dashboardScreen.style.display = 'flex';
-                    initFirebase();
-                } else {
-                    loginScreen.style.display = 'flex';
-                    dashboardScreen.style.display = 'none';
-                }
+            // --- UI TOGGLE ---
+            function showDashboard() {
+                loginScreen.style.display = 'none';
+                dashboardScreen.style.display = 'flex';
+                initDatabase();
             }
+
+            function showLogin() {
+                loginScreen.style.display = 'flex';
+                dashboardScreen.style.display = 'none';
+            }
+
+            // --- FIREBASE AUTH STATE LISTENER ---
+            // This is the single source of truth for auth state.
+            // onAuthStateChanged fires on page load — no need for sessionStorage.
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    showDashboard();
+                } else {
+                    showLogin();
+                }
+            });
 
             // --- TOGGLE PASSWORD VISIBILITY ---
             if (togglePwdBtn && passwordInput) {
@@ -795,23 +817,46 @@
                 });
             }
 
-            // --- LOGIN SUBMISSION ---
+            // --- LOGIN SUBMISSION (Firebase Auth) ---
             if (loginForm) {
-                loginForm.addEventListener('submit', (e) => {
+                loginForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
-                    const entered = (passwordInput ? passwordInput.value : '').trim();
+                    const email = (emailInput ? emailInput.value : '').trim();
+                    const password = (passwordInput ? passwordInput.value : '').trim();
 
-                    if (VALID_PASSWORDS.includes(entered.toLowerCase())) {
-                        sessionStorage.setItem(AUTH_KEY, 'true');
+                    if (!email || !password) return;
+
+                    if (loginSubmitBtn) {
+                        loginSubmitBtn.disabled = true;
+                        loginSubmitBtn.textContent = 'Memverifikasi... ⏳';
+                    }
+
+                    try {
+                        await auth.signInWithEmailAndPassword(email, password);
                         showToast('Login berhasil! Selamat datang, Adha Rafi 👑', 'success');
-                        checkAuth();
-                    } else {
+                        // onAuthStateChanged will automatically call showDashboard()
+                    } catch (err) {
                         loginCard.classList.add('shake');
                         setTimeout(() => loginCard.classList.remove('shake'), 450);
-                        showToast('Password Admin salah! Coba lagi.', 'error');
+
+                        let errMsg = 'Login gagal. Coba lagi.';
+                        if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+                            errMsg = 'Email atau password salah!';
+                        } else if (err.code === 'auth/invalid-email') {
+                            errMsg = 'Format email tidak valid.';
+                        } else if (err.code === 'auth/too-many-requests') {
+                            errMsg = 'Terlalu banyak percobaan login. Coba lagi nanti.';
+                        }
+
+                        showToast(errMsg, 'error');
                         if (passwordInput) {
                             passwordInput.value = '';
                             passwordInput.focus();
+                        }
+                    } finally {
+                        if (loginSubmitBtn) {
+                            loginSubmitBtn.disabled = false;
+                            loginSubmitBtn.textContent = 'Masuk Control Panel 🚀';
                         }
                     }
                 });
@@ -819,43 +864,42 @@
 
             // --- LOGOUT ---
             if (logoutBtn) {
-                logoutBtn.addEventListener('click', () => {
-                    sessionStorage.removeItem(AUTH_KEY);
-                    showToast('Kamu telah keluar dari mode admin.', 'info');
-                    checkAuth();
+                logoutBtn.addEventListener('click', async () => {
+                    try {
+                        await auth.signOut();
+                        showToast('Kamu telah keluar dari mode admin.', 'info');
+                        // onAuthStateChanged will automatically call showLogin()
+                    } catch (err) {
+                        showToast('Gagal logout: ' + err.message, 'error');
+                    }
                 });
             }
 
-            // --- FIREBASE CONNECTION ---
-            function initFirebase() {
+            // --- DATABASE CONNECTION (called after auth confirmed) ---
+            function initDatabase() {
                 try {
-                    if (window.firebase) {
-                        if (!firebase.apps.length) {
-                            firebase.initializeApp(firebaseConfig);
-                        }
-                        const db = firebase.database();
-                        dbRef = db.ref('testimonials_messages');
-                        isFirebaseActive = true;
+                    const db = firebase.database();
+                    dbRef = db.ref('testimonials_messages');
+                    isFirebaseActive = true;
 
-                        // Realtime listener for entire list
-                        dbRef.on('value', (snapshot) => {
-                            const val = snapshot.val();
-                            testimonialsData = [];
-                            if (val) {
-                                Object.keys(val).forEach(key => {
-                                    testimonialsData.push({
-                                        id: key,
-                                        ...val[key]
-                                    });
+                    // Realtime listener for entire list
+                    dbRef.on('value', (snapshot) => {
+                        const val = snapshot.val();
+                        testimonialsData = [];
+                        if (val) {
+                            Object.keys(val).forEach(key => {
+                                testimonialsData.push({
+                                    id: key,
+                                    ...val[key]
                                 });
-                            }
-                            // Sort newest first
-                            testimonialsData.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-                            renderDashboard();
-                        });
-                    }
+                            });
+                        }
+                        // Sort newest first
+                        testimonialsData.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                        renderDashboard();
+                    });
                 } catch (err) {
-                    console.error("Firebase init error in admin panel:", err);
+                    console.error('Firebase DB error in admin panel:', err);
                     isFirebaseActive = false;
                     loadFromLocalStorageFallback();
                 }
@@ -1037,8 +1081,6 @@
                 }
             }
 
-            // Run initial auth check
-            checkAuth();
         })();
     </script>
 </body>
