@@ -1482,8 +1482,53 @@
                 </form>
             </div>
 
-            <!-- Testimonials Grid Container -->
-            <div class="testimonials-grid stagger-children" id="testimonials-grid">
+            <!-- Testimonials Controls & Stat Bar -->
+            <div class="testi-controls-bar anim-fade-up">
+                <div class="testi-summary-badge">
+                    <span class="testi-badge-star">⭐</span>
+                    <span class="testi-badge-rating" id="testi-avg-rating">5.0</span>
+                    <span class="testi-badge-dot">•</span>
+                    <span class="testi-badge-count" id="testi-total-count">0 Ulasan</span>
+                </div>
+                <div class="testi-hint-badge">
+                    <span>✨ Sentuh / hover kartu untuk jeda animasi</span>
+                </div>
+                <div class="testi-view-toggles" role="group" aria-label="Pilihan Tampilan Testimoni">
+                    <button type="button" class="testi-view-btn active" id="testi-btn-marquee" title="Endless Marquee Loop">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="7" width="20" height="10" rx="2"></rect>
+                            <polyline points="12 11 16 11 16 7"></polyline>
+                        </svg>
+                        <span>Endless Loop</span>
+                    </button>
+                    <button type="button" class="testi-view-btn" id="testi-btn-grid" title="Tampilan Grid Semua Kartu">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        <span>Grid View</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Endless Marquee Flow (Dual Row) -->
+            <div class="testimonials-marquee-wrapper anim-fade-up" id="testimonials-marquee-wrapper">
+                <!-- Track 1: Scrolls Left -->
+                <div class="testi-marquee-track track-left" id="testi-track-1">
+                    <div class="testi-marquee-group" id="testi-group-1a"></div>
+                    <div class="testi-marquee-group" id="testi-group-1b" aria-hidden="true"></div>
+                </div>
+                <!-- Track 2: Scrolls Right -->
+                <div class="testi-marquee-track track-right" id="testi-track-2">
+                    <div class="testi-marquee-group" id="testi-group-2a"></div>
+                    <div class="testi-marquee-group" id="testi-group-2b" aria-hidden="true"></div>
+                </div>
+            </div>
+
+            <!-- Testimonials Grid Container (Active in Grid View mode) -->
+            <div class="testimonials-grid stagger-children" id="testimonials-grid" style="display: none;">
                 <!-- Dynamic cards will be rendered here from Firebase / LocalStorage -->
             </div>
         </div>

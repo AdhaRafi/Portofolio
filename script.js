@@ -886,7 +886,7 @@
     }
   });
 
-  // ===== DYNAMIC REAL-TIME TESTIMONIALS WITH FIREBASE =====
+  // ===== DYNAMIC REAL-TIME TESTIMONIALS WITH FIREBASE & DUAL-TRACK MARQUEE =====
   (function initTestimonials() {
     const testiForm = document.getElementById('testi-form');
     const testiNameInput = document.getElementById('testi-name');
@@ -895,12 +895,25 @@
     const testiRatingInput = document.getElementById('testi-rating');
     const testiSubmitBtn = document.getElementById('testi-submit-btn');
     const testiStatus = document.getElementById('testi-status');
-    const testimonialsGrid = document.getElementById('testimonials-grid');
     const starRating = document.getElementById('star-rating');
     const ratingText = document.getElementById('rating-text');
     const chips = document.querySelectorAll('.testi-chip');
 
-    if (!testimonialsGrid) return;
+    // Stats & View Toggle Elements
+    const testiAvgRating = document.getElementById('testi-avg-rating');
+    const testiTotalCount = document.getElementById('testi-total-count');
+    const testiBtnMarquee = document.getElementById('testi-btn-marquee');
+    const testiBtnGrid = document.getElementById('testi-btn-grid');
+
+    // Marquee & Grid Containers
+    const marqueeWrapper = document.getElementById('testimonials-marquee-wrapper');
+    const group1a = document.getElementById('testi-group-1a');
+    const group1b = document.getElementById('testi-group-1b');
+    const group2a = document.getElementById('testi-group-2a');
+    const group2b = document.getElementById('testi-group-2b');
+    const testimonialsGrid = document.getElementById('testimonials-grid');
+
+    if (!marqueeWrapper && !testimonialsGrid) return;
 
     // --- Star Rating Selector Logic ---
     const RATING_LABELS = {
@@ -960,6 +973,23 @@
       });
     });
 
+    // --- View Toggle Buttons (Marquee vs Grid) ---
+    if (testiBtnMarquee && testiBtnGrid) {
+      testiBtnMarquee.addEventListener('click', () => {
+        testiBtnMarquee.classList.add('active');
+        testiBtnGrid.classList.remove('active');
+        if (marqueeWrapper) marqueeWrapper.style.display = 'flex';
+        if (testimonialsGrid) testimonialsGrid.style.display = 'none';
+      });
+
+      testiBtnGrid.addEventListener('click', () => {
+        testiBtnGrid.classList.add('active');
+        testiBtnMarquee.classList.remove('active');
+        if (marqueeWrapper) marqueeWrapper.style.display = 'none';
+        if (testimonialsGrid) testimonialsGrid.style.display = 'grid';
+      });
+    }
+
     // --- Color classes for avatar initials ---
     const AVATAR_COLORS = ['bg-green', 'bg-orange', 'bg-yellow', 'bg-slate', 'bg-dark'];
 
@@ -1016,12 +1046,14 @@
       return '★'.repeat(num) + '☆'.repeat(5 - num);
     }
 
-    const renderedTestiIds = new Set();
-
-    function createTestimonialCard(id, item, isNew = false) {
+    // Create a Testimonial DOM Card
+    function createTestimonialCard(item, isNew = false, isClone = false) {
       const card = document.createElement('div');
       card.className = `testimonial-card ${isNew ? 'new-highlight' : ''}`;
-      card.id = `testi-card-${id}`;
+      if (!isClone) {
+        card.id = `testi-card-${item.id}`;
+      }
+      card.setAttribute('data-testi-id', item.id);
 
       const name = sanitizeHTML(item.name || 'Anonymous');
       const role = sanitizeHTML(item.role || 'Visitor / Teman');
@@ -1029,7 +1061,6 @@
       const starsStr = renderStarsString(item.rating || 5);
       const timeStr = formatTimeAgo(item.timestamp || Date.now());
 
-      // Get first letter initial for avatar
       const initial = name.trim().charAt(0).toUpperCase() || '★';
       const colorClass = getAvatarColorClass(name);
 
@@ -1051,27 +1082,84 @@
       return card;
     }
 
-    function addTestimonialToGrid(id, item, prepend = false, isNew = false) {
-      if (renderedTestiIds.has(id)) return;
-      renderedTestiIds.add(id);
+    // In-memory testimonials state
+    let allTestimonials = [];
 
-      const card = createTestimonialCard(id, item, isNew);
-      if (prepend && testimonialsGrid.firstChild) {
-        testimonialsGrid.insertBefore(card, testimonialsGrid.firstChild);
-      } else {
-        testimonialsGrid.appendChild(card);
+    // Helper: Ensure track has at least minCount items to prevent gaps on large screens
+    function repeatToMinCount(items, min = 4) {
+      if (!items || items.length === 0) return [];
+      let res = [...items];
+      while (res.length < min) {
+        res = res.concat(items);
+      }
+      return res;
+    }
+
+    // Master Render Function: updates stats, grid, and dual-row marquee
+    function renderAllTestimonialsViews(newHighlightId = null) {
+      // Sort newest first
+      allTestimonials.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+      const count = allTestimonials.length;
+      const sum = allTestimonials.reduce((acc, cur) => acc + (parseInt(cur.rating, 10) || 5), 0);
+      const avg = count > 0 ? (sum / count).toFixed(1) : '5.0';
+
+      if (testiAvgRating) testiAvgRating.textContent = avg;
+      if (testiTotalCount) testiTotalCount.textContent = `${count} Ulasan`;
+
+      // 1. Render Grid View
+      if (testimonialsGrid) {
+        testimonialsGrid.innerHTML = '';
+        allTestimonials.forEach(item => {
+          testimonialsGrid.appendChild(createTestimonialCard(item, item.id === newHighlightId, false));
+        });
       }
 
-      if (isNew) {
+      // 2. Render Dual-Row Marquee Tracks
+      if (marqueeWrapper && group1a && group1b && group2a && group2b) {
+        let track1Items = [];
+        let track2Items = [];
+
+        if (count >= 4) {
+          track1Items = allTestimonials.filter((_, idx) => idx % 2 === 0);
+          track2Items = allTestimonials.filter((_, idx) => idx % 2 === 1);
+        } else {
+          track1Items = [...allTestimonials];
+          track2Items = [...allTestimonials].reverse();
+        }
+
+        const rep1 = repeatToMinCount(track1Items, 4);
+        const rep2 = repeatToMinCount(track2Items, 4);
+
+        group1a.innerHTML = '';
+        group1b.innerHTML = '';
+        group2a.innerHTML = '';
+        group2b.innerHTML = '';
+
+        rep1.forEach(item => {
+          group1a.appendChild(createTestimonialCard(item, item.id === newHighlightId, false));
+          group1b.appendChild(createTestimonialCard(item, item.id === newHighlightId, true));
+        });
+
+        rep2.forEach(item => {
+          group2a.appendChild(createTestimonialCard(item, item.id === newHighlightId, false));
+          group2b.appendChild(createTestimonialCard(item, item.id === newHighlightId, true));
+        });
+      }
+
+      // Clear highlight after 6s
+      if (newHighlightId) {
         setTimeout(() => {
-          card.classList.remove('new-highlight');
-        }, 5000);
+          document.querySelectorAll('.testimonial-card.new-highlight').forEach(el => {
+            el.classList.remove('new-highlight');
+          });
+        }, 6000);
       }
     }
 
-    // Periodically update relative timestamps
+    // Periodically update relative timestamps across all rendered cards
     setInterval(() => {
-      const timeElements = testimonialsGrid.querySelectorAll('.testimonial-time[data-ts]');
+      const timeElements = document.querySelectorAll('.testimonial-time[data-ts]');
       timeElements.forEach(el => {
         const ts = parseInt(el.getAttribute('data-ts'), 10);
         if (ts) el.textContent = formatTimeAgo(ts);
@@ -1080,39 +1168,6 @@
 
     let isFirebaseActive = false;
     let dbRef = null;
-
-    // Connect to Firebase Realtime Database
-    try {
-      const db = getFirebaseDb();
-      if (db) {
-        dbRef = db.ref('testimonials_messages');
-        isFirebaseActive = true;
-
-        // Listen for new testimonials in realtime
-        dbRef.limitToLast(50).on('child_added', (snapshot) => {
-          const val = snapshot.val();
-          if (val) {
-            addTestimonialToGrid(snapshot.key, val, true);
-          }
-        });
-
-        // Listen for deleted testimonials in realtime across all devices!
-        dbRef.on('child_removed', (snapshot) => {
-          const id = snapshot.key;
-          const card = document.getElementById(`testi-card-${id}`);
-          if (card) {
-            card.classList.add('deleting');
-            setTimeout(() => {
-              card.remove();
-              renderedTestiIds.delete(id);
-            }, 400);
-          }
-        });
-      }
-    } catch (err) {
-      console.warn("Firebase initialization note (using local storage fallback if needed):", err);
-      isFirebaseActive = false;
-    }
 
     // --- INITIAL TESTIMONIALS & LOCAL STORAGE FALLBACK ---
     const STORAGE_KEY = 'rafikuy_testimonials_list';
@@ -1148,6 +1203,14 @@
           rating: 5,
           message: 'semangat surr, sukses terus buat project-project berikutnya!',
           timestamp: Date.now() - 3600000 * 6
+        },
+        {
+          id: 'init-4',
+          name: 'Rian Saputra',
+          role: 'Visitor',
+          rating: 5,
+          message: 'UI/UX nya berkelas banget, transisinya super halus! 🚀',
+          timestamp: Date.now() - 3600000 * 3
         }
       ];
       try {
@@ -1155,12 +1218,39 @@
       } catch (e) {}
     }
 
-    // Render local initial testimonials if Firebase hasn't loaded any yet
-    if (!isFirebaseActive) {
-      localTestimonials.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-      localTestimonials.forEach(item => {
-        addTestimonialToGrid(item.id, item, false);
-      });
+    allTestimonials = [...localTestimonials];
+    renderAllTestimonialsViews();
+
+    // Connect to Firebase Realtime Database
+    try {
+      const db = getFirebaseDb();
+      if (db) {
+        dbRef = db.ref('testimonials_messages');
+        isFirebaseActive = true;
+
+        // Listen for new testimonials in realtime
+        dbRef.limitToLast(50).on('child_added', (snapshot) => {
+          const val = snapshot.val();
+          if (val) {
+            const item = { ...val, id: snapshot.key };
+            const existingIdx = allTestimonials.findIndex(t => t.id === item.id);
+            if (existingIdx === -1) {
+              allTestimonials.unshift(item);
+              renderAllTestimonialsViews();
+            }
+          }
+        });
+
+        // Listen for deleted testimonials in realtime across all devices!
+        dbRef.on('child_removed', (snapshot) => {
+          const id = snapshot.key;
+          allTestimonials = allTestimonials.filter(t => t.id !== id);
+          renderAllTestimonialsViews();
+        });
+      }
+    } catch (err) {
+      console.warn("Firebase initialization note (using local storage fallback if needed):", err);
+      isFirebaseActive = false;
     }
 
     // --- FORM SUBMISSION ---
@@ -1219,8 +1309,12 @@
 
         if (isFirebaseActive && dbRef) {
           // Push to Firebase Realtime Database
-          dbRef.push(newTestimonial)
+          const newRef = dbRef.push();
+          newTestimonial.id = newRef.key;
+          newRef.set(newTestimonial)
             .then(() => {
+              allTestimonials.unshift(newTestimonial);
+              renderAllTestimonialsViews(newTestimonial.id);
               onSuccess();
             })
             .catch((err) => {
@@ -1240,13 +1334,14 @@
             if (stored) items = JSON.parse(stored);
           } catch (e) {}
 
-          const itemWithId = { ...item, id: 'local-' + Date.now() };
+          const itemWithId = { ...item, id: item.id || ('local-' + Date.now()) };
           items.unshift(itemWithId);
           try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
           } catch (e) {}
 
-          addTestimonialToGrid(itemWithId.id, itemWithId, true, true);
+          allTestimonials.unshift(itemWithId);
+          renderAllTestimonialsViews(itemWithId.id);
         }
 
         // --- CELEBRATORY THANK YOU POPUP WITH CONFETTI ---
@@ -1265,12 +1360,10 @@
           const safeName = sanitizeHTML(authorName || 'Kawan');
           const r = parseInt(starCount || 5, 10);
 
-          // Star string
           if (modalStars) {
             modalStars.textContent = '★'.repeat(r) + '☆'.repeat(5 - r);
           }
 
-          // Custom heartfelt & natural Indonesian developer messages
           if (r === 5) {
             if (modalIcon) modalIcon.textContent = '🔥';
             if (modalTitle) modalTitle.textContent = 'Waduh Bintang 5! Gokil Banget! 🔥⭐';
@@ -1297,11 +1390,9 @@
             }
           }
 
-          // Show modal
           modalBackdrop.classList.add('show');
           modalBackdrop.setAttribute('aria-hidden', 'false');
 
-          // Launch Confetti Burst
           if (canvas) {
             launchConfetti(canvas);
           }
@@ -1410,9 +1501,10 @@
           // Trigger Custom Pop-up with Confetti!
           showThankYouPopup(name, rating);
 
-          // Smooth scroll to testimonials grid so user sees their new card
-          if (testimonialsGrid) {
-            testimonialsGrid.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          // Smooth scroll to testimonials so user sees their new card
+          const targetSection = document.getElementById('testimonials');
+          if (targetSection) {
+            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
 
           setTimeout(() => {
