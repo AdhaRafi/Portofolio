@@ -379,10 +379,61 @@
     if (heroAnimated) return;
     heroAnimated = true;
 
+    // Reveal Eyebrow badge
+    const eyebrow = document.getElementById('hero-eyebrow');
+    if (eyebrow) {
+      setTimeout(() => eyebrow.classList.add('visible'), 100);
+    }
+
+    // Reveal PORTFOLIO Letters with smooth stagger
+    const letters = document.querySelectorAll('.hero-letter');
+    if (letters.length > 0) {
+      letters.forEach((l, i) => {
+        setTimeout(() => l.classList.add('visible'), 200 + i * 65);
+      });
+    }
+
+    // Fallback for .hero-title .word
     const words = document.querySelectorAll('.hero-title .word');
     words.forEach((w, i) => {
       setTimeout(() => w.classList.add('visible'), i * 150);
     });
+
+    // Reveal typing wrap
+    const typingWrap = document.getElementById('hero-typing-wrap');
+    if (typingWrap) {
+      setTimeout(() => typingWrap.classList.add('visible'), 600);
+    }
+
+    // Interactive magnetic wave on hover over PORTFOLIO letters
+    const heroTitle = document.getElementById('hero-title');
+    if (heroTitle && letters.length > 0) {
+      heroTitle.addEventListener('mousemove', (e) => {
+        const rect = heroTitle.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        letters.forEach((letter) => {
+          const lRect = letter.getBoundingClientRect();
+          const letterCenterX = lRect.left + lRect.width / 2 - rect.left;
+          const dist = Math.abs(mouseX - letterCenterX);
+          const maxDist = 120;
+          if (dist < maxDist) {
+            const power = (1 - dist / maxDist);
+            const offsetY = -10 * power;
+            const scale = 1 + 0.12 * power;
+            const rot = (mouseX > letterCenterX ? -3 : 3) * power;
+            letter.style.transform = `translateY(${offsetY}px) scale(${scale}) rotate(${rot}deg)`;
+          } else {
+            letter.style.transform = '';
+          }
+        });
+      });
+
+      heroTitle.addEventListener('mouseleave', () => {
+        letters.forEach((letter) => {
+          letter.style.transform = '';
+        });
+      });
+    }
 
     animateHeroBgText();
 
@@ -390,7 +441,7 @@
     socials.forEach((s, i) => {
       s.style.opacity = '0';
       s.style.transform = 'translateX(-20px)';
-      s.style.transition = `all 0.6s ease ${0.2 + i * 0.12}s`;
+      s.style.transition = `all 0.6s ease ${0.35 + i * 0.12}s`;
       setTimeout(() => {
         s.style.opacity = '1';
         s.style.transform = 'translateX(0)';
@@ -675,6 +726,36 @@
     let charIndex = 0;
     let isDeleting = false;
 
+    const typingTarget = document.getElementById('hero-typing-text');
+    if (typingTarget) {
+      function type() {
+        const currentText = subtexts[textIndex];
+        if (isDeleting) {
+          charIndex--;
+        } else {
+          charIndex++;
+        }
+
+        typingTarget.textContent = currentText.substring(0, charIndex);
+
+        let speed = isDeleting ? 30 : 65;
+
+        if (!isDeleting && charIndex === currentText.length) {
+          speed = 2200;
+          isDeleting = true;
+        } else if (isDeleting && charIndex === 0) {
+          isDeleting = false;
+          textIndex = (textIndex + 1) % subtexts.length;
+          speed = 400;
+        }
+
+        setTimeout(type, speed);
+      }
+
+      setTimeout(type, 1000);
+      return;
+    }
+
     const heroRight = document.querySelector('.hero-right');
     if (heroRight) {
       const typingEl = document.createElement('div');
@@ -688,7 +769,7 @@
       typingEl.innerHTML = '<span class="typing-cursor" style="border-right: 2px solid #DDDDDD; padding-right: 2px;">‎</span>';
       heroRight.insertBefore(typingEl, document.querySelector('.hero-socials'));
 
-      function type() {
+      function typeFallback() {
         const currentText = subtexts[textIndex];
         if (isDeleting) {
           charIndex--;
@@ -710,7 +791,7 @@
           speed = 400;
         }
 
-        setTimeout(type, speed);
+        setTimeout(typeFallback, speed);
       }
 
       // Add blink animation style
@@ -718,7 +799,7 @@
       blinkStyle.textContent = '@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }';
       document.head.appendChild(blinkStyle);
 
-      setTimeout(type, 1200);
+      setTimeout(typeFallback, 1200);
     }
   }
   initTypeEffect();
