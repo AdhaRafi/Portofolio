@@ -929,6 +929,7 @@
 
       // 5. Reset form
       contactForm.reset();
+      showSiteToast('Terima kasih! Pesan Anda telah berhasil terkirim.', 'success');
 
       // 6. Kembalikan state tombol setelah 6 detik
       setTimeout(() => {
@@ -966,6 +967,32 @@
       progressBar.style.width = progress + '%';
     }
   });
+
+  // ===== GLOBAL TOAST NOTIFICATION HELPER =====
+  let siteToastTimer = null;
+  function showSiteToast(message, type = 'success', duration = 3500) {
+    const toast = document.getElementById('site-toast');
+    const toastMsg = document.getElementById('site-toast-message');
+    const toastIcon = document.getElementById('site-toast-icon');
+    if (!toast) return;
+
+    if (toastMsg) toastMsg.textContent = message;
+    if (toastIcon) {
+      toastIcon.textContent = type === 'error' ? '✕' : '✓';
+    }
+
+    toast.className = `site-toast show ${type}`;
+
+    if (siteToastTimer) clearTimeout(siteToastTimer);
+    siteToastTimer = setTimeout(() => {
+      toast.classList.remove('show');
+    }, duration);
+
+    toast.onclick = () => {
+      toast.classList.remove('show');
+      if (siteToastTimer) clearTimeout(siteToastTimer);
+    };
+  }
 
   // ===== DYNAMIC REAL-TIME TESTIMONIALS WITH FIREBASE & DUAL-TRACK MARQUEE =====
   (function initTestimonials() {
@@ -1384,153 +1411,13 @@
           renderAllTestimonialsViews(itemWithId.id);
         }
 
-        // --- CELEBRATORY THANK YOU POPUP WITH CONFETTI ---
-        function showThankYouPopup(authorName, starCount) {
-          const modalBackdrop = document.getElementById('testi-thankyou-modal');
-          const modalIcon = document.getElementById('modal-icon');
-          const modalStars = document.getElementById('modal-stars');
-          const modalTitle = document.getElementById('modal-title');
-          const modalBody = document.getElementById('modal-body');
-          const modalCloseBtn = document.getElementById('modal-close-btn');
-          const modalXBtn = document.getElementById('modal-x-btn');
-          const canvas = document.getElementById('testi-confetti-canvas');
-
-          if (!modalBackdrop) return;
-
-          const safeName = sanitizeHTML(authorName || 'Kawan');
-          const r = parseInt(starCount || 5, 10);
-
-          if (modalStars) {
-            modalStars.textContent = '★'.repeat(r) + '☆'.repeat(5 - r);
-          }
-
-          if (r === 5) {
-            if (modalIcon) modalIcon.textContent = '🔥';
-            if (modalTitle) modalTitle.textContent = 'Waduh Bintang 5! Gokil Banget! 🔥⭐';
-            if (modalBody) {
-              modalBody.innerHTML = `Makasih buanyaak ya <strong>${safeName}</strong>! Rating bintang 5 & apresiasi dari kamu berharga banget buat portofolio pertamaku ini. Bikin makin termotivasi buat terus ngoding & eksplorasi project-project keren lainnya. Sukses & sehat selalu ya bro/sis! ☘️`;
-            }
-          } else if (r === 4) {
-            if (modalIcon) modalIcon.textContent = '✨';
-            if (modalTitle) modalTitle.textContent = 'Mantap Banget, Makasih Ya! 👍✨';
-            if (modalBody) {
-              modalBody.innerHTML = `Thank you so much <strong>${safeName}</strong> udah sempetin mampir & ngasih 4 bintang! Masukan dan saran kamu bakal aku jadiin catatan penting biar websitenya makin jos lagi. Keep in touch! ☘️`;
-            }
-          } else if (r === 3) {
-            if (modalIcon) modalIcon.textContent = '🤝';
-            if (modalTitle) modalTitle.textContent = 'Makasih Masukannya, Respect! 🤝';
-            if (modalBody) {
-              modalBody.innerHTML = `Thanks ya <strong>${safeName}</strong> buat feedback jujurnya! Setiap saran dari kamu sangat berguna buat bahan belajar & evaluasi skill codingku ke depannya. Salam kenal! ☘️`;
-            }
-          } else {
-            if (modalIcon) modalIcon.textContent = '🛠️';
-            if (modalTitle) modalTitle.textContent = 'Siap, Bakal Ditingkatin Lagi! 🛠️';
-            if (modalBody) {
-              modalBody.innerHTML = `Makasih review dan masukannya <strong>${safeName}</strong>! Kritik yang membangun selalu jadi motivasi terbaik buat belajar lebih giat lagi. Ditunggu mampir lagi nanti pas websitenya udah makin upgrade ya! ☘️`;
-            }
-          }
-
-          modalBackdrop.classList.add('show');
-          modalBackdrop.setAttribute('aria-hidden', 'false');
-
-          if (canvas) {
-            launchConfetti(canvas);
-          }
-
-          function closeModal() {
-            modalBackdrop.classList.remove('show');
-            modalBackdrop.setAttribute('aria-hidden', 'true');
-          }
-
-          if (modalCloseBtn) modalCloseBtn.onclick = closeModal;
-          if (modalXBtn) modalXBtn.onclick = closeModal;
-
-          modalBackdrop.onclick = (e) => {
-            if (e.target === modalBackdrop) closeModal();
-          };
-
-          const onKey = (e) => {
-            if (e.key === 'Escape') {
-              closeModal();
-              document.removeEventListener('keydown', onKey);
-            }
-          };
-          document.addEventListener('keydown', onKey);
-        }
-
-        // Lightweight Canvas Confetti Particles
-        function launchConfetti(canvas) {
-          const ctx = canvas.getContext('2d');
-          if (!ctx) return;
-
-          canvas.width = window.innerWidth;
-          canvas.height = window.innerHeight;
-
-          const particles = [];
-          const colors = ['#FFA500', '#FF1744', '#FFFFFF', '#27C93F', '#00D2FF', '#E0E0E0', '#FFD700'];
-
-          const cx = canvas.width / 2;
-          const cy = canvas.height / 2;
-
-          for (let i = 0; i < 65; i++) {
-            const angle = Math.random() * Math.PI * 2;
-            const speed = 4 + Math.random() * 9;
-            particles.push({
-              x: cx,
-              y: cy,
-              vx: Math.cos(angle) * speed,
-              vy: Math.sin(angle) * speed - 3,
-              size: 5 + Math.random() * 6,
-              color: colors[Math.floor(Math.random() * colors.length)],
-              alpha: 1,
-              rotation: Math.random() * Math.PI * 2,
-              rotSpeed: (Math.random() - 0.5) * 0.2,
-              gravity: 0.18 + Math.random() * 0.08
-            });
-          }
-
-          let animId;
-          function render() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            let alive = false;
-
-            particles.forEach(p => {
-              p.x += p.vx;
-              p.y += p.vy;
-              p.vy += p.gravity;
-              p.vx *= 0.98;
-              p.rotation += p.rotSpeed;
-              p.alpha -= 0.012;
-
-              if (p.alpha > 0) {
-                alive = true;
-                ctx.save();
-                ctx.globalAlpha = Math.max(0, p.alpha);
-                ctx.translate(p.x, p.y);
-                ctx.rotate(p.rotation);
-                ctx.fillStyle = p.color;
-                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
-                ctx.restore();
-              }
-            });
-
-            if (alive) {
-              animId = requestAnimationFrame(render);
-            } else {
-              ctx.clearRect(0, 0, canvas.width, canvas.height);
-              cancelAnimationFrame(animId);
-            }
-          }
-          render();
-        }
-
         function onSuccess() {
           localStorage.setItem(LAST_POST_KEY, Date.now().toString());
           if (testiMsgInput) testiMsgInput.value = '';
           
           if (testiStatus) {
             testiStatus.className = 'testi-status success';
-            testiStatus.textContent = 'Testimoni kamu berhasil dikirim & tampil live! Makasih banyak ✨';
+            testiStatus.textContent = 'Terima kasih! Komentar kamu berhasil dikirim.';
           }
 
           if (testiSubmitBtn) {
@@ -1538,8 +1425,8 @@
             testiSubmitBtn.innerHTML = 'Kirim Testimoni <span>✨</span>';
           }
 
-          // Trigger Custom Pop-up with Confetti!
-          showThankYouPopup(name, rating);
+          // Clean, natural toast notification
+          showSiteToast('Terima kasih sudah berkomentar!', 'success');
 
           // Smooth scroll to testimonials so user sees their new card
           const targetSection = document.getElementById('testimonials');
@@ -1548,8 +1435,11 @@
           }
 
           setTimeout(() => {
-            if (testiStatus) testiStatus.textContent = '';
-          }, 5000);
+            if (testiStatus) {
+              testiStatus.textContent = '';
+              testiStatus.className = 'testi-status';
+            }
+          }, 4000);
         }
       });
     }
