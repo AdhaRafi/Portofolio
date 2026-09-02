@@ -626,6 +626,7 @@
           card.classList.add('hidden-filter');
         }
       });
+    });
   });
 
   // ===== ACHIEVEMENTS CATEGORY FILTERS =====
