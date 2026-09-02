@@ -626,7 +626,70 @@
           card.classList.add('hidden-filter');
         }
       });
+  });
+
+  // ===== ACHIEVEMENTS CATEGORY FILTERS =====
+  const achieveFilterBtns = document.querySelectorAll('.achieve-filter-btn');
+  const achieveCards = document.querySelectorAll('.achievements-grid .achievement-card');
+
+  achieveFilterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      achieveFilterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const filter = btn.dataset.filter;
+      achieveCards.forEach(card => {
+        if (filter === 'all' || card.dataset.category === filter) {
+          card.style.display = '';
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(15px)';
+          setTimeout(() => {
+            card.style.transition = 'all 0.4s cubic-bezier(0.22, 1, 0.36, 1)';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+          }, 30);
+        } else {
+          card.style.display = 'none';
+        }
+      });
     });
+  });
+
+  // ===== ACHIEVEMENTS LIGHTBOX MODAL =====
+  const achieveLightbox = document.getElementById('achieve-lightbox');
+  const openAchieveLightboxBtn = document.getElementById('open-achieve-lightbox');
+  const achieveMediaBox = document.getElementById('achieve-media-box');
+  const closeAchieveLightboxBtn = document.getElementById('achieve-lightbox-close');
+
+  function openAchieveModal() {
+    if (!achieveLightbox) return;
+    achieveLightbox.classList.add('show');
+    achieveLightbox.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeAchieveModal() {
+    if (!achieveLightbox) return;
+    achieveLightbox.classList.remove('show');
+    achieveLightbox.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  if (openAchieveLightboxBtn) openAchieveLightboxBtn.addEventListener('click', openAchieveModal);
+  if (achieveMediaBox) achieveMediaBox.addEventListener('click', openAchieveModal);
+  if (closeAchieveLightboxBtn) closeAchieveLightboxBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeAchieveModal();
+  });
+  if (achieveLightbox) {
+    achieveLightbox.addEventListener('click', (e) => {
+      if (e.target === achieveLightbox) closeAchieveModal();
+    });
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && achieveLightbox && achieveLightbox.classList.contains('show')) {
+      closeAchieveModal();
+    }
   });
 
   // ===== TILT EFFECT ON BLUEPRINT PROJECT CARDS =====

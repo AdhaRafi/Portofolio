@@ -1398,20 +1398,187 @@
     <section class="achievements-section" id="achievements">
         <div class="container">
             <div class="achievements-header anim-fade-up">
-                <h2>Achievements</h2>
-                <p>Pencapaian yang pernah saya raih</p>
+                <span class="section-tag">🏆 Recognitions & Milestones</span>
+                <h2>Achievements & Awards</h2>
+                <p>Pencapaian kompetisi, prestasi akademik, sertifikasi keahlian, dan milestone project yang telah diraih.</p>
+            </div>
+
+            <!-- Achievement Category Filter -->
+            <div class="achievement-filter-wrap anim-fade-up">
+                <button type="button" class="achieve-filter-btn active" data-filter="all">Semua (4)</button>
+                <button type="button" class="achieve-filter-btn" data-filter="esport">🏆 Esports & Turnamen</button>
+                <button type="button" class="achieve-filter-btn" data-filter="tech">💻 Tech & Akademik</button>
+                <button type="button" class="achieve-filter-btn" data-filter="cert">📜 Sertifikasi</button>
+                <button type="button" class="achieve-filter-btn" data-filter="design">🎨 UI/UX & Desain</button>
             </div>
 
             <div class="achievements-grid stagger-children" id="achievements-grid">
-                <div class="achievement-card">
-                    <div class="achievement-icon">🏆</div>
-                    <h3>Juara 1 Free Fire</h3>
-                    <p>Meraih juara pertama di turnamen Free Fire. Foto segera ditambahkan!</p>
-                    <img src="assets/images/Juara.jpeg" alt="Juara Free Fire" class="achievement-img">
+                <!-- Card 1: Esports Champion (Featured with Photo) -->
+                <div class="achievement-card featured-card" data-category="esport">
+                    <div class="achievement-card-top">
+                        <div class="achievement-badge-pill gold">
+                            <span class="badge-icon">🥇</span>
+                            <span>Juara 1 (Champion)</span>
+                        </div>
+                        <span class="achievement-year-tag">2024</span>
+                    </div>
+
+                    <div class="achievement-media-box" id="achieve-media-box">
+                        <img src="assets/images/Juara.jpeg" alt="Juara 1 POCO Extreme League Season 3 Free Fire" class="achievement-img">
+                        <div class="achievement-media-overlay" id="open-achieve-lightbox">
+                            <span class="overlay-btn">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                                Lihat Foto Dokumentasi
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-content">
+                        <div class="achievement-category-label">ESPORTS TOURNAMENT • FREE FIRE</div>
+                        <h3 class="achievement-title">Juara 1 POCO Extreme League S3</h3>
+                        <p class="achievement-subtitle">Regional Banyumas • Diselenggarakan oleh POCO Indonesia</p>
+                        <p class="achievement-desc">
+                            Meraih peringkat pertama dalam kompetisi turnamen Free Fire bergengsi POCO Extreme League Season 3 Regional Banyumas bersama tim esport, membuktikan koordinasi strategi, komunikasi cepat, dan konsistensi gameplay di bawah tekanan.
+                        </p>
+                        <div class="achievement-tags">
+                            <span class="achieve-tag">🏆 1st Winner</span>
+                            <span class="achieve-tag">🎮 Free Fire Battle Royale</span>
+                            <span class="achieve-tag">📍 Regional Banyumas</span>
+                            <span class="achieve-tag">🤝 Teamwork & Strategy</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Tech & Academic Showcase -->
+                <div class="achievement-card" data-category="tech">
+                    <div class="achievement-card-top">
+                        <div class="achievement-badge-pill blue">
+                            <span class="badge-icon">🚀</span>
+                            <span>Project Showcase</span>
+                        </div>
+                        <span class="achievement-year-tag">2025</span>
+                    </div>
+
+                    <div class="achievement-visual-preview tech-preview">
+                        <div class="code-terminal-header">
+                            <div class="term-dots"><span></span><span></span><span></span></div>
+                            <span class="term-title">showcase-pplg.dev</span>
+                        </div>
+                        <div class="code-terminal-body">
+                            <div class="term-line"><span class="t-keyword">const</span> <span class="t-var">project</span> = <span class="t-str">"Web Portfolio & Platform"</span>;</div>
+                            <div class="term-line"><span class="t-keyword">const</span> <span class="t-var">status</span> = <span class="t-str">"Featured in PPLG Expo"</span>;</div>
+                            <div class="term-line status-badge"><span class="t-check">✓</span> <span>100% Responsive & Realtime Sync</span></div>
+                        </div>
+                    </div>
+
+                    <div class="achievement-content">
+                        <div class="achievement-category-label">ACADEMIC & TECH SHOWCASE</div>
+                        <h3 class="achievement-title">PPLG Showcase & Web Innovation</h3>
+                        <p class="achievement-subtitle">SMK Telkom Purwokerto • Jurusan PPLG</p>
+                        <p class="achievement-desc">
+                            Terpilih mempresentasikan karya project website interaktif responsif terintegrasi database real-time dalam ajang showcase kejuruan Pengembangan Perangkat Lunak dan Gim (PPLG).
+                        </p>
+                        <div class="achievement-tags">
+                            <span class="achieve-tag">💻 Web Development</span>
+                            <span class="achieve-tag">🏫 SMK Telkom</span>
+                            <span class="achieve-tag">🔥 Realtime Database</span>
+                            <span class="achieve-tag">⚡ Clean Architecture</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Web Development Certification -->
+                <div class="achievement-card" data-category="cert">
+                    <div class="achievement-card-top">
+                        <div class="achievement-badge-pill emerald">
+                            <span class="badge-icon">📜</span>
+                            <span>Certified Skill</span>
+                        </div>
+                        <span class="achievement-year-tag">2024 - 2025</span>
+                    </div>
+
+                    <div class="achievement-visual-preview cert-preview">
+                        <div class="cert-seal-wrap">
+                            <div class="cert-seal-circle">
+                                <span>🏅</span>
+                            </div>
+                            <div class="cert-seal-info">
+                                <strong>Certificate of Competency</strong>
+                                <span>Modern Web Development & Logic</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="achievement-content">
+                        <div class="achievement-category-label">SKILL CERTIFICATION & BOOTCAMP</div>
+                        <h3 class="achievement-title">Frontend Web & JavaScript Mastery</h3>
+                        <p class="achievement-subtitle">Independent Learning & Online Tech Curriculum</p>
+                        <p class="achievement-desc">
+                            Menyelesaikan modul komprehensif frontend engineering: manipulasi DOM modern, asynchronous JavaScript, Web API integration, serta best practice semantic & accessible code.
+                        </p>
+                        <div class="achievement-tags">
+                            <span class="achieve-tag">📜 Certified</span>
+                            <span class="achieve-tag">🌐 HTML5 / CSS3 Modern</span>
+                            <span class="achieve-tag">⚙️ JavaScript ES6+</span>
+                            <span class="achieve-tag">📱 Mobile-First Design</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: UI/UX & Creative Design Concept -->
+                <div class="achievement-card" data-category="design">
+                    <div class="achievement-card-top">
+                        <div class="achievement-badge-pill purple">
+                            <span class="badge-icon">🎨</span>
+                            <span>UI/UX Concept</span>
+                        </div>
+                        <span class="achievement-year-tag">2025</span>
+                    </div>
+
+                    <div class="achievement-visual-preview design-preview">
+                        <div class="design-swatches">
+                            <span class="swatch" style="background: #2F2E2E;"></span>
+                            <span class="swatch" style="background: #656363;"></span>
+                            <span class="swatch" style="background: #9F9C9C;"></span>
+                            <span class="swatch" style="background: #DDDDDD;"></span>
+                        </div>
+                        <div class="design-elements-row">
+                            <span class="ui-mini-btn">Interactive UI</span>
+                            <span class="ui-mini-chip">Auto-Layout</span>
+                            <span class="ui-mini-chip">Figma 100%</span>
+                        </div>
+                    </div>
+
+                    <div class="achievement-content">
+                        <div class="achievement-category-label">UI/UX & CREATIVE DESIGN</div>
+                        <h3 class="achievement-title">UI/UX Design & Brand System</h3>
+                        <p class="achievement-subtitle">Figma Design Exploration & Visual Identity</p>
+                        <p class="achievement-desc">
+                            Perancangan konsep antarmuka digital berbasis user-experience, wireframing, interactive high-fidelity prototyping, dan penyusunan design system dengan token warna Canva palette.
+                        </p>
+                        <div class="achievement-tags">
+                            <span class="achieve-tag">🎨 Figma UI/UX</span>
+                            <span class="achieve-tag">📐 Design Tokens</span>
+                            <span class="achieve-tag">✨ Micro-Interactions</span>
+                            <span class="achieve-tag">🎯 User-Centered</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- ACHIEVEMENTS IMAGE LIGHTBOX MODAL -->
+    <div class="achieve-lightbox-backdrop" id="achieve-lightbox" aria-hidden="true">
+        <div class="achieve-lightbox-content">
+            <button type="button" class="achieve-lightbox-close" id="achieve-lightbox-close" aria-label="Tutup">✕</button>
+            <img src="assets/images/Juara.jpeg" alt="Dokumentasi Juara 1 POCO Extreme League Season 3" class="achieve-lightbox-img">
+            <div class="achieve-lightbox-caption">
+                <h4>🏆 Juara 1 POCO Extreme League Season 3 (Regional Banyumas)</h4>
+                <p>Dokumentasi penyerahan gelar juara turnamen Free Fire esport bersama seluruh anggota tim.</p>
+            </div>
+        </div>
+    </div>
 
     <!-- ============ STATS ============ -->
     <section class="stats-section">
@@ -1430,7 +1597,7 @@
                     <div class="stat-label">Years Learning</div>
                 </div>
                 <div class="stat-item anim-fade-up">
-                    <div class="stat-number" data-target="1">0</div>
+                    <div class="stat-number" data-target="4">0</div>
                     <div class="stat-label">Achievements</div>
                 </div>
             </div>
