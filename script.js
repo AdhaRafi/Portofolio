@@ -1177,80 +1177,39 @@
       if (stored) localTestimonials = JSON.parse(stored);
     } catch (e) {}
 
-    // Default mock testimonials if empty
-    if (!localTestimonials || localTestimonials.length === 0) {
-      localTestimonials = [
-        {
-          id: 'init-1',
-          name: 'Irvan',
-          role: 'Teman',
-          rating: 5,
-          message: 'Jago Nemen fi 🔥 Portonya kece parah, animasi laba-labanya gokil!',
-          timestamp: Date.now() - 3600000 * 48
-        },
-        {
-          id: 'init-2',
-          name: 'Firman',
-          role: 'Teman',
-          rating: 5,
-          message: 'Jos lah websitee, desain monokromnya clean dan enak dipandang!',
-          timestamp: Date.now() - 3600000 * 24
-        },
-        {
-          id: 'init-3',
-          name: 'Budi',
-          role: 'Teman',
-          rating: 5,
-          message: 'semangat surr, sukses terus buat project-project berikutnya!',
-          timestamp: Date.now() - 3600000 * 6
-        },
-        {
-          id: 'init-4',
-          name: 'Rian Saputra',
-          role: 'Visitor',
-          rating: 5,
-          message: 'UI/UX nya berkelas banget, transisinya super halus! 🚀',
-          timestamp: Date.now() - 3600000 * 3
-        }
-      ];
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(localTestimonials));
-      } catch (e) {}
-    }
-
-    allTestimonials = [...localTestimonials];
-    renderAllTestimonialsViews();
-
-    // Connect to Firebase Realtime Database
+    // Connect to Firebase Realtime Database with 100% Realtime Value Sync
     try {
       const db = getFirebaseDb();
       if (db) {
         dbRef = db.ref('testimonials_messages');
         isFirebaseActive = true;
 
-        // Listen for new testimonials in realtime
-        dbRef.limitToLast(50).on('child_added', (snapshot) => {
+        // Full realtime sync matching Admin dashboard 1:1
+        dbRef.on('value', (snapshot) => {
           const val = snapshot.val();
+          const items = [];
           if (val) {
-            const item = { ...val, id: snapshot.key };
-            const existingIdx = allTestimonials.findIndex(t => t.id === item.id);
-            if (existingIdx === -1) {
-              allTestimonials.unshift(item);
-              renderAllTestimonialsViews();
-            }
+            Object.keys(val).forEach(key => {
+              items.push({ id: key, ...val[key] });
+            });
           }
-        });
-
-        // Listen for deleted testimonials in realtime across all devices!
-        dbRef.on('child_removed', (snapshot) => {
-          const id = snapshot.key;
-          allTestimonials = allTestimonials.filter(t => t.id !== id);
+          items.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+          allTestimonials = items;
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+          } catch (e) {}
           renderAllTestimonialsViews();
         });
       }
     } catch (err) {
       console.warn("Firebase initialization note (using local storage fallback if needed):", err);
       isFirebaseActive = false;
+    }
+
+    // Fallback if Firebase is unavailable
+    if (!isFirebaseActive) {
+      allTestimonials = Array.isArray(localTestimonials) ? [...localTestimonials] : [];
+      renderAllTestimonialsViews();
     }
 
     // --- FORM SUBMISSION ---

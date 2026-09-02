@@ -3467,17 +3467,6 @@ body {
   font-weight: 500;
 }
 
-.testi-hint-badge {
-  display: inline-flex;
-  align-items: center;
-  font-size: 0.8rem;
-  color: var(--c-500);
-  background: rgba(0, 0, 0, 0.03);
-  padding: 6px 14px;
-  border-radius: 999px;
-  border: 1px dashed var(--border-subtle);
-}
-
 .testi-view-toggles {
   display: inline-flex;
   align-items: center;
