@@ -890,7 +890,7 @@
                 gap: 14px;
             }
 
-            .btn-delete-item, .btn-reply-email, .btn-reply-wa {
+            .btn-delete-item, .btn-reply-email, .btn-reply-wa, .btn-edit-item {
                 width: 100%;
                 justify-content: center;
             }
@@ -900,6 +900,330 @@
                 width: 100%;
                 margin-top: 4px;
             }
+        }
+
+        /* ===== CRUD ACTION BUTTONS & TOOLBAR EXTENSION ===== */
+        .toolbar-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-add-primary {
+            background: #10B981;
+            color: #FFFFFF;
+            border: 1px solid #10B981;
+            padding: 9px 18px;
+            border-radius: var(--radius-xs);
+            font-family: var(--font-body);
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
+        }
+
+        .btn-add-primary:hover {
+            background: #059669;
+            border-color: #059669;
+            transform: translateY(-1px);
+        }
+
+        .btn-reset-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-subtle);
+            padding: 9px 14px;
+            border-radius: var(--radius-xs);
+            font-family: var(--font-body);
+            font-size: 0.84rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+        }
+
+        .btn-reset-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border-color: var(--border-hover);
+        }
+
+        .btn-edit-item {
+            background: rgba(59, 130, 246, 0.12);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #60A5FA;
+            padding: 7px 12px;
+            border-radius: var(--radius-xs);
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+        }
+
+        .btn-edit-item:hover {
+            background: #3B82F6;
+            color: #FFFFFF;
+        }
+
+        /* Project / Achievement Item Custom Layout */
+        .item-thumb-preview {
+            width: 72px;
+            height: 52px;
+            border-radius: var(--radius-xs);
+            background: var(--surface-3);
+            border: 1px solid var(--border-subtle);
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .item-icon-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--surface-3);
+            border: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .item-tags-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .admin-chip-tag {
+            font-size: 0.72rem;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-subtle);
+            color: #d4d4d8;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+        }
+
+        /* ===== MODAL DIALOG ===== */
+        .admin-modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 99999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .admin-modal-backdrop.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .admin-modal-box {
+            background: #141418;
+            border: 1px solid var(--border-hover);
+            border-radius: var(--radius-md);
+            width: 100%;
+            max-width: 650px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+            transform: scale(0.95) translateY(10px);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .admin-modal-backdrop.show .admin-modal-box {
+            transform: scale(1) translateY(0);
+        }
+
+        .admin-modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .admin-modal-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-tertiary);
+            font-size: 1.4rem;
+            line-height: 1;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .btn-modal-close:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .admin-modal-body {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        @media (max-width: 580px) {
+            .form-grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .admin-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .admin-form-label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .admin-form-label span.req {
+            color: var(--danger);
+        }
+
+        .admin-form-input, .admin-form-select, .admin-form-textarea {
+            width: 100%;
+            background: #09090b;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xs);
+            padding: 10px 14px;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 0.88rem;
+            transition: var(--transition);
+        }
+
+        .admin-form-input:focus, .admin-form-select:focus, .admin-form-textarea:focus {
+            outline: none;
+            border-color: #10B981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+        }
+
+        .admin-form-textarea {
+            resize: vertical;
+            min-height: 80px;
+            line-height: 1.5;
+        }
+
+        .file-upload-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn-browse-file {
+            background: var(--surface-3);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 8px 14px;
+            border-radius: var(--radius-xs);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: var(--transition);
+        }
+
+        .btn-browse-file:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .admin-modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            background: #0d0d10;
+            border-radius: 0 0 var(--radius-md) var(--radius-md);
+        }
+
+        .btn-modal-cancel {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            padding: 9px 18px;
+            border-radius: var(--radius-xs);
+            font-family: var(--font-body);
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-modal-cancel:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+        }
+
+        .btn-modal-save {
+            background: #10B981;
+            border: 1px solid #10B981;
+            color: #FFFFFF;
+            padding: 9px 22px;
+            border-radius: var(--radius-xs);
+            font-family: var(--font-body);
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
+        }
+
+        .btn-modal-save:hover {
+            background: #059669;
+            border-color: #059669;
         }
     </style>
 </head>
@@ -995,11 +1319,21 @@
                     <span>📬 Pesan Kontak (Inbox)</span>
                     <span class="tab-badge" id="badge-msg-count">0</span>
                 </button>
+                <button type="button" class="tab-btn" id="tab-btn-projects">
+                    <span>💻 Selected Projects</span>
+                    <span class="tab-badge" id="badge-proj-count">0</span>
+                </button>
+                <button type="button" class="tab-btn" id="tab-btn-achieve">
+                    <span>🏆 Achievements & Awards</span>
+                    <span class="tab-badge" id="badge-achieve-count">0</span>
+                </button>
             </div>
 
             <div class="content-header">
-                <h1 id="view-title">Testimonials Stream</h1>
-                <p id="view-desc">Manage and moderate community reviews submitted via your portfolio.</p>
+                <div>
+                    <h1 id="view-title">Testimonials Stream</h1>
+                    <p id="view-desc">Manage and moderate community reviews submitted via your portfolio.</p>
+                </div>
             </div>
 
             <!-- Stats KPI Cards -->
@@ -1012,18 +1346,18 @@
                         </svg>
                     </div>
                     <div class="stat-number" id="stat-total">0</div>
-                    <div class="stat-meta">Synced from Firebase RTDB</div>
+                    <div class="stat-meta" id="stat-meta-1">Synced from Firebase RTDB</div>
                 </div>
 
                 <div class="stat-card" id="card-stat-avg">
                     <div class="stat-label">
-                        <span>Average Rating</span>
+                        <span id="stat-label-2">Average Rating</span>
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                         </svg>
                     </div>
                     <div class="stat-number" id="stat-avg">5.0</div>
-                    <div class="stat-meta">Overall audience satisfaction</div>
+                    <div class="stat-meta" id="stat-meta-2">Overall audience satisfaction</div>
                 </div>
 
                 <div class="stat-card" id="card-stat-extra">
@@ -1038,15 +1372,16 @@
                 </div>
             </div>
 
-            <!-- Action Toolbar (Search & Filter) -->
+            <!-- Action Toolbar (Search, Filter, & CRUD Action Buttons) -->
             <div class="toolbar">
                 <div class="search-box">
                     <svg viewBox="0 0 24 24">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
-                    <input type="text" id="search-input" placeholder="Search by name, role, email, or message...">
+                    <input type="text" id="search-input" placeholder="Search...">
                 </div>
+
                 <div class="filter-group" id="filter-group-wrap">
                     <select class="filter-select" id="rating-filter">
                         <option value="all">All Ratings (1 - 5 ★)</option>
@@ -1055,6 +1390,23 @@
                         <option value="3">3 Stars only</option>
                         <option value="low">1 - 2 Stars</option>
                     </select>
+                </div>
+
+                <div class="toolbar-actions" id="toolbar-actions-wrap" style="display: none;">
+                    <button type="button" class="btn-add-primary" id="btn-add-item">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span id="btn-add-label">Tambah Project</span>
+                    </button>
+                    <button type="button" class="btn-reset-secondary" id="btn-reset-default" title="Kembalikan item bawaan default">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="1 4 1 10 7 10"></polyline>
+                            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                        </svg>
+                        <span>Reset Default</span>
+                    </button>
                 </div>
             </div>
 
@@ -1070,6 +1422,218 @@
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- ================= MODAL: ADD / EDIT PROJECT ================= -->
+    <div class="admin-modal-backdrop" id="modal-project-backdrop">
+        <div class="admin-modal-box">
+            <div class="admin-modal-header">
+                <div class="admin-modal-title" id="project-modal-title">
+                    <span>💻</span> Tambah Project Baru
+                </div>
+                <button type="button" class="btn-modal-close" id="btn-close-project-modal">&times;</button>
+            </div>
+            <form id="project-form">
+                <div class="admin-modal-body">
+                    <input type="hidden" id="proj-id">
+
+                    <div class="admin-form-group">
+                        <label class="admin-form-label" for="proj-title">Judul Project <span class="req">*</span></label>
+                        <input type="text" id="proj-title" class="admin-form-input" placeholder="e.g. PasarNusa — Marketplace & Digital Payment" required>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="admin-form-group">
+                            <label class="admin-form-label" for="proj-category">Kategori Filter <span class="req">*</span></label>
+                            <select id="proj-category" class="admin-form-select" required>
+                                <option value="web">🌐 Web Development</option>
+                                <option value="esport">🏆 Esports & Tournament Hub</option>
+                                <option value="uiux">🎨 UI/UX Design</option>
+                                <option value="app">📱 Mobile & System App</option>
+                            </select>
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label class="admin-form-label" for="proj-status">Status Pill</label>
+                            <input type="text" id="proj-status" class="admin-form-input" placeholder="e.g. ● Open Source • GitHub / ● Completed">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="admin-form-group">
+                            <label class="admin-form-label" for="proj-badge">Category Badge Text</label>
+                            <input type="text" id="proj-badge" class="admin-form-input" placeholder="e.g. E-COMMERCE • FULLSTACK & PAYMENT GATEWAY">
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label class="admin-form-label" for="proj-browser-url">Browser Bar URL</label>
+                            <input type="text" id="proj-browser-url" class="admin-form-input" placeholder="e.g. github.com/AdhaRafi/pasarnusa">
+                        </div>
+                    </div>
+
+                    <div class="admin-form-group">
+                        <label class="admin-form-label" for="proj-desc">Deskripsi Project <span class="req">*</span></label>
+                        <textarea id="proj-desc" class="admin-form-textarea" placeholder="Tuliskan deskripsi lengkap project, fitur utama, dan teknologi yang digunakan..." required></textarea>
+                    </div>
+
+                    <div class="admin-form-group">
+                        <label class="admin-form-label" for="proj-tags">Tech Stack Tags (Pisahkan dengan koma)</label>
+                        <input type="text" id="proj-tags" class="admin-form-input" placeholder="e.g. PHP Native, MySQL Database, Midtrans Payment API, Google OAuth">
+                    </div>
+
+                    <div class="admin-form-group">
+                        <label class="admin-form-label" for="proj-img">Foto / Thumbnail Project (URL atau Upload File)</label>
+                        <div class="file-upload-row">
+                            <input type="text" id="proj-img" class="admin-form-input" placeholder="assets/images/Pasarnusa.png atau link https://...">
+                            <label class="btn-browse-file">
+                                📁 Upload
+                                <input type="file" id="proj-file-input" accept="image/*" style="display: none;">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="admin-form-group">
+                            <label class="admin-form-label" for="proj-btn1-text">Teks Tombol 1</label>
+                            <input type="text" id="proj-btn1-text" class="admin-form-input" placeholder="e.g. GitHub Repo / Source Code">
+                        </div>
+                        <div class="admin-form-group">
+                            <label class="admin-form-label" for="proj-btn1-url">Link Tombol 1 (URL)</label>
+                            <input type="url" id="proj-btn1-url" class="admin-form-input" placeholder="https://github.com/AdhaRafi/pasarnusa">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="admin-form-group">
+                            <label class="admin-form-label" for="proj-btn2-text">Teks Tombol 2 (Opsional)</label>
+                            <input type="text" id="proj-btn2-text" class="admin-form-input" placeholder="e.g. Live Preview ↗ / Lihat Kode ↗">
+                        </div>
+                        <div class="admin-form-group">
+                            <label class="admin-form-label" for="proj-btn2-url">Link Tombol 2 (Opsional)</label>
+                            <input type="url" id="proj-btn2-url" class="admin-form-input" placeholder="https://...">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-modal-footer">
+                    <button type="button" class="btn-modal-cancel" id="btn-cancel-project-modal">Batal</button>
+                    <button type="submit" class="btn-modal-save">
+                        <span>💾 Simpan Project</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: ADD / EDIT ACHIEVEMENT ================= -->
+    <div class="admin-modal-backdrop" id="modal-achieve-backdrop">
+        <div class="admin-modal-box">
+            <div class="admin-modal-header">
+                <div class="admin-modal-title" id="achieve-modal-title">
+                    <span>🏆</span> Tambah Achievement Baru
+                </div>
+                <button type="button" class="btn-modal-close" id="btn-close-achieve-modal">&times;</button>
+            </div>
+            <form id="achieve-form">
+                <div class="admin-modal-body">
+                    <input type="hidden" id="achieve-id">
+
+                    <div class="admin-form-group">
+                        <label class="admin-form-label" for="achieve-title">Judul Prestasi / Milestone <span class="req">*</span></label>
+                        <input type="text" id="achieve-title" class="admin-form-input" placeholder="e.g. Juara 1 POCO Extreme League S3" required>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="admin-form-group">
+                            <label class="admin-form-label" for="achieve-category">Kategori Filter <span class="req">*</span></label>
+                            <select id="achieve-category" class="admin-form-select" required>
+                                <option value="esport">🏆 Esports & Turnamen</option>
+                                <option value="tech">💻 Tech & Akademik</option>
+                                <option value="cert">📜 Sertifikasi</option>
+                                <option value="design">🎨 UI/UX & Desain</option>
+                            </select>
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label class="admin-form-label" for="achieve-year">Tahun / Periode <span class="req">*</span></label>
+                            <input type="text" id="achieve-year" class="admin-form-input" placeholder="e.g. 2024 atau 2024 - 2025" required>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="admin-form-group">
+                            <label class="admin-form-label" for="achieve-badge-type">Warna Badge</label>
+                            <select id="achieve-badge-type" class="admin-form-select">
+                                <option value="gold">🥇 Gold (Juara 1 / Prestasi Emas)</option>
+                                <option value="blue">🚀 Blue (Showcase / Inovasi)</option>
+                                <option value="emerald">📜 Emerald (Sertifikasi / Kelulusan)</option>
+                                <option value="purple">🎨 Purple (Desain / Konsep UI/UX)</option>
+                            </select>
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label class="admin-form-label" for="achieve-badge-icon">Icon Emoji & Teks Badge</label>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="text" id="achieve-badge-icon" class="admin-form-input" style="width: 60px; text-align: center;" placeholder="🥇" value="🥇">
+                                <input type="text" id="achieve-badge-text" class="admin-form-input" placeholder="e.g. Juara 1 (Champion)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="admin-form-group">
+                            <label class="admin-form-label" for="achieve-category-label">Category Label Tag</label>
+                            <input type="text" id="achieve-category-label" class="admin-form-input" placeholder="e.g. ESPORTS TOURNAMENT • FREE FIRE">
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label class="admin-form-label" for="achieve-subtitle">Sub-judul / Penyelenggara</label>
+                            <input type="text" id="achieve-subtitle" class="admin-form-input" placeholder="e.g. Regional Banyumas • Diselenggarakan oleh POCO Indonesia">
+                        </div>
+                    </div>
+
+                    <div class="admin-form-group">
+                        <label class="admin-form-label" for="achieve-desc">Deskripsi Pencapaian <span class="req">*</span></label>
+                        <textarea id="achieve-desc" class="admin-form-textarea" placeholder="Tuliskan cerita prestasi, peran, dan dampak pencapaian ini..." required></textarea>
+                    </div>
+
+                    <div class="admin-form-group">
+                        <label class="admin-form-label" for="achieve-tags">Highlight Tags (Pisahkan dengan koma)</label>
+                        <input type="text" id="achieve-tags" class="admin-form-input" placeholder="e.g. 🏆 1st Winner, 🎮 Free Fire Battle Royale, 📍 Regional Banyumas, 🤝 Teamwork">
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="admin-form-group">
+                            <label class="admin-form-label" for="achieve-img">Foto Dokumentasi / Piagam (Opsional)</label>
+                            <div class="file-upload-row">
+                                <input type="text" id="achieve-img" class="admin-form-input" placeholder="assets/images/Juara.jpeg atau link https://...">
+                                <label class="btn-browse-file">
+                                    📁 Upload
+                                    <input type="file" id="achieve-file-input" accept="image/*" style="display: none;">
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label class="admin-form-label" for="achieve-preview-type">Style Tampilan Jika Tanpa Foto</label>
+                            <select id="achieve-preview-type" class="admin-form-select">
+                                <option value="image">Foto Dokumentasi (Dengan Lightbox Modal)</option>
+                                <option value="tech">💻 Code Terminal Mockup</option>
+                                <option value="cert">🏅 Certificate Seal Badge</option>
+                                <option value="design">🎨 UI Swatches & Chips</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-modal-footer">
+                    <button type="button" class="btn-modal-cancel" id="btn-cancel-achieve-modal">Batal</button>
+                    <button type="submit" class="btn-modal-save">
+                        <span>💾 Simpan Achievement</span>
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- SCRIPT LOGIC -->
@@ -1093,6 +1657,157 @@
                 return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
             }
 
+            // --- DEFAULT DATA FOR SEEDING ---
+            const DEFAULT_PROJECTS = [
+                {
+                    id: "proj_pasarnusa",
+                    title: "PasarNusa — Marketplace & Digital Payment",
+                    category: "web",
+                    categoryBadge: "E-COMMERCE • FULLSTACK & PAYMENT GATEWAY",
+                    statusPill: "● Open Source • GitHub",
+                    browserUrl: "github.com/AdhaRafi/pasarnusa",
+                    image: "assets/images/Pasarnusa.png",
+                    desc: "Platform e-commerce digitalisasi UMKM pasar tradisional yang dilengkapi integrasi Google OAuth 2.0 (Single Sign-On), Midtrans Payment Gateway untuk pembayaran digital otomatis, manajemen admin toko, dan keranjang belanja dinamis.",
+                    tags: ["PHP Native", "MySQL Database", "Google OAuth 2.0", "Midtrans Payment API", "Composer", "Multi-Merchant"],
+                    primaryBtnText: "GitHub Repo",
+                    primaryBtnUrl: "https://github.com/AdhaRafi/pasarnusa",
+                    secondaryBtnText: "Lihat Kode ↗",
+                    secondaryBtnUrl: "https://github.com/AdhaRafi/pasarnusa",
+                    timestamp: Date.now() - 100000
+                },
+                {
+                    id: "proj_portal_smk",
+                    title: "Portal Informasi SMK Telkom",
+                    category: "web",
+                    categoryBadge: "WEB DEVELOPMENT • FULLSTACK",
+                    statusPill: "● Completed",
+                    browserUrl: "smktelkom-pwt.sch.id",
+                    image: "",
+                    desc: "Website portal komprehensif untuk menyajikan profil sekolah, sistem pengumuman agenda, galeri kegiatan siswa jurusan PPLG, serta form pendaftaran online terintegrasi database.",
+                    tags: ["HTML5 / CSS3", "PHP Native", "MySQL Database", "Responsive UI"],
+                    primaryBtnText: "Source Code",
+                    primaryBtnUrl: "https://github.com/AdhaRafi",
+                    secondaryBtnText: "Live Preview ↗",
+                    secondaryBtnUrl: "https://github.com/AdhaRafi",
+                    timestamp: Date.now() - 200000
+                },
+                {
+                    id: "proj_ff_tournament",
+                    title: "Free Fire Tournament & Leaderboard Hub",
+                    category: "esport",
+                    categoryBadge: "ESPORTS & GAMING • WEB APP",
+                    statusPill: "● Championship Hub",
+                    browserUrl: "ff-tournament-hub.dev",
+                    image: "",
+                    desc: "Platform pendaftaran tim esport Free Fire dengan kalkulasi poin otomatis, sistem standing leaderboard real-time, jadwal match tournament, dan galeri piala prestasi Juara 1.",
+                    tags: ["JavaScript ES6", "Interactive DOM", "Local Storage", "Dark Mode UI", "Esport Branding"],
+                    primaryBtnText: "Source Code",
+                    primaryBtnUrl: "https://github.com/AdhaRafi",
+                    secondaryBtnText: "Live Preview ↗",
+                    secondaryBtnUrl: "https://github.com/AdhaRafi",
+                    timestamp: Date.now() - 300000
+                },
+                {
+                    id: "proj_pplg_store",
+                    title: "Toko Online & Katalog Produk PPLG",
+                    category: "web",
+                    categoryBadge: "E-COMMERCE • WEB APPLICATION",
+                    statusPill: "● Completed",
+                    browserUrl: "pplg-store.shop",
+                    image: "",
+                    desc: "Aplikasi web e-commerce interaktif dengan keranjang belanja dinamis, filter kategori produk, kalkulasi total harga otomatis, dan direct checkout via WhatsApp link order.",
+                    tags: ["JavaScript", "PHP & MySQL", "Cart State", "WhatsApp API", "Tailwind CSS"],
+                    primaryBtnText: "Source Code",
+                    primaryBtnUrl: "https://github.com/AdhaRafi",
+                    secondaryBtnText: "Live Preview ↗",
+                    secondaryBtnUrl: "https://github.com/AdhaRafi",
+                    timestamp: Date.now() - 400000
+                },
+                {
+                    id: "proj_figma_uiux",
+                    title: "Desain UI/UX Mobile App & Design System",
+                    category: "uiux",
+                    categoryBadge: "UI/UX DESIGN • FIGMA PROTOTYPE",
+                    statusPill: "● Figma Design",
+                    browserUrl: "figma.com/@adharafi",
+                    image: "",
+                    desc: "Perancangan sistematis UI/UX mencakup user persona, wireframing low-fidelity hingga high-fidelity, interactive clickable prototype, dan atomic design token kit di Figma.",
+                    tags: ["Figma Pro", "Canva", "Wireframing", "Design Tokens", "Atomic Design"],
+                    primaryBtnText: "Lihat Desain",
+                    primaryBtnUrl: "https://www.instagram.com/rafiiwow_",
+                    secondaryBtnText: "Case Study ↗",
+                    secondaryBtnUrl: "https://github.com/AdhaRafi",
+                    timestamp: Date.now() - 500000
+                }
+            ];
+
+            const DEFAULT_ACHIEVEMENTS = [
+                {
+                    id: "achieve_poco_s3",
+                    title: "Juara 1 POCO Extreme League S3",
+                    category: "esport",
+                    badgeType: "gold",
+                    badgeIcon: "🥇",
+                    badgeText: "Juara 1 (Champion)",
+                    year: "2024",
+                    categoryLabel: "ESPORTS TOURNAMENT • FREE FIRE",
+                    subtitle: "Regional Banyumas • Diselenggarakan oleh POCO Indonesia",
+                    desc: "Meraih peringkat pertama dalam kompetisi turnamen Free Fire bergengsi POCO Extreme League Season 3 Regional Banyumas bersama tim esport, membuktikan koordinasi strategi, komunikasi cepat, dan konsistensi gameplay di bawah tekanan.",
+                    tags: ["🏆 1st Winner", "🎮 Free Fire Battle Royale", "📍 Regional Banyumas", "🤝 Teamwork & Strategy"],
+                    image: "assets/images/Juara.jpeg",
+                    previewType: "image",
+                    timestamp: Date.now() - 100000
+                },
+                {
+                    id: "achieve_pplg_showcase",
+                    title: "PPLG Showcase & Web Innovation",
+                    category: "tech",
+                    badgeType: "blue",
+                    badgeIcon: "🚀",
+                    badgeText: "Project Showcase",
+                    year: "2025",
+                    categoryLabel: "ACADEMIC & TECH SHOWCASE",
+                    subtitle: "SMK Telkom Purwokerto • Jurusan PPLG",
+                    desc: "Terpilih mempresentasikan karya project website interaktif responsif terintegrasi database real-time dalam ajang showcase kejuruan Pengembangan Perangkat Lunak dan Gim (PPLG).",
+                    tags: ["💻 Web Development", "🏫 SMK Telkom", "🔥 Realtime Database", "⚡ Clean Architecture"],
+                    image: "",
+                    previewType: "tech",
+                    timestamp: Date.now() - 200000
+                },
+                {
+                    id: "achieve_frontend_cert",
+                    title: "Frontend Web & JavaScript Mastery",
+                    category: "cert",
+                    badgeType: "emerald",
+                    badgeIcon: "📜",
+                    badgeText: "Certified Skill",
+                    year: "2024 - 2025",
+                    categoryLabel: "SKILL CERTIFICATION & BOOTCAMP",
+                    subtitle: "Independent Learning & Online Tech Curriculum",
+                    desc: "Menyelesaikan modul komprehensif frontend engineering: manipulasi DOM modern, asynchronous JavaScript, Web API integration, serta best practice semantic & accessible code.",
+                    tags: ["📜 Certified", "🌐 HTML5 / CSS3 Modern", "⚙️ JavaScript ES6+", "📱 Mobile-First Design"],
+                    image: "",
+                    previewType: "cert",
+                    timestamp: Date.now() - 300000
+                },
+                {
+                    id: "achieve_uiux_concept",
+                    title: "UI/UX Design & Brand System",
+                    category: "design",
+                    badgeType: "purple",
+                    badgeIcon: "🎨",
+                    badgeText: "UI/UX Concept",
+                    year: "2025",
+                    categoryLabel: "UI/UX & CREATIVE DESIGN",
+                    subtitle: "Figma Design Exploration & Visual Identity",
+                    desc: "Perancangan konsep antarmuka digital berbasis user-experience, wireframing, interactive high-fidelity prototyping, dan penyusunan design system dengan token warna Canva palette.",
+                    tags: ["🎨 Figma UI/UX", "📐 Design Tokens", "✨ Micro-Interactions", "🎯 User-Centered"],
+                    image: "",
+                    previewType: "design",
+                    timestamp: Date.now() - 400000
+                }
+            ];
+
             // --- DOM ELEMENTS ---
             const loginScreen = document.getElementById('login-screen');
             const dashboardScreen = document.getElementById('dashboard-screen');
@@ -1105,27 +1820,56 @@
 
             const tabBtnTesti = document.getElementById('tab-btn-testi');
             const tabBtnMessages = document.getElementById('tab-btn-messages');
+            const tabBtnProjects = document.getElementById('tab-btn-projects');
+            const tabBtnAchieve = document.getElementById('tab-btn-achieve');
+
             const badgeTestiCount = document.getElementById('badge-testi-count');
             const badgeMsgCount = document.getElementById('badge-msg-count');
+            const badgeProjCount = document.getElementById('badge-proj-count');
+            const badgeAchieveCount = document.getElementById('badge-achieve-count');
 
             const viewTitle = document.getElementById('view-title');
             const viewDesc = document.getElementById('view-desc');
             const statLabel1 = document.getElementById('stat-label-1');
             const statTotal = document.getElementById('stat-total');
+            const statMeta1 = document.getElementById('stat-meta-1');
+            const statLabel2 = document.getElementById('stat-label-2');
             const statAvg = document.getElementById('stat-avg');
-            const statFiveStar = document.getElementById('stat-five-star');
-            const cardStatAvg = document.getElementById('card-stat-avg');
+            const statMeta2 = document.getElementById('stat-meta-2');
             const statLabel3 = document.getElementById('stat-label-3');
+            const statFiveStar = document.getElementById('stat-five-star');
             const statMeta3 = document.getElementById('stat-meta-3');
+            const cardStatAvg = document.getElementById('card-stat-avg');
 
             const searchInput = document.getElementById('search-input');
             const ratingFilter = document.getElementById('rating-filter');
             const filterGroupWrap = document.getElementById('filter-group-wrap');
+            const toolbarActionsWrap = document.getElementById('toolbar-actions-wrap');
+            const btnAddItem = document.getElementById('btn-add-item');
+            const btnAddLabel = document.getElementById('btn-add-label');
+            const btnResetDefault = document.getElementById('btn-reset-default');
             const testiListContainer = document.getElementById('testi-list-container');
 
-            let currentView = 'testimonials'; // 'testimonials' | 'messages'
+            // Modals & Forms
+            const modalProjectBackdrop = document.getElementById('modal-project-backdrop');
+            const projectForm = document.getElementById('project-form');
+            const projectModalTitle = document.getElementById('project-modal-title');
+            const btnCloseProjectModal = document.getElementById('btn-close-project-modal');
+            const btnCancelProjectModal = document.getElementById('btn-cancel-project-modal');
+            const projFileInput = document.getElementById('proj-file-input');
+
+            const modalAchieveBackdrop = document.getElementById('modal-achieve-backdrop');
+            const achieveForm = document.getElementById('achieve-form');
+            const achieveModalTitle = document.getElementById('achieve-modal-title');
+            const btnCloseAchieveModal = document.getElementById('btn-close-achieve-modal');
+            const btnCancelAchieveModal = document.getElementById('btn-cancel-achieve-modal');
+            const achieveFileInput = document.getElementById('achieve-file-input');
+
+            let currentView = 'testimonials'; // 'testimonials' | 'messages' | 'projects' | 'achievements'
             let testimonialsData = [];
             let messagesData = [];
+            let projectsData = [];
+            let achievementsData = [];
 
             // --- FIREBASE CONFIGURATION ---
             const firebaseConfig = {
@@ -1142,37 +1886,89 @@
             let isFirebaseActive = false;
             let dbTestiRef = null;
             let dbMsgRef = null;
+            let dbProjectsRef = null;
+            let dbAchievementsRef = null;
 
             // --- TAB SWITCHING ---
-            if (tabBtnTesti && tabBtnMessages) {
-                tabBtnTesti.addEventListener('click', () => {
-                    currentView = 'testimonials';
-                    tabBtnTesti.classList.add('active');
-                    tabBtnMessages.classList.remove('active');
+            function setTab(view) {
+                currentView = view;
+                const tabs = [
+                    { name: 'testimonials', btn: tabBtnTesti },
+                    { name: 'messages', btn: tabBtnMessages },
+                    { name: 'projects', btn: tabBtnProjects },
+                    { name: 'achievements', btn: tabBtnAchieve }
+                ];
+
+                tabs.forEach(t => {
+                    if (t.btn) {
+                        if (t.name === view) t.btn.classList.add('active');
+                        else t.btn.classList.remove('active');
+                    }
+                });
+
+                if (searchInput) searchInput.value = '';
+
+                if (view === 'testimonials') {
                     viewTitle.textContent = 'Testimonials Stream';
                     viewDesc.textContent = 'Manage and moderate community reviews submitted via your portfolio.';
                     if (filterGroupWrap) filterGroupWrap.style.display = 'block';
+                    if (toolbarActionsWrap) toolbarActionsWrap.style.display = 'none';
                     if (cardStatAvg) cardStatAvg.style.display = 'block';
                     if (statLabel1) statLabel1.textContent = 'Total Reviews';
+                    if (statMeta1) statMeta1.textContent = 'Synced from Firebase RTDB';
+                    if (statLabel2) statLabel2.textContent = 'Average Rating';
+                    if (statMeta2) statMeta2.textContent = 'Overall audience satisfaction';
                     if (statLabel3) statLabel3.textContent = '5-Star Ratings';
                     if (statMeta3) statMeta3.textContent = 'Top feedback responses';
-                    renderDashboard();
-                });
-
-                tabBtnMessages.addEventListener('click', () => {
-                    currentView = 'messages';
-                    tabBtnMessages.classList.add('active');
-                    tabBtnTesti.classList.remove('active');
+                    if (searchInput) searchInput.placeholder = 'Search by name, role, email, or message...';
+                } else if (view === 'messages') {
                     viewTitle.textContent = 'Contact Messages Inbox';
                     viewDesc.textContent = 'Direct inquiries sent from visitors using your portfolio contact form.';
                     if (filterGroupWrap) filterGroupWrap.style.display = 'none';
+                    if (toolbarActionsWrap) toolbarActionsWrap.style.display = 'none';
                     if (cardStatAvg) cardStatAvg.style.display = 'none';
                     if (statLabel1) statLabel1.textContent = 'Total Messages';
-                    if (statLabel3) statLabel3.textContent = 'Latest Inquiries';
-                    if (statMeta3) statMeta3.textContent = 'Direct portfolio contacts';
-                    renderDashboard();
-                });
+                    if (statMeta1) statMeta1.textContent = 'Realtime inbox messages';
+                    if (statLabel3) statLabel3.textContent = 'Direct Contacts';
+                    if (statMeta3) statMeta3.textContent = 'Direct inquiries';
+                    if (searchInput) searchInput.placeholder = 'Search by name, email, subject, or message...';
+                } else if (view === 'projects') {
+                    viewTitle.textContent = 'Selected Projects Management';
+                    viewDesc.textContent = 'Tambah, edit, dan hapus portfolio project yang tampil di website utama.';
+                    if (filterGroupWrap) filterGroupWrap.style.display = 'none';
+                    if (toolbarActionsWrap) toolbarActionsWrap.style.display = 'flex';
+                    if (btnAddLabel) btnAddLabel.textContent = 'Tambah Project Baru';
+                    if (cardStatAvg) cardStatAvg.style.display = 'block';
+                    if (statLabel1) statLabel1.textContent = 'Total Projects';
+                    if (statMeta1) statMeta1.textContent = 'Live on Portfolio';
+                    if (statLabel2) statLabel2.textContent = 'Web Development';
+                    if (statMeta2) statMeta2.textContent = 'Web & Fullstack Apps';
+                    if (statLabel3) statLabel3.textContent = 'UI/UX & Esport Hub';
+                    if (statMeta3) statMeta3.textContent = 'Design & Interactive Platforms';
+                    if (searchInput) searchInput.placeholder = 'Search projects by title, category, tags, or desc...';
+                } else if (view === 'achievements') {
+                    viewTitle.textContent = 'Achievements & Awards Management';
+                    viewDesc.textContent = 'Kelola sertifikasi, piala turnamen esport, dan milestone akademik.';
+                    if (filterGroupWrap) filterGroupWrap.style.display = 'none';
+                    if (toolbarActionsWrap) toolbarActionsWrap.style.display = 'flex';
+                    if (btnAddLabel) btnAddLabel.textContent = 'Tambah Achievement Baru';
+                    if (cardStatAvg) cardStatAvg.style.display = 'block';
+                    if (statLabel1) statLabel1.textContent = 'Total Achievements';
+                    if (statMeta1) statMeta1.textContent = 'Live on Portfolio';
+                    if (statLabel2) statLabel2.textContent = 'Esports & Turnamen';
+                    if (statMeta2) statMeta2.textContent = 'Piala & Kompetisi';
+                    if (statLabel3) statLabel3.textContent = 'Tech & Sertifikasi';
+                    if (statMeta3) statMeta3.textContent = 'Akademik & Sertifikat';
+                    if (searchInput) searchInput.placeholder = 'Search achievements by title, category, year, or desc...';
+                }
+
+                renderDashboard();
             }
+
+            if (tabBtnTesti) tabBtnTesti.addEventListener('click', () => setTab('testimonials'));
+            if (tabBtnMessages) tabBtnMessages.addEventListener('click', () => setTab('messages'));
+            if (tabBtnProjects) tabBtnProjects.addEventListener('click', () => setTab('projects'));
+            if (tabBtnAchieve) tabBtnAchieve.addEventListener('click', () => setTab('achievements'));
 
             // --- AUTH LOGIC ---
             function checkSession() {
@@ -1199,16 +1995,6 @@
                 initDatabase();
             }
 
-            function showToast(msg, type = 'info') {
-                if (!toast) return;
-                toast.textContent = msg;
-                toast.className = `toast show ${type}`;
-                setTimeout(() => {
-                    toast.className = 'toast';
-                }, 3200);
-            }
-
-            // Toggle Password Visibility
             if (togglePwdBtn && passwordInput) {
                 togglePwdBtn.addEventListener('click', () => {
                     const isPwd = passwordInput.type === 'password';
@@ -1216,7 +2002,6 @@
                 });
             }
 
-            // Form Submit Login
             if (loginForm) {
                 loginForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
@@ -1238,7 +2023,6 @@
                 });
             }
 
-            // Logout
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', () => {
                     sessionStorage.removeItem(AUTH_KEY);
@@ -1247,7 +2031,29 @@
                 });
             }
 
-            // --- DATABASE CONNECTION ---
+            // --- TOAST HELPER ---
+            function showToast(msg, type = 'info') {
+                if (!toast) return;
+                toast.textContent = msg;
+                if (type === 'success') {
+                    toast.style.borderColor = '#10B981';
+                    toast.style.color = '#34D399';
+                } else if (type === 'error') {
+                    toast.style.borderColor = '#EF4444';
+                    toast.style.color = '#F87171';
+                } else {
+                    toast.style.borderColor = 'var(--border-hover)';
+                    toast.style.color = 'var(--text-primary)';
+                }
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateY(0)';
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateY(20px)';
+                }, 3500);
+            }
+
+            // --- DATABASE CONNECTION & REALTIME LISTENERS ---
             function initDatabase() {
                 try {
                     if (window.firebase) {
@@ -1257,9 +2063,11 @@
                         const db = firebase.database();
                         dbTestiRef = db.ref('testimonials_messages');
                         dbMsgRef = db.ref('contact_messages');
+                        dbProjectsRef = db.ref('portfolio_projects');
+                        dbAchievementsRef = db.ref('portfolio_achievements');
                         isFirebaseActive = true;
 
-                        // 1. Listener for Testimonials
+                        // 1. Testimonials
                         dbTestiRef.on('value', (snapshot) => {
                             const val = snapshot.val();
                             testimonialsData = [];
@@ -1273,7 +2081,7 @@
                             if (currentView === 'testimonials') renderDashboard();
                         });
 
-                        // 2. Listener for Contact Messages
+                        // 2. Messages
                         dbMsgRef.on('value', (snapshot) => {
                             const val = snapshot.val();
                             messagesData = [];
@@ -1286,6 +2094,44 @@
                             if (badgeMsgCount) badgeMsgCount.textContent = messagesData.length;
                             if (currentView === 'messages') renderDashboard();
                         });
+
+                        // 3. Projects
+                        dbProjectsRef.on('value', (snapshot) => {
+                            const val = snapshot.val();
+                            projectsData = [];
+                            if (val) {
+                                Object.keys(val).forEach(key => {
+                                    projectsData.push({ id: key, ...val[key] });
+                                });
+                            } else {
+                                // Seed default projects to Firebase if empty
+                                seedDefaultProjects();
+                                return;
+                            }
+                            projectsData.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                            localStorage.setItem('rafikuy_portfolio_projects', JSON.stringify(projectsData));
+                            if (badgeProjCount) badgeProjCount.textContent = projectsData.length;
+                            if (currentView === 'projects') renderDashboard();
+                        });
+
+                        // 4. Achievements
+                        dbAchievementsRef.on('value', (snapshot) => {
+                            const val = snapshot.val();
+                            achievementsData = [];
+                            if (val) {
+                                Object.keys(val).forEach(key => {
+                                    achievementsData.push({ id: key, ...val[key] });
+                                });
+                            } else {
+                                // Seed default achievements to Firebase if empty
+                                seedDefaultAchievements();
+                                return;
+                            }
+                            achievementsData.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                            localStorage.setItem('rafikuy_portfolio_achievements', JSON.stringify(achievementsData));
+                            if (badgeAchieveCount) badgeAchieveCount.textContent = achievementsData.length;
+                            if (currentView === 'achievements') renderDashboard();
+                        });
                     }
                 } catch (err) {
                     console.error('Firebase DB error in admin panel:', err);
@@ -1294,50 +2140,91 @@
                 }
             }
 
+            function seedDefaultProjects() {
+                projectsData = [...DEFAULT_PROJECTS];
+                localStorage.setItem('rafikuy_portfolio_projects', JSON.stringify(projectsData));
+                if (badgeProjCount) badgeProjCount.textContent = projectsData.length;
+                if (isFirebaseActive && dbProjectsRef) {
+                    const obj = {};
+                    projectsData.forEach(p => { obj[p.id] = p; });
+                    dbProjectsRef.set(obj);
+                }
+                if (currentView === 'projects') renderDashboard();
+            }
+
+            function seedDefaultAchievements() {
+                achievementsData = [...DEFAULT_ACHIEVEMENTS];
+                localStorage.setItem('rafikuy_portfolio_achievements', JSON.stringify(achievementsData));
+                if (badgeAchieveCount) badgeAchieveCount.textContent = achievementsData.length;
+                if (isFirebaseActive && dbAchievementsRef) {
+                    const obj = {};
+                    achievementsData.forEach(a => { obj[a.id] = a; });
+                    dbAchievementsRef.set(obj);
+                }
+                if (currentView === 'achievements') renderDashboard();
+            }
+
             function loadFromLocalStorageFallback() {
                 try {
                     testimonialsData = JSON.parse(localStorage.getItem('rafikuy_testimonials_list') || '[]');
                     messagesData = JSON.parse(localStorage.getItem('rafikuy_contact_inbox') || '[]');
+                    projectsData = JSON.parse(localStorage.getItem('rafikuy_portfolio_projects') || JSON.stringify(DEFAULT_PROJECTS));
+                    achievementsData = JSON.parse(localStorage.getItem('rafikuy_portfolio_achievements') || JSON.stringify(DEFAULT_ACHIEVEMENTS));
+
                     if (badgeTestiCount) badgeTestiCount.textContent = testimonialsData.length;
                     if (badgeMsgCount) badgeMsgCount.textContent = messagesData.length;
+                    if (badgeProjCount) badgeProjCount.textContent = projectsData.length;
+                    if (badgeAchieveCount) badgeAchieveCount.textContent = achievementsData.length;
                     renderDashboard();
                 } catch (e) {
-                    testimonialsData = [];
-                    messagesData = [];
                     renderDashboard();
                 }
             }
 
-            // --- RENDER DASHBOARD & STATS ---
+            // --- RENDER DISPATCHER ---
             function renderDashboard() {
                 if (currentView === 'testimonials') {
                     const total = testimonialsData.length;
                     let fiveStars = 0;
                     let sumRatings = 0;
-
                     testimonialsData.forEach(t => {
                         const r = parseInt(t.rating || 5, 10);
                         if (r === 5) fiveStars++;
                         sumRatings += r;
                     });
-
                     const avg = total > 0 ? (sumRatings / total).toFixed(1) : '5.0';
 
                     if (statTotal) statTotal.textContent = total;
                     if (statFiveStar) statFiveStar.textContent = fiveStars;
                     if (statAvg) statAvg.textContent = avg;
-
                     applyFilterAndRenderTestimonials();
-                } else {
+                } else if (currentView === 'messages') {
                     const total = messagesData.length;
                     if (statTotal) statTotal.textContent = total;
                     if (statFiveStar) statFiveStar.textContent = total;
-
                     applyFilterAndRenderMessages();
+                } else if (currentView === 'projects') {
+                    const total = projectsData.length;
+                    const webCount = projectsData.filter(p => p.category === 'web').length;
+                    const otherCount = projectsData.filter(p => p.category !== 'web').length;
+
+                    if (statTotal) statTotal.textContent = total;
+                    if (statAvg) statAvg.textContent = webCount;
+                    if (statFiveStar) statFiveStar.textContent = otherCount;
+                    applyFilterAndRenderProjects();
+                } else if (currentView === 'achievements') {
+                    const total = achievementsData.length;
+                    const esportCount = achievementsData.filter(a => a.category === 'esport').length;
+                    const techCertCount = achievementsData.filter(a => a.category === 'tech' || a.category === 'cert').length;
+
+                    if (statTotal) statTotal.textContent = total;
+                    if (statAvg) statAvg.textContent = esportCount;
+                    if (statFiveStar) statFiveStar.textContent = techCertCount;
+                    applyFilterAndRenderAchievements();
                 }
             }
 
-            // --- RENDER TESTIMONIALS ---
+            // --- 1. RENDER TESTIMONIALS ---
             function applyFilterAndRenderTestimonials() {
                 const searchQ = (searchInput ? searchInput.value : '').toLowerCase().trim();
                 const filterVal = ratingFilter ? ratingFilter.value : 'all';
@@ -1359,7 +2246,6 @@
                 });
 
                 if (!testiListContainer) return;
-
                 if (filtered.length === 0) {
                     testiListContainer.innerHTML = `
                         <div class="empty-state">
@@ -1375,7 +2261,6 @@
                 }
 
                 testiListContainer.innerHTML = '';
-
                 filtered.forEach(item => {
                     const card = document.createElement('div');
                     card.className = 'testi-item';
@@ -1411,16 +2296,14 @@
 
                     const delBtn = card.querySelector('.btn-delete-item');
                     if (delBtn) {
-                        delBtn.addEventListener('click', () => {
-                            deleteTestimonial(item.id, name);
-                        });
+                        delBtn.addEventListener('click', () => deleteTestimonial(item.id, name));
                     }
 
                     testiListContainer.appendChild(card);
                 });
             }
 
-            // --- RENDER CONTACT MESSAGES ---
+            // --- 2. RENDER CONTACT MESSAGES ---
             function applyFilterAndRenderMessages() {
                 const searchQ = (searchInput ? searchInput.value : '').toLowerCase().trim();
 
@@ -1433,7 +2316,6 @@
                 });
 
                 if (!testiListContainer) return;
-
                 if (filtered.length === 0) {
                     testiListContainer.innerHTML = `
                         <div class="empty-state">
@@ -1449,7 +2331,6 @@
                 }
 
                 testiListContainer.innerHTML = '';
-
                 filtered.forEach(item => {
                     const card = document.createElement('div');
                     card.className = 'testi-item';
@@ -1463,8 +2344,6 @@
                     const dateStr = formatDate(item.timestamp || Date.now());
 
                     const replyEmailUrl = `mailto:${email}?subject=Re:%20${encodeURIComponent(subject)}&body=Halo%20${encodeURIComponent(name)},%0D%0A%0D%0ATerima%20kasih%20telah%20menghubungi%20saya...`;
-                    const waText = `Halo ${name}, saya Adha Rafi. Terima kasih telah menghubungi saya mengenai "${subject}".`;
-                    const replyWaUrl = `https://wa.me/?text=${encodeURIComponent(waText)}`;
 
                     card.innerHTML = `
                         <div class="testi-main">
@@ -1499,9 +2378,205 @@
 
                     const delBtn = card.querySelector('.btn-delete-item');
                     if (delBtn) {
-                        delBtn.addEventListener('click', () => {
-                            deleteMessage(item.id, name);
-                        });
+                        delBtn.addEventListener('click', () => deleteMessage(item.id, name));
+                    }
+
+                    testiListContainer.appendChild(card);
+                });
+            }
+
+            // --- 3. RENDER SELECTED PROJECTS ---
+            function applyFilterAndRenderProjects() {
+                const searchQ = (searchInput ? searchInput.value : '').toLowerCase().trim();
+
+                let filtered = projectsData.filter(item => {
+                    const matchTitle = (item.title || '').toLowerCase().includes(searchQ);
+                    const matchCat = (item.category || '').toLowerCase().includes(searchQ);
+                    const matchBadge = (item.categoryBadge || '').toLowerCase().includes(searchQ);
+                    const matchDesc = (item.desc || '').toLowerCase().includes(searchQ);
+                    const matchTags = Array.isArray(item.tags) ? item.tags.join(' ').toLowerCase().includes(searchQ) : false;
+                    return matchTitle || matchCat || matchBadge || matchDesc || matchTags;
+                });
+
+                if (!testiListContainer) return;
+                if (filtered.length === 0) {
+                    testiListContainer.innerHTML = `
+                        <div class="empty-state">
+                            <svg class="empty-icon-svg" viewBox="0 0 24 24">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                            <h3>No projects found</h3>
+                            <p>Belum ada project yang cocok atau klik "+ Tambah Project Baru" di atas.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                testiListContainer.innerHTML = '';
+                filtered.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'testi-item';
+                    card.id = `proj-card-${item.id}`;
+
+                    const title = sanitize(item.title || 'Untitled Project');
+                    const badge = sanitize(item.categoryBadge || item.category || 'PROJECT');
+                    const status = sanitize(item.statusPill || '● Active');
+                    const desc = sanitize(item.desc || '');
+                    const tagsArr = Array.isArray(item.tags) ? item.tags : [];
+                    const tagsHtml = tagsArr.map(t => `<span class="admin-chip-tag">${sanitize(t)}</span>`).join('');
+                    const hasImg = !!item.image;
+                    const imgPreview = hasImg 
+                        ? `<img src="${item.image}" alt="${title}" class="item-thumb-preview" onerror="this.style.display='none'">` 
+                        : `<div class="item-icon-avatar">💻</div>`;
+
+                    card.innerHTML = `
+                        <div style="display: flex; gap: 16px; align-items: flex-start; flex: 1; min-width: 0;">
+                            ${imgPreview}
+                            <div class="testi-main">
+                                <div class="testi-header-row">
+                                    <span class="testi-author-name">${title}</span>
+                                    <span class="testi-role-badge" style="background: rgba(59, 130, 246, 0.15); color: #60A5FA; border-color: rgba(59, 130, 246, 0.3);">${badge}</span>
+                                    <span class="testi-stars-tag" style="color: #34D399; font-size: 0.76rem;">${status}</span>
+                                </div>
+                                <div class="testi-quote-text" style="font-size: 0.86rem; color: #a1a1aa; border-left-color: #60A5FA;">
+                                    ${desc}
+                                </div>
+                                <div class="item-tags-wrap">
+                                    ${tagsHtml}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="msg-actions">
+                            <button type="button" class="btn-edit-item" data-id="${item.id}" title="Edit Project">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                                <span>Edit</span>
+                            </button>
+                            <button type="button" class="btn-delete-item" data-id="${item.id}" data-name="${title}" title="Hapus Project">
+                                <svg viewBox="0 0 24 24">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                </svg>
+                                <span>Hapus</span>
+                            </button>
+                        </div>
+                    `;
+
+                    const editBtn = card.querySelector('.btn-edit-item');
+                    if (editBtn) {
+                        editBtn.addEventListener('click', () => openEditProjectModal(item.id));
+                    }
+
+                    const delBtn = card.querySelector('.btn-delete-item');
+                    if (delBtn) {
+                        delBtn.addEventListener('click', () => deleteProject(item.id, title));
+                    }
+
+                    testiListContainer.appendChild(card);
+                });
+            }
+
+            // --- 4. RENDER ACHIEVEMENTS & AWARDS ---
+            function applyFilterAndRenderAchievements() {
+                const searchQ = (searchInput ? searchInput.value : '').toLowerCase().trim();
+
+                let filtered = achievementsData.filter(item => {
+                    const matchTitle = (item.title || '').toLowerCase().includes(searchQ);
+                    const matchCat = (item.category || '').toLowerCase().includes(searchQ);
+                    const matchLabel = (item.categoryLabel || '').toLowerCase().includes(searchQ);
+                    const matchSub = (item.subtitle || '').toLowerCase().includes(searchQ);
+                    const matchDesc = (item.desc || '').toLowerCase().includes(searchQ);
+                    const matchYear = (item.year || '').toLowerCase().includes(searchQ);
+                    const matchTags = Array.isArray(item.tags) ? item.tags.join(' ').toLowerCase().includes(searchQ) : false;
+                    return matchTitle || matchCat || matchLabel || matchSub || matchDesc || matchYear || matchTags;
+                });
+
+                if (!testiListContainer) return;
+                if (filtered.length === 0) {
+                    testiListContainer.innerHTML = `
+                        <div class="empty-state">
+                            <svg class="empty-icon-svg" viewBox="0 0 24 24">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            </svg>
+                            <h3>No achievements found</h3>
+                            <p>Belum ada achievement yang cocok atau klik "+ Tambah Achievement Baru" di atas.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                testiListContainer.innerHTML = '';
+                filtered.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'testi-item';
+                    card.id = `achieve-card-${item.id}`;
+
+                    const title = sanitize(item.title || 'Untitled Achievement');
+                    const icon = item.badgeIcon || '🏆';
+                    const badgeText = sanitize(item.badgeText || 'Award');
+                    const year = sanitize(item.year || '2025');
+                    const subtitle = sanitize(item.subtitle || '');
+                    const desc = sanitize(item.desc || '');
+                    const tagsArr = Array.isArray(item.tags) ? item.tags : [];
+                    const tagsHtml = tagsArr.map(t => `<span class="admin-chip-tag">${sanitize(t)}</span>`).join('');
+                    const hasImg = !!item.image;
+                    const imgPreview = hasImg 
+                        ? `<img src="${item.image}" alt="${title}" class="item-thumb-preview" onerror="this.style.display='none'">` 
+                        : `<div class="item-icon-avatar">${icon}</div>`;
+
+                    let badgeColorStyle = 'background: rgba(245, 158, 11, 0.15); color: #F59E0B; border-color: rgba(245, 158, 11, 0.3);';
+                    if (item.badgeType === 'blue') badgeColorStyle = 'background: rgba(59, 130, 246, 0.15); color: #60A5FA; border-color: rgba(59, 130, 246, 0.3);';
+                    if (item.badgeType === 'emerald') badgeColorStyle = 'background: rgba(16, 185, 129, 0.15); color: #34D399; border-color: rgba(16, 185, 129, 0.3);';
+                    if (item.badgeType === 'purple') badgeColorStyle = 'background: rgba(168, 85, 247, 0.15); color: #C084FC; border-color: rgba(168, 85, 247, 0.3);';
+
+                    card.innerHTML = `
+                        <div style="display: flex; gap: 16px; align-items: flex-start; flex: 1; min-width: 0;">
+                            ${imgPreview}
+                            <div class="testi-main">
+                                <div class="testi-header-row">
+                                    <span class="testi-author-name">${title}</span>
+                                    <span class="testi-role-badge" style="${badgeColorStyle}">${icon} ${badgeText}</span>
+                                    <span class="testi-stars-tag" style="color: #a1a1aa; font-family: var(--font-mono); font-size: 0.78rem;">📅 ${year}</span>
+                                </div>
+                                ${subtitle ? `<div style="font-size: 0.8rem; color: #a1a1aa; margin-bottom: 4px;">${subtitle}</div>` : ''}
+                                <div class="testi-quote-text" style="font-size: 0.86rem; color: #d4d4d8; border-left-color: #F59E0B;">
+                                    ${desc}
+                                </div>
+                                <div class="item-tags-wrap">
+                                    ${tagsHtml}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="msg-actions">
+                            <button type="button" class="btn-edit-item" data-id="${item.id}" title="Edit Achievement">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                                <span>Edit</span>
+                            </button>
+                            <button type="button" class="btn-delete-item" data-id="${item.id}" data-name="${title}" title="Hapus Achievement">
+                                <svg viewBox="0 0 24 24">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                </svg>
+                                <span>Hapus</span>
+                            </button>
+                        </div>
+                    `;
+
+                    const editBtn = card.querySelector('.btn-edit-item');
+                    if (editBtn) {
+                        editBtn.addEventListener('click', () => openEditAchieveModal(item.id));
+                    }
+
+                    const delBtn = card.querySelector('.btn-delete-item');
+                    if (delBtn) {
+                        delBtn.addEventListener('click', () => deleteAchievement(item.id, title));
                     }
 
                     testiListContainer.appendChild(card);
@@ -1556,11 +2631,299 @@
                 setTimeout(() => renderDashboard(), 300);
             }
 
+            // --- DELETE PROJECT ACTION ---
+            function deleteProject(id, title) {
+                const ok = confirm(`Hapus project "${title}"?\n\nProject ini akan dihapus dari website portfolio secara realtime.`);
+                if (!ok) return;
+
+                const cardEl = document.getElementById(`proj-card-${id}`);
+                if (cardEl) cardEl.classList.add('deleting');
+
+                if (isFirebaseActive && dbProjectsRef) {
+                    dbProjectsRef.child(id).remove()
+                        .then(() => showToast(`Project "${title}" berhasil dihapus`, 'success'))
+                        .catch((err) => showToast('Gagal menghapus dari Firebase: ' + err.message, 'error'));
+                }
+
+                projectsData = projectsData.filter(item => item.id !== id);
+                localStorage.setItem('rafikuy_portfolio_projects', JSON.stringify(projectsData));
+                if (badgeProjCount) badgeProjCount.textContent = projectsData.length;
+                setTimeout(() => renderDashboard(), 300);
+            }
+
+            // --- DELETE ACHIEVEMENT ACTION ---
+            function deleteAchievement(id, title) {
+                const ok = confirm(`Hapus achievement "${title}"?\n\nItem ini akan dihapus dari website portfolio secara realtime.`);
+                if (!ok) return;
+
+                const cardEl = document.getElementById(`achieve-card-${id}`);
+                if (cardEl) cardEl.classList.add('deleting');
+
+                if (isFirebaseActive && dbAchievementsRef) {
+                    dbAchievementsRef.child(id).remove()
+                        .then(() => showToast(`Achievement "${title}" berhasil dihapus`, 'success'))
+                        .catch((err) => showToast('Gagal menghapus dari Firebase: ' + err.message, 'error'));
+                }
+
+                achievementsData = achievementsData.filter(item => item.id !== id);
+                localStorage.setItem('rafikuy_portfolio_achievements', JSON.stringify(achievementsData));
+                if (badgeAchieveCount) badgeAchieveCount.textContent = achievementsData.length;
+                setTimeout(() => renderDashboard(), 300);
+            }
+
+            // --- MODAL CONTROLS: PROJECT ---
+            function openAddProjectModal() {
+                projectModalTitle.innerHTML = '<span>💻</span> Tambah Project Baru';
+                projectForm.reset();
+                document.getElementById('proj-id').value = '';
+                modalProjectBackdrop.classList.add('show');
+            }
+
+            function openEditProjectModal(id) {
+                const p = projectsData.find(item => item.id === id);
+                if (!p) return;
+
+                projectModalTitle.innerHTML = '<span>✏️</span> Edit Selected Project';
+                document.getElementById('proj-id').value = p.id;
+                document.getElementById('proj-title').value = p.title || '';
+                document.getElementById('proj-category').value = p.category || 'web';
+                document.getElementById('proj-status').value = p.statusPill || '';
+                document.getElementById('proj-badge').value = p.categoryBadge || '';
+                document.getElementById('proj-browser-url').value = p.browserUrl || '';
+                document.getElementById('proj-desc').value = p.desc || '';
+                document.getElementById('proj-tags').value = Array.isArray(p.tags) ? p.tags.join(', ') : '';
+                document.getElementById('proj-img').value = p.image || '';
+                document.getElementById('proj-btn1-text').value = p.primaryBtnText || '';
+                document.getElementById('proj-btn1-url').value = p.primaryBtnUrl || '';
+                document.getElementById('proj-btn2-text').value = p.secondaryBtnText || '';
+                document.getElementById('proj-btn2-url').value = p.secondaryBtnUrl || '';
+
+                modalProjectBackdrop.classList.add('show');
+            }
+
+            function closeProjectModal() {
+                modalProjectBackdrop.classList.remove('show');
+            }
+
+            if (btnCloseProjectModal) btnCloseProjectModal.addEventListener('click', closeProjectModal);
+            if (btnCancelProjectModal) btnCancelProjectModal.addEventListener('click', closeProjectModal);
+            if (modalProjectBackdrop) {
+                modalProjectBackdrop.addEventListener('click', (e) => {
+                    if (e.target === modalProjectBackdrop) closeProjectModal();
+                });
+            }
+
+            // File reader for project image
+            if (projFileInput) {
+                projFileInput.addEventListener('change', function () {
+                    const file = this.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            document.getElementById('proj-img').value = e.target.result;
+                            showToast('Foto project siap digunakan!', 'success');
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            // Submit project form
+            if (projectForm) {
+                projectForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const id = document.getElementById('proj-id').value.trim() || 'proj_' + Date.now();
+                    const tagsRaw = document.getElementById('proj-tags').value;
+                    const tags = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
+
+                    const projectObj = {
+                        id: id,
+                        title: document.getElementById('proj-title').value.trim(),
+                        category: document.getElementById('proj-category').value,
+                        statusPill: document.getElementById('proj-status').value.trim() || '● Active',
+                        categoryBadge: document.getElementById('proj-badge').value.trim() || 'PROJECT',
+                        browserUrl: document.getElementById('proj-browser-url').value.trim() || 'project-preview.dev',
+                        desc: document.getElementById('proj-desc').value.trim(),
+                        tags: tags.length ? tags : ['Web Development'],
+                        image: document.getElementById('proj-img').value.trim(),
+                        primaryBtnText: document.getElementById('proj-btn1-text').value.trim() || 'Source Code',
+                        primaryBtnUrl: document.getElementById('proj-btn1-url').value.trim() || 'https://github.com/AdhaRafi',
+                        secondaryBtnText: document.getElementById('proj-btn2-text').value.trim(),
+                        secondaryBtnUrl: document.getElementById('proj-btn2-url').value.trim(),
+                        timestamp: Date.now()
+                    };
+
+                    // Update local state
+                    const existingIdx = projectsData.findIndex(p => p.id === id);
+                    if (existingIdx >= 0) {
+                        projectsData[existingIdx] = { ...projectsData[existingIdx], ...projectObj };
+                        showToast(`Project "${projectObj.title}" berhasil diupdate!`, 'success');
+                    } else {
+                        projectsData.unshift(projectObj);
+                        showToast(`Project "${projectObj.title}" berhasil ditambahkan!`, 'success');
+                    }
+
+                    localStorage.setItem('rafikuy_portfolio_projects', JSON.stringify(projectsData));
+
+                    // Sync to Firebase
+                    if (isFirebaseActive && dbProjectsRef) {
+                        dbProjectsRef.child(id).set(projectObj)
+                            .catch(err => console.error('Firebase save error:', err));
+                    }
+
+                    closeProjectModal();
+                    renderDashboard();
+                });
+            }
+
+            // --- MODAL CONTROLS: ACHIEVEMENT ---
+            function openAddAchieveModal() {
+                achieveModalTitle.innerHTML = '<span>🏆</span> Tambah Achievement Baru';
+                achieveForm.reset();
+                document.getElementById('achieve-id').value = '';
+                document.getElementById('achieve-year').value = new Date().getFullYear().toString();
+                document.getElementById('achieve-badge-icon').value = '🥇';
+                modalAchieveBackdrop.classList.add('show');
+            }
+
+            function openEditAchieveModal(id) {
+                const a = achievementsData.find(item => item.id === id);
+                if (!a) return;
+
+                achieveModalTitle.innerHTML = '<span>✏️</span> Edit Achievement & Award';
+                document.getElementById('achieve-id').value = a.id;
+                document.getElementById('achieve-title').value = a.title || '';
+                document.getElementById('achieve-category').value = a.category || 'esport';
+                document.getElementById('achieve-year').value = a.year || '';
+                document.getElementById('achieve-badge-type').value = a.badgeType || 'gold';
+                document.getElementById('achieve-badge-icon').value = a.badgeIcon || '🏆';
+                document.getElementById('achieve-badge-text').value = a.badgeText || '';
+                document.getElementById('achieve-category-label').value = a.categoryLabel || '';
+                document.getElementById('achieve-subtitle').value = a.subtitle || '';
+                document.getElementById('achieve-desc').value = a.desc || '';
+                document.getElementById('achieve-tags').value = Array.isArray(a.tags) ? a.tags.join(', ') : '';
+                document.getElementById('achieve-img').value = a.image || '';
+                document.getElementById('achieve-preview-type').value = a.previewType || 'image';
+
+                modalAchieveBackdrop.classList.add('show');
+            }
+
+            function closeAchieveModal() {
+                modalAchieveBackdrop.classList.remove('show');
+            }
+
+            if (btnCloseAchieveModal) btnCloseAchieveModal.addEventListener('click', closeAchieveModal);
+            if (btnCancelAchieveModal) btnCancelAchieveModal.addEventListener('click', closeAchieveModal);
+            if (modalAchieveBackdrop) {
+                modalAchieveBackdrop.addEventListener('click', (e) => {
+                    if (e.target === modalAchieveBackdrop) closeAchieveModal();
+                });
+            }
+
+            // Auto-pick emoji icon when badge type changes
+            const badgeTypeSelect = document.getElementById('achieve-badge-type');
+            if (badgeTypeSelect) {
+                badgeTypeSelect.addEventListener('change', function () {
+                    const iconInput = document.getElementById('achieve-badge-icon');
+                    if (this.value === 'gold') iconInput.value = '🥇';
+                    else if (this.value === 'blue') iconInput.value = '🚀';
+                    else if (this.value === 'emerald') iconInput.value = '📜';
+                    else if (this.value === 'purple') iconInput.value = '🎨';
+                });
+            }
+
+            // File reader for achievement image
+            if (achieveFileInput) {
+                achieveFileInput.addEventListener('change', function () {
+                    const file = this.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            document.getElementById('achieve-img').value = e.target.result;
+                            document.getElementById('achieve-preview-type').value = 'image';
+                            showToast('Foto piagam / dokumentasi siap digunakan!', 'success');
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            // Submit achievement form
+            if (achieveForm) {
+                achieveForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const id = document.getElementById('achieve-id').value.trim() || 'achieve_' + Date.now();
+                    const tagsRaw = document.getElementById('achieve-tags').value;
+                    const tags = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
+
+                    const achieveObj = {
+                        id: id,
+                        title: document.getElementById('achieve-title').value.trim(),
+                        category: document.getElementById('achieve-category').value,
+                        year: document.getElementById('achieve-year').value.trim(),
+                        badgeType: document.getElementById('achieve-badge-type').value,
+                        badgeIcon: document.getElementById('achieve-badge-icon').value.trim() || '🏆',
+                        badgeText: document.getElementById('achieve-badge-text').value.trim() || 'Achievement',
+                        categoryLabel: document.getElementById('achieve-category-label').value.trim() || 'ACHIEVEMENT',
+                        subtitle: document.getElementById('achieve-subtitle').value.trim(),
+                        desc: document.getElementById('achieve-desc').value.trim(),
+                        tags: tags.length ? tags : ['Milestone'],
+                        image: document.getElementById('achieve-img').value.trim(),
+                        previewType: document.getElementById('achieve-preview-type').value,
+                        timestamp: Date.now()
+                    };
+
+                    // Update local state
+                    const existingIdx = achievementsData.findIndex(a => a.id === id);
+                    if (existingIdx >= 0) {
+                        achievementsData[existingIdx] = { ...achievementsData[existingIdx], ...achieveObj };
+                        showToast(`Achievement "${achieveObj.title}" berhasil diupdate!`, 'success');
+                    } else {
+                        achievementsData.unshift(achieveObj);
+                        showToast(`Achievement "${achieveObj.title}" berhasil ditambahkan!`, 'success');
+                    }
+
+                    localStorage.setItem('rafikuy_portfolio_achievements', JSON.stringify(achievementsData));
+
+                    // Sync to Firebase
+                    if (isFirebaseActive && dbAchievementsRef) {
+                        dbAchievementsRef.child(id).set(achieveObj)
+                            .catch(err => console.error('Firebase save error:', err));
+                    }
+
+                    closeAchieveModal();
+                    renderDashboard();
+                });
+            }
+
+            // --- TOP ADD & RESET BUTTONS ---
+            if (btnAddItem) {
+                btnAddItem.addEventListener('click', () => {
+                    if (currentView === 'projects') openAddProjectModal();
+                    else if (currentView === 'achievements') openAddAchieveModal();
+                });
+            }
+
+            if (btnResetDefault) {
+                btnResetDefault.addEventListener('click', () => {
+                    if (currentView === 'projects') {
+                        const ok = confirm('Kembalikan 5 project default awal?\n\nProject kustom akan digantikan dengan project default.');
+                        if (!ok) return;
+                        seedDefaultProjects();
+                        showToast('Project telah direset ke default bawaan.', 'success');
+                    } else if (currentView === 'achievements') {
+                        const ok = confirm('Kembalikan 4 achievement default awal?\n\nAchievement kustom akan digantikan dengan achievement default.');
+                        if (!ok) return;
+                        seedDefaultAchievements();
+                        showToast('Achievements telah direset ke default bawaan.', 'success');
+                    }
+                });
+            }
+
             // --- SEARCH & FILTER LISTENERS ---
             if (searchInput) {
                 searchInput.addEventListener('input', () => {
-                    if (currentView === 'testimonials') applyFilterAndRenderTestimonials();
-                    else applyFilterAndRenderMessages();
+                    renderDashboard();
                 });
             }
             if (ratingFilter) {

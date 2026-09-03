@@ -602,68 +602,399 @@
     });
   }
 
-  // ===== PROJECT CATEGORY FILTERS =====
-  const filterBtns = document.querySelectorAll('.project-filter-btn');
-  const projectCards = document.querySelectorAll('.blueprint-card-wrapper');
+  // ===== DEFAULT DATA FOR PROJECTS & ACHIEVEMENTS =====
+  const DEFAULT_PORTFOLIO_PROJECTS = [
+    {
+      id: "proj_pasarnusa",
+      title: "PasarNusa — Marketplace & Digital Payment",
+      category: "web",
+      categoryBadge: "E-COMMERCE • FULLSTACK & PAYMENT GATEWAY",
+      statusPill: "● Open Source • GitHub",
+      browserUrl: "github.com/AdhaRafi/pasarnusa",
+      image: "assets/images/Pasarnusa.png",
+      desc: "Platform e-commerce digitalisasi UMKM pasar tradisional yang dilengkapi integrasi Google OAuth 2.0 (Single Sign-On), Midtrans Payment Gateway untuk pembayaran digital otomatis, manajemen admin toko, dan keranjang belanja dinamis.",
+      tags: ["PHP Native", "MySQL Database", "Google OAuth 2.0", "Midtrans Payment API", "Composer", "Multi-Merchant"],
+      primaryBtnText: "GitHub Repo",
+      primaryBtnUrl: "https://github.com/AdhaRafi/pasarnusa",
+      secondaryBtnText: "Lihat Kode ↗",
+      secondaryBtnUrl: "https://github.com/AdhaRafi/pasarnusa"
+    },
+    {
+      id: "proj_portal_smk",
+      title: "Portal Informasi SMK Telkom",
+      category: "web",
+      categoryBadge: "WEB DEVELOPMENT • FULLSTACK",
+      statusPill: "● Completed",
+      browserUrl: "smktelkom-pwt.sch.id",
+      image: "",
+      desc: "Website portal komprehensif untuk menyajikan profil sekolah, sistem pengumuman agenda, galeri kegiatan siswa jurusan PPLG, serta form pendaftaran online terintegrasi database.",
+      tags: ["HTML5 / CSS3", "PHP Native", "MySQL Database", "Responsive UI"],
+      primaryBtnText: "Source Code",
+      primaryBtnUrl: "https://github.com/AdhaRafi",
+      secondaryBtnText: "Live Preview ↗",
+      secondaryBtnUrl: "https://github.com/AdhaRafi"
+    },
+    {
+      id: "proj_ff_tournament",
+      title: "Free Fire Tournament & Leaderboard Hub",
+      category: "esport",
+      categoryBadge: "ESPORTS & GAMING • WEB APP",
+      statusPill: "● Championship Hub",
+      browserUrl: "ff-tournament-hub.dev",
+      image: "",
+      desc: "Platform pendaftaran tim esport Free Fire dengan kalkulasi poin otomatis, sistem standing leaderboard real-time, jadwal match tournament, dan galeri piala prestasi Juara 1.",
+      tags: ["JavaScript ES6", "Interactive DOM", "Local Storage", "Dark Mode UI", "Esport Branding"],
+      primaryBtnText: "Source Code",
+      primaryBtnUrl: "https://github.com/AdhaRafi",
+      secondaryBtnText: "Live Preview ↗",
+      secondaryBtnUrl: "https://github.com/AdhaRafi"
+    },
+    {
+      id: "proj_pplg_store",
+      title: "Toko Online & Katalog Produk PPLG",
+      category: "web",
+      categoryBadge: "E-COMMERCE • WEB APPLICATION",
+      statusPill: "● Completed",
+      browserUrl: "pplg-store.shop",
+      image: "",
+      desc: "Aplikasi web e-commerce interaktif dengan keranjang belanja dinamis, filter kategori produk, kalkulasi total harga otomatis, dan direct checkout via WhatsApp link order.",
+      tags: ["JavaScript", "PHP & MySQL", "Cart State", "WhatsApp API", "Tailwind CSS"],
+      primaryBtnText: "Source Code",
+      primaryBtnUrl: "https://github.com/AdhaRafi",
+      secondaryBtnText: "Live Preview ↗",
+      secondaryBtnUrl: "https://github.com/AdhaRafi"
+    },
+    {
+      id: "proj_figma_uiux",
+      title: "Desain UI/UX Mobile App & Design System",
+      category: "uiux",
+      categoryBadge: "UI/UX DESIGN • FIGMA PROTOTYPE",
+      statusPill: "● Figma Design",
+      browserUrl: "figma.com/@adharafi",
+      image: "",
+      desc: "Perancangan sistematis UI/UX mencakup user persona, wireframing low-fidelity hingga high-fidelity, interactive clickable prototype, dan atomic design token kit di Figma.",
+      tags: ["Figma Pro", "Canva", "Wireframing", "Design Tokens", "Atomic Design"],
+      primaryBtnText: "Lihat Desain",
+      primaryBtnUrl: "https://www.instagram.com/rafiiwow_",
+      secondaryBtnText: "Case Study ↗",
+      secondaryBtnUrl: "https://github.com/AdhaRafi"
+    }
+  ];
 
-  filterBtns.forEach(btn => {
+  const DEFAULT_PORTFOLIO_ACHIEVEMENTS = [
+    {
+      id: "achieve_poco_s3",
+      title: "Juara 1 POCO Extreme League S3",
+      category: "esport",
+      badgeType: "gold",
+      badgeIcon: "🥇",
+      badgeText: "Juara 1 (Champion)",
+      year: "2024",
+      categoryLabel: "ESPORTS TOURNAMENT • FREE FIRE",
+      subtitle: "Regional Banyumas • Diselenggarakan oleh POCO Indonesia",
+      desc: "Meraih peringkat pertama dalam kompetisi turnamen Free Fire bergengsi POCO Extreme League Season 3 Regional Banyumas bersama tim esport, membuktikan koordinasi strategi, komunikasi cepat, dan konsistensi gameplay di bawah tekanan.",
+      tags: ["🏆 1st Winner", "🎮 Free Fire Battle Royale", "📍 Regional Banyumas", "🤝 Teamwork & Strategy"],
+      image: "assets/images/Juara.jpeg",
+      previewType: "image"
+    },
+    {
+      id: "achieve_pplg_showcase",
+      title: "PPLG Showcase & Web Innovation",
+      category: "tech",
+      badgeType: "blue",
+      badgeIcon: "🚀",
+      badgeText: "Project Showcase",
+      year: "2025",
+      categoryLabel: "ACADEMIC & TECH SHOWCASE",
+      subtitle: "SMK Telkom Purwokerto • Jurusan PPLG",
+      desc: "Terpilih mempresentasikan karya project website interaktif responsif terintegrasi database real-time dalam ajang showcase kejuruan Pengembangan Perangkat Lunak dan Gim (PPLG).",
+      tags: ["💻 Web Development", "🏫 SMK Telkom", "🔥 Realtime Database", "⚡ Clean Architecture"],
+      image: "",
+      previewType: "tech"
+    },
+    {
+      id: "achieve_frontend_cert",
+      title: "Frontend Web & JavaScript Mastery",
+      category: "cert",
+      badgeType: "emerald",
+      badgeIcon: "📜",
+      badgeText: "Certified Skill",
+      year: "2024 - 2025",
+      categoryLabel: "SKILL CERTIFICATION & BOOTCAMP",
+      subtitle: "Independent Learning & Online Tech Curriculum",
+      desc: "Menyelesaikan modul komprehensif frontend engineering: manipulasi DOM modern, asynchronous JavaScript, Web API integration, serta best practice semantic & accessible code.",
+      tags: ["📜 Certified", "🌐 HTML5 / CSS3 Modern", "⚙️ JavaScript ES6+", "📱 Mobile-First Design"],
+      image: "",
+      previewType: "cert"
+    },
+    {
+      id: "achieve_uiux_concept",
+      title: "UI/UX Design & Brand System",
+      category: "design",
+      badgeType: "purple",
+      badgeIcon: "🎨",
+      badgeText: "UI/UX Concept",
+      year: "2025",
+      categoryLabel: "UI/UX & CREATIVE DESIGN",
+      subtitle: "Figma Design Exploration & Visual Identity",
+      desc: "Perancangan konsep antarmuka digital berbasis user-experience, wireframing, interactive high-fidelity prototyping, dan penyusunan design system dengan token warna Canva palette.",
+      tags: ["🎨 Figma UI/UX", "📐 Design Tokens", "✨ Micro-Interactions", "🎯 User-Centered"],
+      image: "",
+      previewType: "design"
+    }
+  ];
+
+  // Helper sanitize
+  function sanitizeHtml(str) {
+    if (!str) return '';
+    const temp = document.createElement('div');
+    temp.textContent = str;
+    return temp.innerHTML;
+  }
+
+  // ===== DYNAMIC PROJECTS RENDERING =====
+  const projectsStack = document.getElementById('projects-blueprint-stack');
+  let currentActiveProjectFilter = 'all';
+
+  function getProjectMockupHtml(category, title) {
+    if (category === 'esport') {
+      return `
+        <div class="project-mockup-graphic esports-hub">
+            <div class="mockup-header-nav">
+                <div class="mockup-logo">🏆 FF CHAMPIONSHIP</div>
+                <span class="esports-live-tag">● LIVE BRACKET</span>
+            </div>
+            <div class="mockup-leaderboard">
+                <div class="lb-row gold"><span>🥇 #1 Adha Team (Juara 1)</span> <strong>32 Pts</strong></div>
+                <div class="lb-row"><span>🥈 #2 Alpha Squad</span> <strong>24 Pts</strong></div>
+                <div class="lb-row"><span>🥉 #3 Phoenix Rises</span> <strong>19 Pts</strong></div>
+            </div>
+        </div>
+      `;
+    } else if (category === 'uiux') {
+      return `
+        <div class="project-mockup-graphic figma-prototype">
+            <div class="figma-artboard-wrap">
+                <div class="figma-phone-screen">
+                    <div class="phone-notch"></div>
+                    <div class="phone-widget"></div>
+                    <div class="phone-list-item"></div>
+                    <div class="phone-list-item"></div>
+                </div>
+                <div class="figma-palette-box">
+                    <span style="background:#000000"></span>
+                    <span style="background:#4C4A4A"></span>
+                    <span style="background:#9F9C9C"></span>
+                    <span style="background:#DDDDDD"></span>
+                </div>
+            </div>
+        </div>
+      `;
+    } else if (title.toLowerCase().includes('toko') || title.toLowerCase().includes('store')) {
+      return `
+        <div class="project-mockup-graphic ecommerce-store">
+            <div class="mockup-header-nav">
+                <div class="mockup-logo">🛒 PPLG STORE</div>
+                <span class="mockup-cart-badge">🛍️ 3 Items</span>
+            </div>
+            <div class="mockup-products-grid">
+                <div class="m-product-card"><div class="m-product-img"></div><span>Code Hoodie</span></div>
+                <div class="m-product-card"><div class="m-product-img"></div><span>Dev Stickers</span></div>
+            </div>
+        </div>
+      `;
+    }
+    // Default Web Portal mockup
+    return `
+      <div class="project-mockup-graphic web-portal">
+          <div class="mockup-header-nav">
+              <div class="mockup-logo">🏫 SMK TELKOM</div>
+              <div class="mockup-nav-items"><span></span><span></span><span></span></div>
+          </div>
+          <div class="mockup-hero-banner">
+              <span class="mockup-badge">PPDB & Info Portal</span>
+              <h4>Portal Sistem Informasi</h4>
+          </div>
+          <div class="mockup-grid-preview">
+              <div class="mockup-card-item"></div>
+              <div class="mockup-card-item"></div>
+              <div class="mockup-card-item"></div>
+          </div>
+      </div>
+    `;
+  }
+
+  function renderPortfolioProjects(list) {
+    if (!projectsStack) return;
+    if (!list || list.length === 0) {
+      list = DEFAULT_PORTFOLIO_PROJECTS;
+    }
+
+    projectsStack.innerHTML = '';
+
+    list.forEach(p => {
+      const cardWrap = document.createElement('div');
+      cardWrap.className = 'blueprint-card-wrapper anim-fade-up';
+      cardWrap.dataset.category = p.category || 'web';
+
+      const title = sanitizeHtml(p.title);
+      const catBadge = sanitizeHtml(p.categoryBadge || (p.category ? p.category.toUpperCase() : 'PROJECT'));
+      const statusPill = sanitizeHtml(p.statusPill || '● Active');
+      const browserUrl = sanitizeHtml(p.browserUrl || 'portfolio-project.dev');
+      const desc = sanitizeHtml(p.desc);
+      const tagsArr = Array.isArray(p.tags) ? p.tags : [];
+      const tagsHtml = tagsArr.map(t => `<span class="p-tech-pill">${sanitizeHtml(t)}</span>`).join('');
+      const hasImg = !!p.image;
+      const primaryBtnText = sanitizeHtml(p.primaryBtnText || 'Source Code');
+      const primaryBtnUrl = p.primaryBtnUrl || 'https://github.com/AdhaRafi';
+      const secondaryBtnText = sanitizeHtml(p.secondaryBtnText || '');
+      const secondaryBtnUrl = p.secondaryBtnUrl || '';
+
+      const visualPreviewHtml = hasImg
+        ? `<div class="project-preview-content project-img-preview"><img src="${p.image}" alt="${title} Preview" class="project-real-img" loading="lazy"></div>`
+        : `<div class="project-preview-content">${getProjectMockupHtml(p.category, p.title)}</div>`;
+
+      cardWrap.innerHTML = `
+        <div class="blueprint-dashed-frame">
+            <div class="blueprint-marker top-left"></div>
+            <div class="blueprint-marker top-right"></div>
+            <div class="blueprint-marker bottom-left"></div>
+            <div class="blueprint-marker bottom-right"></div>
+            <div class="blueprint-anchor-pin"></div>
+        </div>
+        <div class="project-showcase-card">
+            <div class="project-visual-box">
+                <div class="project-browser-bar">
+                    <span class="browser-dot red"></span>
+                    <span class="browser-dot yellow"></span>
+                    <span class="browser-dot green"></span>
+                    <span class="browser-url">${browserUrl}</span>
+                </div>
+                ${visualPreviewHtml}
+                <span class="project-status-pill">${statusPill}</span>
+            </div>
+            <div class="project-details-box">
+                <span class="project-category-badge">${catBadge}</span>
+                <h3 class="project-title">${title}</h3>
+                <p class="project-desc">${desc}</p>
+                <div class="project-tech-tags">
+                    ${tagsHtml}
+                </div>
+                <div class="project-action-row">
+                    <a href="${primaryBtnUrl}" target="_blank" rel="noopener noreferrer" class="btn-project-primary">
+                        <span>${primaryBtnText}</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                        </svg>
+                    </a>
+                    ${secondaryBtnText && secondaryBtnUrl ? `
+                    <a href="${secondaryBtnUrl}" target="_blank" rel="noopener noreferrer" class="btn-project-secondary">
+                        <span>${secondaryBtnText}</span>
+                    </a>` : ''}
+                </div>
+            </div>
+        </div>
+      `;
+
+      projectsStack.appendChild(cardWrap);
+    });
+
+    applyProjectFilter(currentActiveProjectFilter);
+    initTiltEffects();
+  }
+
+  function applyProjectFilter(filter) {
+    currentActiveProjectFilter = filter;
+    const cards = document.querySelectorAll('.blueprint-card-wrapper');
+    cards.forEach(card => {
+      if (filter === 'all' || card.dataset.category === filter) {
+        card.classList.remove('hidden-filter');
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(15px)';
+        setTimeout(() => {
+          card.style.transition = 'all 0.4s ease';
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }, 50);
+      } else {
+        card.classList.add('hidden-filter');
+      }
+    });
+  }
+
+  // Filter project buttons
+  const projectFilterBtns = document.querySelectorAll('.project-filter-btn');
+  projectFilterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
+      projectFilterBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-
-      const filter = btn.dataset.filter;
-      projectCards.forEach(card => {
-        if (filter === 'all' || card.dataset.category === filter) {
-          card.classList.remove('hidden-filter');
-          card.style.opacity = '0';
-          card.style.transform = 'translateY(15px)';
-          setTimeout(() => {
-            card.style.transition = 'all 0.4s ease';
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-          }, 50);
-        } else {
-          card.classList.add('hidden-filter');
-        }
-      });
+      applyProjectFilter(btn.dataset.filter);
     });
   });
 
-  // ===== ACHIEVEMENTS CATEGORY FILTERS =====
-  const achieveFilterBtns = document.querySelectorAll('.achieve-filter-btn');
-  const achieveCards = document.querySelectorAll('.achievements-grid .achievement-card');
-
-  achieveFilterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      achieveFilterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      const filter = btn.dataset.filter;
-      achieveCards.forEach(card => {
-        if (filter === 'all' || card.dataset.category === filter) {
-          card.style.display = '';
-          card.style.opacity = '0';
-          card.style.transform = 'translateY(15px)';
-          setTimeout(() => {
-            card.style.transition = 'all 0.4s cubic-bezier(0.22, 1, 0.36, 1)';
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-          }, 30);
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    });
-  });
-
-  // ===== ACHIEVEMENTS LIGHTBOX MODAL =====
+  // ===== DYNAMIC ACHIEVEMENTS RENDERING =====
+  const achievementsGrid = document.getElementById('achievements-grid');
   const achieveLightbox = document.getElementById('achieve-lightbox');
-  const openAchieveLightboxBtn = document.getElementById('open-achieve-lightbox');
-  const achieveMediaBox = document.getElementById('achieve-media-box');
   const closeAchieveLightboxBtn = document.getElementById('achieve-lightbox-close');
+  let currentActiveAchieveFilter = 'all';
 
-  function openAchieveModal() {
+  function getAchievementVisualPreviewHtml(type) {
+    if (type === 'tech') {
+      return `
+        <div class="achievement-visual-preview tech-preview">
+            <div class="code-terminal-header">
+                <div class="term-dots"><span></span><span></span><span></span></div>
+                <span class="term-title">showcase-pplg.dev</span>
+            </div>
+            <div class="code-terminal-body">
+                <div class="term-line"><span class="t-keyword">const</span> <span class="t-var">project</span> = <span class="t-str">"Web Portfolio & Platform"</span>;</div>
+                <div class="term-line"><span class="t-keyword">const</span> <span class="t-var">status</span> = <span class="t-str">"Featured in PPLG Expo"</span>;</div>
+                <div class="term-line status-badge"><span class="t-check">✓</span> <span>100% Responsive & Realtime Sync</span></div>
+            </div>
+        </div>
+      `;
+    } else if (type === 'cert') {
+      return `
+        <div class="achievement-visual-preview cert-preview">
+            <div class="cert-seal-wrap">
+                <div class="cert-seal-circle"><span>🏅</span></div>
+                <div class="cert-seal-info">
+                    <strong>Certificate of Competency</strong>
+                    <span>Modern Web Development & Logic</span>
+                </div>
+            </div>
+        </div>
+      `;
+    } else if (type === 'design') {
+      return `
+        <div class="achievement-visual-preview design-preview">
+            <div class="design-swatches">
+                <span class="swatch" style="background: #2F2E2E;"></span>
+                <span class="swatch" style="background: #656363;"></span>
+                <span class="swatch" style="background: #9F9C9C;"></span>
+                <span class="swatch" style="background: #DDDDDD;"></span>
+            </div>
+            <div class="design-elements-row">
+                <span class="ui-mini-btn">Interactive UI</span>
+                <span class="ui-mini-chip">Auto-Layout</span>
+                <span class="ui-mini-chip">Figma 100%</span>
+            </div>
+        </div>
+      `;
+    }
+    return '';
+  }
+
+  function openAchieveLightboxWithData(imgSrc, title, desc) {
     if (!achieveLightbox) return;
+    const imgEl = achieveLightbox.querySelector('.achieve-lightbox-img');
+    const capTitle = achieveLightbox.querySelector('.achieve-lightbox-caption h4');
+    const capDesc = achieveLightbox.querySelector('.achieve-lightbox-caption p');
+
+    if (imgEl && imgSrc) imgEl.src = imgSrc;
+    if (capTitle) capTitle.textContent = title || 'Dokumentasi Prestasi';
+    if (capDesc) capDesc.textContent = desc || 'Dokumentasi penyerahan gelar juara & penghargaan.';
+
     achieveLightbox.classList.add('show');
     achieveLightbox.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
@@ -676,8 +1007,6 @@
     document.body.style.overflow = '';
   }
 
-  if (openAchieveLightboxBtn) openAchieveLightboxBtn.addEventListener('click', openAchieveModal);
-  if (achieveMediaBox) achieveMediaBox.addEventListener('click', openAchieveModal);
   if (closeAchieveLightboxBtn) closeAchieveLightboxBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     closeAchieveModal();
@@ -693,30 +1022,189 @@
     }
   });
 
-  // ===== TILT EFFECT ON BLUEPRINT PROJECT CARDS =====
-  if (window.innerWidth > 768) {
-    document.querySelectorAll('.project-showcase-card, .achievement-card').forEach(card => {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const rotateX = (y - centerY) / centerY * -3;
-        const rotateY = (x - centerX) / centerX * 3;
+  function renderPortfolioAchievements(list) {
+    if (!achievementsGrid) return;
+    if (!list || list.length === 0) {
+      list = DEFAULT_PORTFOLIO_ACHIEVEMENTS;
+    }
 
-        card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
-      });
+    achievementsGrid.innerHTML = '';
 
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateY(0)';
-        card.style.transition = 'transform 0.5s ease, box-shadow 0.4s ease';
-      });
+    list.forEach(a => {
+      const card = document.createElement('div');
+      const isFeatured = !!a.image;
+      card.className = `achievement-card ${isFeatured ? 'featured-card' : ''}`;
+      card.dataset.category = a.category || 'esport';
 
-      card.addEventListener('mouseenter', () => {
-        card.style.transition = 'none';
-      });
+      const title = sanitizeHtml(a.title);
+      const icon = a.badgeIcon || '🏆';
+      const badgeText = sanitizeHtml(a.badgeText || 'Award');
+      const badgeType = a.badgeType || 'gold';
+      const year = sanitizeHtml(a.year || '2025');
+      const catLabel = sanitizeHtml(a.categoryLabel || 'ACHIEVEMENT');
+      const subtitle = sanitizeHtml(a.subtitle || '');
+      const desc = sanitizeHtml(a.desc);
+      const tagsArr = Array.isArray(a.tags) ? a.tags : [];
+      const tagsHtml = tagsArr.map(t => `<span class="achieve-tag">${sanitizeHtml(t)}</span>`).join('');
+      const hasImg = !!a.image;
+
+      let mediaOrPreviewHtml = '';
+      if (hasImg) {
+        mediaOrPreviewHtml = `
+          <div class="achievement-media-box">
+              <img src="${a.image}" alt="${title}" class="achievement-img" loading="lazy">
+              <div class="achievement-media-overlay" data-img="${a.image}" data-title="${title}" data-desc="${desc}">
+                  <span class="overlay-btn">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                      Lihat Foto Dokumentasi
+                  </span>
+              </div>
+          </div>
+        `;
+      } else {
+        mediaOrPreviewHtml = getAchievementVisualPreviewHtml(a.previewType || a.category);
+      }
+
+      card.innerHTML = `
+        <div class="achievement-card-top">
+            <div class="achievement-badge-pill ${badgeType}">
+                <span class="badge-icon">${icon}</span>
+                <span>${badgeText}</span>
+            </div>
+            <span class="achievement-year-tag">${year}</span>
+        </div>
+        ${mediaOrPreviewHtml}
+        <div class="achievement-content">
+            <div class="achievement-category-label">${catLabel}</div>
+            <h3 class="achievement-title">${title}</h3>
+            ${subtitle ? `<p class="achievement-subtitle">${subtitle}</p>` : ''}
+            <p class="achievement-desc">${desc}</p>
+            <div class="achievement-tags">
+                ${tagsHtml}
+            </div>
+        </div>
+      `;
+
+      // Attach lightbox click if image exists
+      const mediaBox = card.querySelector('.achievement-media-box');
+      if (mediaBox && hasImg) {
+        mediaBox.addEventListener('click', () => {
+          openAchieveLightboxWithData(a.image, a.title, a.desc);
+        });
+      }
+
+      achievementsGrid.appendChild(card);
     });
+
+    applyAchievementFilter(currentActiveAchieveFilter);
+    initTiltEffects();
+  }
+
+  function applyAchievementFilter(filter) {
+    currentActiveAchieveFilter = filter;
+    const cards = document.querySelectorAll('.achievements-grid .achievement-card');
+    cards.forEach(card => {
+      if (filter === 'all' || card.dataset.category === filter) {
+        card.style.display = '';
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(15px)';
+        setTimeout(() => {
+          card.style.transition = 'all 0.4s cubic-bezier(0.22, 1, 0.36, 1)';
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }, 30);
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  // Filter achievement buttons
+  const achieveFilterBtns = document.querySelectorAll('.achieve-filter-btn');
+  achieveFilterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      achieveFilterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyAchievementFilter(btn.dataset.filter);
+    });
+  });
+
+  // ===== TILT EFFECT ON BLUEPRINT PROJECT CARDS & ACHIEVEMENTS =====
+  function initTiltEffects() {
+    if (window.innerWidth > 768) {
+      document.querySelectorAll('.project-showcase-card, .achievement-card').forEach(card => {
+        if (card.dataset.tiltBound) return;
+        card.dataset.tiltBound = 'true';
+
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = (y - centerY) / centerY * -3;
+          const rotateY = (x - centerX) / centerX * 3;
+
+          card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateY(0)';
+          card.style.transition = 'transform 0.5s ease, box-shadow 0.4s ease';
+        });
+
+        card.addEventListener('mouseenter', () => {
+          card.style.transition = 'none';
+        });
+      });
+    }
+  }
+
+  // ===== INITIALIZE REALTIME SYNC FOR PROJECTS & ACHIEVEMENTS =====
+  function initRealtimePortfolioData() {
+    // 1. Initial render from LocalStorage or Defaults
+    try {
+      const savedProjects = JSON.parse(localStorage.getItem('rafikuy_portfolio_projects') || 'null');
+      renderPortfolioProjects(savedProjects || DEFAULT_PORTFOLIO_PROJECTS);
+    } catch (e) {
+      renderPortfolioProjects(DEFAULT_PORTFOLIO_PROJECTS);
+    }
+
+    try {
+      const savedAchieve = JSON.parse(localStorage.getItem('rafikuy_portfolio_achievements') || 'null');
+      renderPortfolioAchievements(savedAchieve || DEFAULT_PORTFOLIO_ACHIEVEMENTS);
+    } catch (e) {
+      renderPortfolioAchievements(DEFAULT_PORTFOLIO_ACHIEVEMENTS);
+    }
+
+    // 2. Realtime sync with Firebase RTDB
+    const db = getFirebaseDb();
+    if (db) {
+      // Sync Projects
+      db.ref('portfolio_projects').on('value', (snapshot) => {
+        const val = snapshot.val();
+        if (val) {
+          const list = Object.keys(val).map(key => ({ id: key, ...val[key] }));
+          list.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+          localStorage.setItem('rafikuy_portfolio_projects', JSON.stringify(list));
+          renderPortfolioProjects(list);
+        }
+      });
+
+      // Sync Achievements
+      db.ref('portfolio_achievements').on('value', (snapshot) => {
+        const val = snapshot.val();
+        if (val) {
+          const list = Object.keys(val).map(key => ({ id: key, ...val[key] }));
+          list.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+          localStorage.setItem('rafikuy_portfolio_achievements', JSON.stringify(list));
+          renderPortfolioAchievements(list);
+        }
+      });
+    }
+  }
+
+  initRealtimePortfolioData();
 
     // ===== 3D HOLOGRAM TILT & GLARE FOR HERO & ABOUT PHOTO =====
     const setupPhotoTilt = (wrapperId, cardSelector, glareSelector) => {
@@ -759,9 +1247,10 @@
       });
     };
 
-    setupPhotoTilt('hero-interactive-card', '.hero-card-3d', '.hero-lens-glare');
-    setupPhotoTilt('about-interactive-card', '.about-photo-frame', '.about-lens-glare');
-  }
+    if (window.innerWidth > 768) {
+      setupPhotoTilt('hero-interactive-card', '.hero-card-3d', '.hero-lens-glare');
+      setupPhotoTilt('about-interactive-card', '.about-photo-frame', '.about-lens-glare');
+    }
 
   // ===== SMOOTH SCROLL =====
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
