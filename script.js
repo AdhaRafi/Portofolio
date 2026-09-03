@@ -1578,11 +1578,11 @@
 
     // --- Star Rating Selector Logic ---
     const RATING_LABELS = {
-      1: '1.0 (Kurang Memuaskan 🙁)',
-      2: '2.0 (Bisa Ditingkatkan 😐)',
-      3: '3.0 (Cukup Baik 🙂)',
-      4: '4.0 (Bagus Banget! 👍)',
-      5: '5.0 (Sempurna! 🌟)'
+      1: '1.0 (Perlu Ditingkatkan)',
+      2: '2.0 (Cukup)',
+      3: '3.0 (Baik)',
+      4: '4.0 (Sangat Baik)',
+      5: '5.0 (Sempurna)'
     };
 
     if (starRating) {
@@ -1916,7 +1916,7 @@
         // Button loading state
         if (testiSubmitBtn) {
           testiSubmitBtn.disabled = true;
-          testiSubmitBtn.innerHTML = 'Mengirim... ⏳';
+          testiSubmitBtn.innerHTML = 'Mengirim...';
         }
 
         const newTestimonial = {

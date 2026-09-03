@@ -3075,7 +3075,7 @@ body {
 
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 24px;
 }
 
@@ -3134,8 +3134,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  color: var(--c-100);
   margin-bottom: 20px;
+  transition: var(--transition);
+}
+
+.service-card:hover .service-icon-wrap {
+  background: var(--c-500);
+  border-color: var(--c-300);
+  transform: scale(1.05);
 }
 
 .service-card h3 {
@@ -4572,7 +4579,18 @@ body {
 }
 
 .hobby-icon {
-  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: var(--c-700);
+  transition: var(--transition);
+}
+
+.hobby-item:hover .hobby-icon {
+  color: var(--c-900);
+  transform: scale(1.1);
 }
 
 .hobby-item span {
