@@ -6,6 +6,31 @@
 (function () {
   'use strict';
 
+  // ===== DARK / LIGHT MODE TOGGLE =====
+  const themeToggleBtn = document.getElementById('theme-toggle');
+  const html = document.documentElement;
+
+  function applyTheme(theme) {
+    html.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    if (themeToggleBtn) {
+      themeToggleBtn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+      themeToggleBtn.title = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+    }
+  }
+
+  // Initialize: respect saved pref or system pref
+  const savedTheme = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
+
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+      const current = html.getAttribute('data-theme');
+      applyTheme(current === 'dark' ? 'light' : 'dark');
+    });
+  }
+
   // ===== MINIMALIST NOIR BAT PRELOADER =====
   const canvas = document.getElementById('bat-canvas');
   const ctx = canvas ? canvas.getContext('2d') : null;

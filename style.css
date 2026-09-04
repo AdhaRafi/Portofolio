@@ -50,11 +50,78 @@
   --radius-md: 20px;
 }
 
+/* ===== DARK MODE VARIABLES ===== */
+[data-theme="dark"] {
+  --bg-page: #0e0e11;
+  --bg-section-alt: #141418;
+  --bg-card: #1a1a22;
+  --text-main: #e8e8f0;
+  --text-muted: #8a8a9a;
+  --text-light: #3a3a4a;
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-dark: rgba(255, 255, 255, 0.04);
+  --c-100: #2a2a35;
+  --c-200: #3a3a48;
+  --c-300: #5a5a72;
+  --c-400: #7a7a95;
+  --c-500: #9898b8;
+  --c-600: #b8b8d0;
+  --c-700: #d8d8e8;
+  --c-900: #f0f0f8;
+}
+
+/* Smooth color transition on theme switch */
+html {
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+*, *::before, *::after {
+  transition: background-color 0.4s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+/* Exclude animations & transforms from transition override */
+.preloader, canvas, .hero-letter, .bat-char, [style*="transform"], [style*="animation"] {
+  transition: none;
+}
+
+/* ===== THEME TOGGLE BUTTON ===== */
+.theme-toggle {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: var(--bg-card);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12), inset 0 0 0 1.5px var(--border-subtle);
+  flex-shrink: 0;
+  overflow: hidden;
+  margin-left: 8px;
+}
+.theme-toggle:hover {
+  transform: scale(1.1) rotate(12deg);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+}
+.theme-icon {
+  position: absolute;
+  font-size: 18px;
+  line-height: 1;
+  transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+/* Light mode: show moon, hide sun */
+.theme-icon-moon { opacity: 1; transform: rotate(0deg) scale(1); }
+.theme-icon-sun  { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+/* Dark mode: show sun, hide moon */
+[data-theme="dark"] .theme-icon-moon { opacity: 0; transform: rotate(90deg) scale(0.5); }
+[data-theme="dark"] .theme-icon-sun  { opacity: 1; transform: rotate(0deg) scale(1); }
+
 html {
   scroll-behavior: smooth;
   font-size: 16px;
   overflow-x: hidden;
 }
+
 
 body {
   font-family: var(--font-body);
@@ -291,6 +358,11 @@ img {
   box-shadow: 0 2px 25px rgba(0, 0, 0, 0.08);
   border-bottom: 1px solid var(--border-subtle);
 }
+[data-theme="dark"] .navbar.scrolled {
+  background: rgba(14, 14, 17, 0.92);
+  box-shadow: 0 2px 25px rgba(0, 0, 0, 0.4);
+}
+
 
 .navbar .container {
   display: flex;
