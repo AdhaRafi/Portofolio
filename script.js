@@ -1065,20 +1065,28 @@
       startPhotoBatSwarm(false);
     }, 350);
 
-    // Click on photo card: bats swarm back in and scatter to reveal photo again
+    // Hover on photo card: bats fly in, cover, then scatter to reveal the photo
     const cardWrap = document.getElementById('hero-interactive-card');
     if (cardWrap) {
-      cardWrap.addEventListener('click', () => {
-        startPhotoBatSwarm(true);
+      cardWrap.addEventListener('mouseenter', () => {
+        // Only re-trigger if not already mid-animation
+        if (!isSwarmingActive) {
+          startPhotoBatSwarm(true);
+        }
       });
 
-      // Safety fallback: guarantee photo is 100% visible after 3.5s
-      setTimeout(() => {
-        if (!cardWrap.classList.contains('bat-revealed')) {
-          cardWrap.classList.remove('bat-swarming');
-          cardWrap.classList.add('bat-revealed');
-        }
-      }, 3500);
+      // On mouse leave: shroud the photo again so the next hover re-triggers
+      cardWrap.addEventListener('mouseleave', () => {
+        // Wait a beat so reveal is briefly visible before covering again
+        setTimeout(() => {
+          const card3d = document.getElementById('hero-card-3d');
+          if (!isSwarmingActive) {
+            cardWrap.classList.remove('bat-revealed');
+            cardWrap.classList.add('bat-swarming');
+            if (card3d) card3d.classList.remove('glint-active');
+          }
+        }, 600);
+      });
     }
 
     // Pause when hero is not visible (scroll away)
