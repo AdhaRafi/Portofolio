@@ -606,6 +606,324 @@
         quote.style.transform = 'translateY(0)';
       }, 50);
     }
+
+    // Initialize Hero Bat Canvas (Ambient & Interactive)
+    initHeroBatCanvas();
+  }
+
+  // ===== HERO AMBIENT & INTERACTIVE BAT CANVAS =====
+  function initHeroBatCanvas() {
+    const heroSection = document.querySelector('.hero');
+    const heroCanvas = document.getElementById('hero-bat-canvas');
+    if (!heroSection || !heroCanvas) return;
+
+    const ctx = heroCanvas.getContext('2d');
+    if (!ctx) return;
+
+    let dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let heroW = 0;
+    let heroH = 0;
+    let heroBats = [];
+    let isHeroVisible = true;
+    let animFrameId = null;
+    let ambientTimer = null;
+    let lastInteractTime = 0;
+
+    function resizeHeroCanvas() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      heroW = heroSection.clientWidth;
+      heroH = heroSection.clientHeight;
+      heroCanvas.width = heroW * dpr;
+      heroCanvas.height = heroH * dpr;
+      heroCanvas.style.width = heroW + 'px';
+      heroCanvas.style.height = heroH + 'px';
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(dpr, dpr);
+    }
+
+    resizeHeroCanvas();
+    window.addEventListener('resize', resizeHeroCanvas);
+
+    // Draw Bat function
+    function drawBatOnCanvas(x, y, size, angle, flapPhase, opacity) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+      ctx.scale(size, size);
+      ctx.globalAlpha = Math.max(0, Math.min(1, opacity));
+
+      const flap = Math.sin(flapPhase);
+
+      // Deep charcoal silhouette with crisp silver moonlight rim
+      ctx.fillStyle = '#050608';
+      ctx.strokeStyle = 'rgba(225, 235, 255, 0.8)';
+      ctx.lineWidth = 0.85;
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+      ctx.shadowBlur = 6;
+
+      ctx.beginPath();
+      // Head & ears
+      ctx.moveTo(0, -6);
+      ctx.lineTo(-2, -9.5);
+      ctx.lineTo(-1, -5.5);
+      ctx.lineTo(1, -5.5);
+      ctx.lineTo(2, -9.5);
+      ctx.lineTo(0, -6);
+
+      // Torso
+      ctx.ellipse(0, 0, 2.2, 5.2, 0, 0, Math.PI * 2);
+
+      // Left Wing
+      const elbowX = -7.5;
+      const elbowY = -4 - flap * 4.5;
+      const tipX = -21;
+      const tipY = -2 + flap * 11;
+      const s1X = -15, s1Y = 3 + flap * 5;
+      const s2X = -10, s2Y = 3.8 + flap * 3.5;
+      const s3X = -5,  s3Y = 3.2 + flap * 1.5;
+
+      ctx.moveTo(-1.2, -2);
+      ctx.quadraticCurveTo(-4.5, -5.5 - flap * 3, elbowX, elbowY);
+      ctx.quadraticCurveTo(-13.5, -5.5 - flap * 5.5, tipX, tipY);
+      ctx.quadraticCurveTo(-17.5, 0 + flap * 5.5, s1X, s1Y);
+      ctx.quadraticCurveTo(-12.5, 2 + flap * 3.8, s2X, s2Y);
+      ctx.quadraticCurveTo(-8, 2.5 + flap * 2, s3X, s3Y);
+      ctx.quadraticCurveTo(-2.5, 2.8, 0, 5.2);
+
+      // Right Wing (symmetrical)
+      ctx.quadraticCurveTo(2.5, 2.8, -s3X, s3Y);
+      ctx.quadraticCurveTo(8, 2.5 + flap * 2, -s2X, s2Y);
+      ctx.quadraticCurveTo(12.5, 2 + flap * 3.8, -s1X, s1Y);
+      ctx.quadraticCurveTo(17.5, 0 + flap * 5.5, -tipX, tipY);
+      ctx.quadraticCurveTo(13.5, -5.5 - flap * 5.5, -elbowX, elbowY);
+      ctx.quadraticCurveTo(4.5, -5.5 - flap * 3, 1.2, -2);
+
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      if (size > 1.6) {
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(elbowX, elbowY);
+        ctx.lineTo(s1X, s1Y);
+        ctx.moveTo(elbowX, elbowY);
+        ctx.lineTo(s2X, s2Y);
+        ctx.moveTo(-elbowX, elbowY);
+        ctx.lineTo(-s1X, s1Y);
+        ctx.moveTo(-elbowX, elbowY);
+        ctx.lineTo(-s2X, s2Y);
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    function bezier(p0, p1, p2, p3, t) {
+      const u = 1 - t;
+      const tt = t * t;
+      const uu = u * u;
+      const uuu = uu * u;
+      const ttt = tt * t;
+      return {
+        x: uuu * p0.x + 3 * uu * t * p1.x + 3 * u * tt * p2.x + ttt * p3.x,
+        y: uuu * p0.y + 3 * uu * t * p1.y + 3 * u * tt * p2.y + ttt * p3.y
+      };
+    }
+
+    // Spawning single bat
+    function spawnBat(p0, p1, p2, p3, duration, baseSize, endSize) {
+      heroBats.push({
+        p0, p1, p2, p3,
+        startTime: performance.now(),
+        duration,
+        baseSize,
+        endSize,
+        flapSpeed: 0.22 + Math.random() * 0.08,
+        flapPhase: Math.random() * Math.PI * 2
+      });
+
+      if (!animFrameId) {
+        animFrameId = requestAnimationFrame(renderHeroBats);
+      }
+    }
+
+    // Ambient spawn: 1 to 3 bats gliding across hero sky
+    function spawnAmbientBats() {
+      if (!isHeroVisible || heroW === 0) return;
+      const count = Math.random() < 0.6 ? 2 : (Math.random() < 0.5 ? 1 : 3);
+      const dir = Math.random() < 0.5 ? 1 : -1;
+
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          if (!isHeroVisible) return;
+          const startX = dir === 1 ? -60 : heroW + 60;
+          const endX = dir === 1 ? heroW + 80 : -80;
+          const startY = heroH * 0.18 + Math.random() * (heroH * 0.35);
+          const endY = heroH * 0.22 + Math.random() * (heroH * 0.4);
+
+          const p0 = { x: startX, y: startY };
+          const p1 = { x: heroW * 0.3 + (Math.random() - 0.5) * 100, y: startY + (Math.random() - 0.5) * 80 };
+          const p2 = { x: heroW * 0.7 + (Math.random() - 0.5) * 100, y: endY + (Math.random() - 0.5) * 80 };
+          const p3 = { x: endX, y: endY };
+
+          const duration = 1600 + Math.random() * 600;
+          const size = 1.4 + Math.random() * 0.6;
+          spawnBat(p0, p1, p2, p3, duration, size, size * (0.9 + Math.random() * 0.2));
+        }, i * 220);
+      }
+    }
+
+    // Interactive flock trigger: bursts out from PORTFOLIO title
+    function triggerTitleBatBurst(count = 5) {
+      const heroTitle = document.getElementById('hero-title');
+      if (!heroTitle) return;
+
+      const titleRect = heroTitle.getBoundingClientRect();
+      const heroRect = heroSection.getBoundingClientRect();
+      const originX = titleRect.left - heroRect.left + titleRect.width * 0.5;
+      const originY = titleRect.top - heroRect.top + titleRect.height * 0.5;
+
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          const spreadAngle = (-Math.PI / 2) + (i - (count - 1) / 2) * 0.35 + (Math.random() - 0.5) * 0.2;
+          const dist = Math.max(heroW, heroH) * 0.8 + Math.random() * 200;
+
+          const p0 = {
+            x: originX + (Math.random() - 0.5) * (titleRect.width * 0.8),
+            y: originY + (Math.random() - 0.5) * 20
+          };
+
+          const p1 = {
+            x: p0.x + Math.cos(spreadAngle) * (dist * 0.3) + (Math.random() - 0.5) * 80,
+            y: p0.y + Math.sin(spreadAngle) * (dist * 0.3) - 60
+          };
+
+          const p2 = {
+            x: p0.x + Math.cos(spreadAngle) * (dist * 0.7),
+            y: p0.y + Math.sin(spreadAngle) * (dist * 0.7)
+          };
+
+          const p3 = {
+            x: p0.x + Math.cos(spreadAngle) * dist,
+            y: p0.y + Math.sin(spreadAngle) * dist
+          };
+
+          const duration = 1100 + Math.random() * 400;
+          const baseSize = 1.6 + Math.random() * 0.7;
+          const endSize = baseSize * (1.1 + Math.random() * 0.4);
+
+          spawnBat(p0, p1, p2, p3, duration, baseSize, endSize);
+        }, i * 65);
+      }
+    }
+
+    // Render loop
+    function renderHeroBats(timestamp) {
+      if (!ctx || heroW === 0) {
+        animFrameId = null;
+        return;
+      }
+
+      ctx.clearRect(0, 0, heroW, heroH);
+
+      const now = performance.now();
+      for (let i = heroBats.length - 1; i >= 0; i--) {
+        const b = heroBats[i];
+        const elapsed = now - b.startTime;
+        const t = Math.min(elapsed / b.duration, 1);
+
+        if (t >= 1) {
+          heroBats.splice(i, 1);
+          continue;
+        }
+
+        const pos = bezier(b.p0, b.p1, b.p2, b.p3, t);
+        const nextT = Math.min(t + 0.02, 1);
+        const nextPos = bezier(b.p0, b.p1, b.p2, b.p3, nextT);
+        const dx = nextPos.x - pos.x;
+        const dy = nextPos.y - pos.y;
+        const angle = Math.atan2(dy, dx) + Math.PI / 2;
+
+        const currentSize = b.baseSize + (b.endSize - b.baseSize) * t;
+        let opacity = 1;
+        if (t < 0.12) opacity = t / 0.12;
+        if (t > 0.85) opacity = (1 - t) / 0.15;
+
+        b.flapPhase += b.flapSpeed;
+        drawBatOnCanvas(pos.x, pos.y, currentSize, angle, b.flapPhase, opacity);
+      }
+
+      if (heroBats.length > 0 && isHeroVisible) {
+        animFrameId = requestAnimationFrame(renderHeroBats);
+      } else {
+        animFrameId = null;
+        ctx.clearRect(0, 0, heroW, heroH);
+      }
+    }
+
+    // Ambient loop: trigger every 7-10s
+    function scheduleNextAmbient() {
+      if (ambientTimer) clearTimeout(ambientTimer);
+      const delay = 6500 + Math.random() * 3500;
+      ambientTimer = setTimeout(() => {
+        if (isHeroVisible) {
+          spawnAmbientBats();
+        }
+        scheduleNextAmbient();
+      }, delay);
+    }
+
+    // Initial ambient flight after 1.8s
+    setTimeout(() => {
+      if (isHeroVisible) {
+        spawnAmbientBats();
+      }
+      scheduleNextAmbient();
+    }, 1800);
+
+    // Click on PORTFOLIO title triggers bat burst
+    const heroTitle = document.getElementById('hero-title');
+    if (heroTitle) {
+      heroTitle.addEventListener('click', (e) => {
+        const now = Date.now();
+        if (now - lastInteractTime < 600) return;
+        lastInteractTime = now;
+        triggerTitleBatBurst(6);
+      });
+
+      // Hover on PORTFOLIO title triggers a light flutter of 3 bats
+      heroTitle.addEventListener('mouseenter', (e) => {
+        const now = Date.now();
+        if (now - lastInteractTime < 1800) return;
+        lastInteractTime = now;
+        triggerTitleBatBurst(3);
+      });
+    }
+
+    // Pause when hero is not visible (scroll away)
+    if ('IntersectionObserver' in window) {
+      const heroObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          isHeroVisible = entry.isIntersecting;
+          if (!isHeroVisible) {
+            if (animFrameId) {
+              cancelAnimationFrame(animFrameId);
+              animFrameId = null;
+            }
+            heroBats = [];
+            ctx.clearRect(0, 0, heroW, heroH);
+          } else {
+            if (heroBats.length > 0 && !animFrameId) {
+              animFrameId = requestAnimationFrame(renderHeroBats);
+            }
+          }
+        });
+      }, { threshold: 0.1 });
+
+      heroObserver.observe(heroSection);
+    }
   }
 
   // Automatic triggers for hero animations
