@@ -45,110 +45,89 @@
     <div class="custom-cursor" id="cursor"></div>
     <div class="cursor-dot" id="cursor-dot"></div>
 
-    <!-- PRELOADER — Spider Web -->
-    <div class="preloader" id="preloader">
-        <canvas id="spider-web-canvas"></canvas>
-
-        <!-- Spider silk thread -->
-        <div class="spider-silk" id="spider-silk"></div>
-
-        <!-- Spider SVG with animated legs -->
-        <div class="spider-wrapper" id="spider-wrapper">
-            <svg class="spider-svg" viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <!-- Red glow filter -->
-                    <filter id="redGlow" x="-50%" y="-50%" width="200%" height="200%">
-                        <feGaussianBlur stdDeviation="2" result="blur" />
-                        <feFlood flood-color="#ff1744" flood-opacity="0.6" result="color" />
-                        <feComposite in="color" in2="blur" operator="in" result="glow" />
-                        <feMerge>
-                            <feMergeNode in="glow" />
-                            <feMergeNode in="SourceGraphic" />
-                        </feMerge>
-                    </filter>
-                    <!-- Eye glow -->
-                    <filter id="eyeGlow" x="-50%" y="-50%" width="200%" height="200%">
-                        <feGaussianBlur stdDeviation="3" result="blur" />
-                        <feFlood flood-color="#ffffff" flood-opacity="0.8" result="color" />
-                        <feComposite in="color" in2="blur" operator="in" result="glow" />
-                        <feMerge>
-                            <feMergeNode in="glow" />
-                            <feMergeNode in="SourceGraphic" />
-                        </feMerge>
-                    </filter>
-                </defs>
-
-                <!-- Legs left side — black with red tips -->
-                <line class="spider-leg leg-l1" x1="38" y1="38" x2="5" y2="12" />
-                <line class="spider-leg leg-l2" x1="35" y1="46" x2="2" y2="42" />
-                <line class="spider-leg leg-l3" x1="35" y1="54" x2="2" y2="62" />
-                <line class="spider-leg leg-l4" x1="38" y1="62" x2="5" y2="90" />
-                <!-- Red tips left -->
-                <line class="spider-leg-tip leg-l1" x1="10" y1="16" x2="5" y2="12" />
-                <line class="spider-leg-tip leg-l2" x1="7" y1="42" x2="2" y2="42" />
-                <line class="spider-leg-tip leg-l3" x1="7" y1="62" x2="2" y2="62" />
-                <line class="spider-leg-tip leg-l4" x1="10" y1="86" x2="5" y2="90" />
-
-                <!-- Legs right side -->
-                <line class="spider-leg leg-r1" x1="82" y1="38" x2="115" y2="12" />
-                <line class="spider-leg leg-r2" x1="85" y1="46" x2="118" y2="42" />
-                <line class="spider-leg leg-r3" x1="85" y1="54" x2="118" y2="62" />
-                <line class="spider-leg leg-r4" x1="82" y1="62" x2="115" y2="90" />
-                <!-- Red tips right -->
-                <line class="spider-leg-tip leg-r1" x1="110" y1="16" x2="115" y2="12" />
-                <line class="spider-leg-tip leg-r2" x1="113" y1="42" x2="118" y2="42" />
-                <line class="spider-leg-tip leg-r3" x1="113" y1="62" x2="118" y2="62" />
-                <line class="spider-leg-tip leg-r4" x1="110" y1="86" x2="115" y2="90" />
-
-                <!-- Body (abdomen) — dark black with red outline glow -->
-                <ellipse cx="60" cy="58" rx="22" ry="26" fill="#0d0d0d" stroke="#cc1133" stroke-width="0.8"
-                    opacity="0.95" />
-                <!-- Red accent stripes on abdomen -->
-                <path d="M52 46 L60 42 L68 46" fill="none" stroke="#ff1744" stroke-width="1.2" opacity="0.8" />
-                <path d="M49 52 L60 47 L71 52" fill="none" stroke="#ff1744" stroke-width="1" opacity="0.6" />
-                <path d="M50 58 L60 54 L70 58" fill="none" stroke="#cc1133" stroke-width="0.8" opacity="0.4" />
-
-                <!-- Spider emblem on abdomen (Miles style) -->
-                <g filter="url(#redGlow)" opacity="0.9">
-                    <!-- Spider body -->
-                    <ellipse cx="60" cy="63" rx="3" ry="5" fill="#ff1744" />
-                    <ellipse cx="60" cy="56" rx="2.5" ry="3" fill="#ff1744" />
-                    <!-- Spider emblem legs -->
-                    <line x1="57" y1="56" x2="50" y2="52" stroke="#ff1744" stroke-width="1" stroke-linecap="round" />
-                    <line x1="63" y1="56" x2="70" y2="52" stroke="#ff1744" stroke-width="1" stroke-linecap="round" />
-                    <line x1="57" y1="59" x2="48" y2="60" stroke="#ff1744" stroke-width="1" stroke-linecap="round" />
-                    <line x1="63" y1="59" x2="72" y2="60" stroke="#ff1744" stroke-width="1" stroke-linecap="round" />
-                    <line x1="57" y1="63" x2="49" y2="68" stroke="#ff1744" stroke-width="1" stroke-linecap="round" />
-                    <line x1="63" y1="63" x2="71" y2="68" stroke="#ff1744" stroke-width="1" stroke-linecap="round" />
-                    <line x1="58" y1="66" x2="51" y2="74" stroke="#ff1744" stroke-width="1" stroke-linecap="round" />
-                    <line x1="62" y1="66" x2="69" y2="74" stroke="#ff1744" stroke-width="1" stroke-linecap="round" />
-                </g>
-
-                <!-- Cephalothorax (head) — dark -->
-                <ellipse cx="60" cy="34" rx="16" ry="14" fill="#111111" stroke="#cc1133" stroke-width="0.6" />
-
-                <!-- Big Spider-Man eyes (Miles Morales white angular) -->
-                <g filter="url(#eyeGlow)">
-                    <!-- Left eye -->
-                    <path d="M47 30 Q50 22 56 26 Q57 32 52 35 Q47 34 47 30Z" fill="#ffffff" opacity="0.95">
-                        <animate attributeName="opacity" values="0.95;0.7;0.95" dur="3s" repeatCount="indefinite" />
-                    </path>
-                    <!-- Right eye -->
-                    <path d="M73 30 Q70 22 64 26 Q63 32 68 35 Q73 34 73 30Z" fill="#ffffff" opacity="0.95">
-                        <animate attributeName="opacity" values="0.95;0.7;0.95" dur="3s" repeatCount="indefinite"
-                            begin="0.5s" />
-                    </path>
-                </g>
-
-                <!-- Red reflection in eyes -->
-                <circle cx="52" cy="29" r="1.2" fill="#ff1744" opacity="0.3" />
-                <circle cx="68" cy="29" r="1.2" fill="#ff1744" opacity="0.3" />
-            </svg>
+    <!-- PRELOADER — Batman Dark Knight Intro -->
+    <div class="preloader bat-preloader" id="preloader">
+        <!-- Gotham Ambient Atmosphere & Bat-Signal Beam -->
+        <div class="bat-atmosphere">
+            <div class="bat-sky-glow"></div>
+            <div class="bat-signal-beam"></div>
+            <div class="bat-signal-spot"></div>
         </div>
 
-        <div class="preloader-name" id="preloader-name">RafiKuy</div>
-        <div class="preloader-bar">
-            <div class="preloader-fill" id="preloader-fill"></div>
+        <!-- 60FPS Canvas for Bat Swarm crossing screen and name -->
+        <canvas id="bat-canvas"></canvas>
+
+        <!-- Center Content: Batman Crest & User Name -->
+        <div class="bat-center-wrap" id="bat-center-wrap">
+            <!-- Batman Insignia SVG -->
+            <div class="bat-symbol-container" id="bat-symbol-container">
+                <svg class="bat-symbol-svg" viewBox="0 0 240 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="batGlow" x="-30%" y="-30%" width="160%" height="160%">
+                            <feGaussianBlur stdDeviation="5" result="blur" />
+                            <feFlood flood-color="#f59e0b" flood-opacity="0.4" result="goldGlow" />
+                            <feComposite in="goldGlow" in2="blur" operator="in" result="glow" />
+                            <feMerge>
+                                <feMergeNode in="glow" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                        <linearGradient id="batBodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#242933" />
+                            <stop offset="45%" stop-color="#12151b" />
+                            <stop offset="100%" stop-color="#050608" />
+                        </linearGradient>
+                        <linearGradient id="batBorderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.85" />
+                            <stop offset="50%" stop-color="#f1f5f9" stop-opacity="0.45" />
+                            <stop offset="100%" stop-color="#d97706" stop-opacity="0.9" />
+                        </linearGradient>
+                    </defs>
+                    <!-- Symmetrical Iconic Bat Silhouette -->
+                    <path class="bat-crest"
+                        d="M 120,24 
+                           L 115,10 
+                           L 111,20 
+                           C 96,25 65,22 8,10 
+                           C 18,36 32,58 58,66 
+                           C 68,60 80,60 86,68 
+                           C 94,62 106,64 112,78 
+                           L 120,92 
+                           L 128,78 
+                           C 134,64 146,62 154,68 
+                           C 160,60 172,60 182,66 
+                           C 208,58 222,36 232,10 
+                           C 175,22 144,25 129,20 
+                           L 125,10 
+                           Z"
+                        fill="url(#batBodyGrad)"
+                        stroke="url(#batBorderGrad)"
+                        stroke-width="1.8"
+                        filter="url(#batGlow)" />
+                </svg>
+            </div>
+
+            <!-- Name Section where bats swoop across -->
+            <div class="bat-name-block" id="bat-name-block">
+                <div class="bat-eyebrow">ADHA RAFI NURFAIZ</div>
+                <div class="preloader-name" id="preloader-name">
+                    <span class="bat-char">R</span>
+                    <span class="bat-char">a</span>
+                    <span class="bat-char">f</span>
+                    <span class="bat-char">i</span>
+                    <span class="bat-char">K</span>
+                    <span class="bat-char">u</span>
+                    <span class="bat-char">y</span>
+                    <div class="bat-shine-sweep" id="bat-shine-sweep"></div>
+                </div>
+                <div class="bat-tagline">GOTHAM EDITION // PORTFOLIO</div>
+            </div>
+
+            <!-- Sleek Progress HUD Bar -->
+            <div class="preloader-bar bat-loader-bar">
+                <div class="preloader-fill bat-loader-fill" id="preloader-fill"></div>
+            </div>
+            <div class="bat-skip-hint">KLIK DI MANA SAJA UNTUK MELEWATI</div>
         </div>
     </div>
 

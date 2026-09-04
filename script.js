@@ -6,26 +6,31 @@
 (function () {
   'use strict';
 
-  // ===== SPIDER WEB PRELOADER =====
-  const canvas = document.getElementById('spider-web-canvas');
+  // ===== BATMAN DARK KNIGHT PRELOADER =====
+  const canvas = document.getElementById('bat-canvas');
   const ctx = canvas ? canvas.getContext('2d') : null;
-  const spiderWrapper = document.getElementById('spider-wrapper');
-  const spiderSilk = document.getElementById('spider-silk');
-  const preloaderName = document.getElementById('preloader-name');
+  const preloader = document.getElementById('preloader');
   const preloaderFill = document.getElementById('preloader-fill');
+  const preloaderName = document.getElementById('preloader-name');
+  const shineSweep = document.getElementById('bat-shine-sweep');
+  const batChars = document.querySelectorAll('.bat-char');
 
-  // Web drawing state
-  let webProgress = 0; // 0 to 1
-  let spiderDescended = false;
-  let webDrawn = false;
-  const WEB_DURATION = 1800; // ms to draw web
-  const SPIDER_DESCEND_DURATION = 800; // ms for spider to come down
-  let webStartTime = null;
+  let preloaderDone = false;
+  let startTime = null;
+  const PRELOADER_DURATION = 2600; // total duration in ms
+  let particles = [];
 
   function resizeCanvas() {
     if (!canvas) return;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    if (ctx) {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(dpr, dpr);
+    }
   }
 
   if (canvas) {
@@ -33,160 +38,369 @@
     window.addEventListener('resize', resizeCanvas);
   }
 
-  // Draw spider web progressively
-  function drawWeb(progress) {
-    if (!ctx || !canvas) return;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  // Helper: Get name bounding position
+  function getNameBounds() {
+    if (!preloaderName) {
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight / 2 + 25;
+      return { x: cx, y: cy, left: cx - 120, right: cx + 120, top: cy - 25, bottom: cy + 25, width: 240, height: 50 };
+    }
+    const r = preloaderName.getBoundingClientRect();
+    return {
+      x: r.left + r.width / 2,
+      y: r.top + r.height / 2,
+      left: r.left,
+      right: r.right,
+      top: r.top,
+      bottom: r.bottom,
+      width: r.width,
+      height: r.height
+    };
+  }
 
-    const cx = canvas.width / 2;
-    const cy = canvas.height / 2;
-    // Make web cover most of the viewport
-    const maxRadius = Math.max(canvas.width, canvas.height) * 0.62;
-    const numRadials = 20;
-    const numSpirals = 13;
+  // Draw an anatomical, realistic bat with flapping wings
+  function drawBat(ctx, x, y, size, angle, flapPhase, opacity, isGold) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(angle);
+    ctx.scale(size, size);
+    ctx.globalAlpha = Math.max(0, Math.min(1, opacity));
 
-    // Phase 1: Draw radial lines (0 → 0.4 of progress)
-    const radialProgress = Math.min(progress / 0.4, 1);
-    const radialsToShow = Math.floor(numRadials * radialProgress);
+    const flap = Math.sin(flapPhase);
 
-    for (let i = 0; i < radialsToShow; i++) {
-      const angle = (i / numRadials) * Math.PI * 2 - Math.PI / 2;
-      const lineLen = maxRadius * (i === radialsToShow - 1 ? (radialProgress * numRadials - i) : 1);
-      const ex = cx + Math.cos(angle) * lineLen;
-      const ey = cy + Math.sin(angle) * lineLen;
+    // Dark sleek bat body with subtle moonlight/gold rim
+    ctx.fillStyle = isGold ? '#181206' : '#07090e';
+    ctx.strokeStyle = isGold ? 'rgba(245, 180, 40, 0.7)' : 'rgba(210, 225, 250, 0.45)';
+    ctx.lineWidth = 0.8;
 
+    ctx.beginPath();
+    // Head & pointed ears
+    ctx.moveTo(0, -6);
+    ctx.lineTo(-2.2, -9.5); // left ear tip
+    ctx.lineTo(-1.2, -5.5);
+    ctx.lineTo(1.2, -5.5);
+    ctx.lineTo(2.2, -9.5);  // right ear tip
+    ctx.lineTo(0, -6);
+
+    // Torso
+    ctx.ellipse(0, 0, 2.2, 5.5, 0, 0, Math.PI * 2);
+
+    // Left Wing
+    const elbowX = -8;
+    const elbowY = -4 - flap * 4.5;
+    const tipX = -21;
+    const tipY = -2 + flap * 11;
+
+    // Scallops along bottom of wing
+    const s1X = -15, s1Y = 3 + flap * 5;
+    const s2X = -10, s2Y = 4 + flap * 3.5;
+    const s3X = -5,  s3Y = 3.5 + flap * 1.5;
+
+    ctx.moveTo(-1.5, -2);
+    ctx.quadraticCurveTo(-5, -6 - flap * 3, elbowX, elbowY);
+    ctx.quadraticCurveTo(-14, -6 - flap * 6, tipX, tipY);
+    ctx.quadraticCurveTo(-18, 0 + flap * 6, s1X, s1Y);
+    ctx.quadraticCurveTo(-13, 2 + flap * 4, s2X, s2Y);
+    ctx.quadraticCurveTo(-8, 2.5 + flap * 2, s3X, s3Y);
+    ctx.quadraticCurveTo(-3, 3, 0, 5.5);
+
+    // Right Wing (symmetrical)
+    ctx.quadraticCurveTo(3, 3, -s3X, s3Y);
+    ctx.quadraticCurveTo(8, 2.5 + flap * 2, -s2X, s2Y);
+    ctx.quadraticCurveTo(13, 2 + flap * 4, -s1X, s1Y);
+    ctx.quadraticCurveTo(18, 0 + flap * 6, -tipX, tipY);
+    ctx.quadraticCurveTo(14, -6 - flap * 6, -elbowX, elbowY);
+    ctx.quadraticCurveTo(5, -6 - flap * 3, 1.5, -2);
+
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Wing bone details for larger bats
+    if (size > 1.3) {
+      ctx.strokeStyle = isGold ? 'rgba(245, 180, 40, 0.35)' : 'rgba(255, 255, 255, 0.2)';
+      ctx.lineWidth = 0.5;
       ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.lineTo(ex, ey);
-      ctx.strokeStyle = `rgba(255, ${190 + 65 * Math.sin(i)}, ${190 + 65 * Math.sin(i)}, ${0.08 + 0.06 * Math.sin(i)})`;
-      ctx.lineWidth = 1.1;
+      // Arm bones
+      ctx.moveTo(-1.5, -2);
+      ctx.lineTo(elbowX, elbowY);
+      ctx.lineTo(tipX, tipY);
+      ctx.moveTo(elbowX, elbowY);
+      ctx.lineTo(s1X, s1Y);
+      ctx.moveTo(elbowX, elbowY);
+      ctx.lineTo(s2X, s2Y);
+      // Right wing bones
+      ctx.moveTo(1.5, -2);
+      ctx.lineTo(-elbowX, elbowY);
+      ctx.lineTo(-tipX, tipY);
+      ctx.moveTo(-elbowX, elbowY);
+      ctx.lineTo(-s1X, s1Y);
+      ctx.moveTo(-elbowX, elbowY);
+      ctx.lineTo(-s2X, s2Y);
       ctx.stroke();
     }
 
-    // Phase 2: Draw spiral threads (0.4 → 1.0 of progress)
-    if (progress > 0.4) {
-      const spiralProgress = Math.min((progress - 0.4) / 0.6, 1);
-      const spiralsToShow = Math.floor(numSpirals * spiralProgress);
+    // Glowing bat eyes
+    ctx.fillStyle = '#ffd700';
+    ctx.fillRect(-1.2, -4.5, 0.8, 0.8);
+    ctx.fillRect(0.4, -4.5, 0.8, 0.8);
 
-      for (let s = 1; s <= spiralsToShow + 1; s++) {
-        const radius = (s / numSpirals) * maxRadius * 0.96;
-        const currentSpiralFraction = (s <= spiralsToShow) ? 1 : (spiralProgress * numSpirals - spiralsToShow);
+    ctx.restore();
+  }
 
-        ctx.beginPath();
-        for (let i = 0; i <= numRadials * currentSpiralFraction; i++) {
-          const angle = (i / numRadials) * Math.PI * 2 - Math.PI / 2;
-          // Add slight wobble for natural look
-          const wobble = Math.sin(i * 3.7 + s * 2.1) * 3.5;
-          const r = radius + wobble;
-          const px = cx + Math.cos(angle) * r;
-          const py = cy + Math.sin(angle) * r;
+  // Generate Bat Swarm Flock
+  const bats = [];
+  const TOTAL_BATS = 45;
 
-          if (i === 0) {
-            ctx.moveTo(px, py);
-          } else {
-            ctx.lineTo(px, py);
-          }
-        }
-        const redMix = Math.min(s / numSpirals, 1);
-        ctx.strokeStyle = `rgba(255, ${Math.floor(230 - 180 * redMix)}, ${Math.floor(230 - 200 * redMix)}, ${0.06 + 0.035 * s})`;
-        ctx.lineWidth = 0.85;
-        ctx.stroke();
+  function initBats() {
+    bats.length = 0;
+    const nameB = getNameBounds();
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2;
+
+    for (let i = 0; i < TOTAL_BATS; i++) {
+      // Different bat roles:
+      // 0 to 8: Scouts (early flutter across sky)
+      // 9 to 32: Main swarm swooping right across the name
+      // 33 to 44: Camera-rush foreground bats
+      let role = 'swarm';
+      let delay = 0;
+      let duration = 1200;
+      let p0 = { x: 0, y: 0 };
+      let p1 = { x: 0, y: 0 };
+      let p2 = { x: 0, y: 0 };
+      let p3 = { x: 0, y: 0 };
+      let baseSize = 1;
+      let endSize = 1;
+      let isGold = Math.random() < 0.25;
+
+      if (i < 8) {
+        // Scouts
+        role = 'scout';
+        delay = i * 70;
+        duration = 1000 + Math.random() * 400;
+        const side = i % 2 === 0 ? -1 : 1;
+        p0 = { x: cx + side * (cx * 0.9), y: cy * 0.2 + (Math.random() - 0.5) * 100 };
+        p1 = { x: cx + side * 150, y: cy * 0.5 };
+        p2 = { x: cx - side * 120, y: cy * 0.7 };
+        p3 = { x: cx - side * (cx * 0.9), y: cy * 0.3 + (Math.random() - 0.5) * 120 };
+        baseSize = 0.75 + Math.random() * 0.45;
+        endSize = baseSize;
+      } else if (i < 34) {
+        // Main Swarm — swoops DIRECTLY through the user's name!
+        role = 'nameCross';
+        const batchIdx = i - 8;
+        delay = 400 + batchIdx * 50 + Math.random() * 80;
+        duration = 1100 + Math.random() * 300;
+
+        // Swarm starts from behind Bat Signal (above center) or high corners
+        const startX = cx + (Math.random() - 0.5) * (window.innerWidth * 0.6);
+        const startY = cy - 220 - Math.random() * 120;
+        p0 = { x: startX, y: startY };
+
+        // Diving downward toward the name
+        p1 = {
+          x: cx + (Math.random() - 0.5) * 200,
+          y: nameB.top - 80 - Math.random() * 60
+        };
+
+        // Exact crossing point across the name "RafiKuy"
+        const nameXFraction = (batchIdx / 26);
+        const targetX = nameB.left + nameXFraction * nameB.width + (Math.random() - 0.5) * 30;
+        const targetY = nameB.y + (Math.random() - 0.5) * (nameB.height * 0.75);
+        p2 = { x: targetX, y: targetY };
+
+        // Exit swooping upward or toward camera
+        const exitSide = (batchIdx % 2 === 0 ? 1 : -1);
+        p3 = {
+          x: targetX + exitSide * (window.innerWidth * 0.5 + Math.random() * 200),
+          y: cy + 180 + Math.random() * 160
+        };
+
+        baseSize = 0.9 + Math.random() * 0.6;
+        endSize = baseSize * (1.1 + Math.random() * 0.3);
+      } else {
+        // Close Foreground rush bats (dramatic pop toward viewer)
+        role = 'rush';
+        const rushIdx = i - 34;
+        delay = 1100 + rushIdx * 90;
+        duration = 850 + Math.random() * 250;
+
+        const side = rushIdx % 2 === 0 ? -1 : 1;
+        p0 = { x: cx + side * (100 + Math.random() * 150), y: nameB.top - 40 };
+        p1 = { x: nameB.x + side * 40, y: nameB.y };
+        p2 = { x: cx + side * 280, y: cy + 150 };
+        p3 = { x: cx + side * (cx + 200), y: window.innerHeight + 150 };
+
+        baseSize = 1.3;
+        endSize = 3.6 + Math.random() * 1.6; // huge scale near camera!
       }
+
+      bats.push({
+        p0, p1, p2, p3,
+        delay,
+        duration,
+        baseSize,
+        endSize,
+        flapSpeed: 0.22 + Math.random() * 0.12,
+        flapPhase: Math.random() * Math.PI * 2,
+        isGold,
+        role,
+        hasLit: false
+      });
     }
+  }
 
-    // Draw subtle glow at center
-    const glowGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 80);
-    glowGrad.addColorStop(0, `rgba(255, 23, 68, ${0.12 * progress})`);
-    glowGrad.addColorStop(0.5, `rgba(255, 23, 68, ${0.04 * progress})`);
-    glowGrad.addColorStop(1, 'transparent');
-    ctx.beginPath();
-    ctx.arc(cx, cy, 80, 0, Math.PI * 2);
-    ctx.fillStyle = glowGrad;
-    ctx.fill();
+  initBats();
 
-    // Draw small dew drops at intersections
-    if (progress > 0.7) {
-      const dewOpacity = (progress - 0.7) / 0.3;
-      for (let s = 2; s <= numSpirals; s += 2) {
-        const radius = (s / numSpirals) * maxRadius * 0.96;
-        for (let i = 0; i < numRadials; i += 2) {
-          const angle = (i / numRadials) * Math.PI * 2 - Math.PI / 2;
-          const px = cx + Math.cos(angle) * radius;
-          const py = cy + Math.sin(angle) * radius;
+  // Cubic Bezier interpolation
+  function bezierPoint(p0, p1, p2, p3, t) {
+    const u = 1 - t;
+    const tt = t * t;
+    const uu = u * u;
+    const uuu = uu * u;
+    const ttt = tt * t;
 
-          ctx.beginPath();
-          ctx.arc(px, py, 2.2, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 23, 68, ${0.28 * dewOpacity})`;
-          ctx.fill();
+    return {
+      x: uuu * p0.x + 3 * uu * t * p1.x + 3 * u * tt * p2.x + ttt * p3.x,
+      y: uuu * p0.y + 3 * uu * t * p1.y + 3 * u * tt * p2.y + ttt * p3.y
+    };
+  }
+
+  // Trigger shine and letter lighting when bats cross the name
+  function triggerNameCrossing(batX, batY) {
+    const nameB = getNameBounds();
+    if (batX >= nameB.left - 30 && batX <= nameB.right + 30 &&
+        batY >= nameB.top - 20 && batY <= nameB.bottom + 20) {
+      
+      // Determine which letter of "RafiKuy" is nearest
+      if (batChars.length > 0) {
+        const normX = (batX - nameB.left) / nameB.width;
+        const charIdx = Math.max(0, Math.min(batChars.length - 1, Math.floor(normX * batChars.length)));
+        const charEl = batChars[charIdx];
+        if (charEl && !charEl.classList.contains('lit')) {
+          charEl.classList.add('lit');
+          setTimeout(() => charEl.classList.remove('lit'), 280);
         }
+      }
+
+      // Trigger glint sweep
+      if (shineSweep && !shineSweep.classList.contains('active')) {
+        shineSweep.classList.add('active');
+      }
+
+      // Spawn golden bat spark particles
+      for (let p = 0; p < 2; p++) {
+        particles.push({
+          x: batX + (Math.random() - 0.5) * 16,
+          y: batY + (Math.random() - 0.5) * 16,
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: (Math.random() - 0.5) * 1.5 - 0.5,
+          size: 1.5 + Math.random() * 2,
+          alpha: 1,
+          decay: 0.035 + Math.random() * 0.02
+        });
       }
     }
   }
 
-  // Spider descent animation
-  function descendSpider(timestamp) {
-    if (!spiderWrapper || !spiderSilk) return;
+  // Main Batman Animation Loop
+  function animateBatmanPreloader(timestamp) {
+    if (!startTime) startTime = timestamp;
+    const elapsed = timestamp - startTime;
+    const totalProgress = Math.min(elapsed / PRELOADER_DURATION, 1);
 
-    if (!spiderWrapper._startTime) spiderWrapper._startTime = timestamp;
-    const elapsed = timestamp - spiderWrapper._startTime;
-    const progress = Math.min(elapsed / SPIDER_DESCEND_DURATION, 1);
-
-    // Ease out quad
-    const eased = 1 - (1 - progress) * (1 - progress);
-
-    const targetY = (window.innerHeight / 2) - 70; // center-ish
-    const currentY = -120 + (targetY + 120) * eased;
-
-    spiderWrapper.style.top = currentY + 'px';
-    spiderSilk.style.height = (currentY + 40) + 'px';
-
-    if (progress < 1) {
-      requestAnimationFrame(descendSpider);
-    } else {
-      spiderDescended = true;
-      spiderWrapper.classList.add('idle');
-      // Show name
-      if (preloaderName) preloaderName.classList.add('visible');
-    }
-  }
-
-  // Main web animation loop
-  function animateWeb(timestamp) {
-    if (!webStartTime) webStartTime = timestamp;
-    const elapsed = timestamp - webStartTime;
-    webProgress = Math.min(elapsed / WEB_DURATION, 1);
-
-    drawWeb(webProgress);
-
-    // Update progress bar
+    // Update Loading Bar
     if (preloaderFill) {
-      preloaderFill.style.width = (webProgress * 100) + '%';
+      preloaderFill.style.width = (totalProgress * 100) + '%';
     }
 
-    // Start spider descent at 60% web progress
-    if (webProgress >= 0.6 && !spiderWrapper._startTime) {
-      requestAnimationFrame(descendSpider);
+    if (ctx && canvas) {
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+      // Render & update particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const pt = particles[i];
+        pt.x += pt.vx;
+        pt.y += pt.vy;
+        pt.alpha -= pt.decay;
+
+        if (pt.alpha <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+
+        ctx.save();
+        ctx.fillStyle = `rgba(245, 197, 24, ${pt.alpha})`;
+        ctx.shadowColor = '#ffd700';
+        ctx.shadowBlur = 6;
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // Render Bats
+      for (let i = 0; i < bats.length; i++) {
+        const b = bats[i];
+        if (elapsed < b.delay) continue;
+
+        const batElapsed = elapsed - b.delay;
+        const t = Math.min(batElapsed / b.duration, 1);
+
+        if (t >= 1) continue; // Finished flight
+
+        // Position on Bezier curve
+        const pos = bezierPoint(b.p0, b.p1, b.p2, b.p3, t);
+
+        // Velocity / facing angle from slightly ahead on curve
+        const nextT = Math.min(t + 0.018, 1);
+        const nextPos = bezierPoint(b.p0, b.p1, b.p2, b.p3, nextT);
+        const dx = nextPos.x - pos.x;
+        const dy = nextPos.y - pos.y;
+        const angle = Math.atan2(dy, dx) + Math.PI / 2;
+
+        // Current scale & opacity
+        const currentSize = b.baseSize + (b.endSize - b.baseSize) * t;
+        let opacity = 1;
+        if (t < 0.1) opacity = t / 0.1;
+        if (t > 0.88) opacity = (1 - t) / 0.12;
+
+        // Flap animation
+        b.flapPhase += b.flapSpeed;
+
+        drawBat(ctx, pos.x, pos.y, currentSize, angle, b.flapPhase, opacity, b.isGold);
+
+        // Trigger interaction when passing the name
+        if (b.role === 'nameCross' || b.role === 'rush') {
+          triggerNameCrossing(pos.x, pos.y);
+        }
+      }
     }
 
-    if (webProgress < 1) {
-      requestAnimationFrame(animateWeb);
+    if (totalProgress < 1) {
+      requestAnimationFrame(animateBatmanPreloader);
     } else {
-      webDrawn = true;
+      setTimeout(hidePreloader, 250);
     }
   }
 
-  // Start animation
+  // Start Animation
   if (canvas && ctx) {
-    requestAnimationFrame(animateWeb);
+    requestAnimationFrame(animateBatmanPreloader);
+  } else {
+    setTimeout(hidePreloader, 2000);
   }
 
   function hidePreloader() {
-    const preloader = document.getElementById('preloader');
+    if (preloaderDone) return;
+    preloaderDone = true;
+
     if (preloader && !preloader.classList.contains('done')) {
       preloader.classList.add('done');
       setTimeout(() => {
         preloader.style.display = 'none';
-      }, 600);
+      }, 700);
     }
     if (typeof initHeroAnimations === 'function') {
       initHeroAnimations();
@@ -200,19 +414,10 @@
     preloaderEl.addEventListener('touchstart', hidePreloader, { passive: true });
   }
 
-  // Hide preloader once web and spider finish
-  const checkReady = setInterval(() => {
-    if (webDrawn && spiderDescended) {
-      clearInterval(checkReady);
-      setTimeout(hidePreloader, 400);
-    }
-  }, 100);
-
-  // Absolute safety timeout: allow full spider animation to complete (~2.6s), then dismiss
+  // Absolute safety timeout: dismiss after 3.2s
   setTimeout(() => {
-    clearInterval(checkReady);
     hidePreloader();
-  }, 3000);
+  }, 3200);
 
   // ===== CUSTOM CURSOR (Desktop Only) =====
   if (window.innerWidth > 768) {
