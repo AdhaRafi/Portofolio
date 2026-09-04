@@ -575,7 +575,7 @@ body {
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 3;
+  z-index: 15;
 }
 
 .hero-bg-text {
@@ -654,6 +654,42 @@ body {
   max-width: 420px;
   perspective: 1000px;
   user-select: none;
+  cursor: pointer;
+}
+
+/* Bat Swarm Reveal Initial State (Masked/Hidden) */
+.hero-image-wrapper.bat-reveal-init .hero-card-3d {
+  opacity: 0;
+  transform: scale(0.85) translateY(28px);
+  filter: blur(14px) brightness(0.35);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-image-wrapper.bat-reveal-init .hero-floating-badge,
+.hero-image-wrapper.bat-reveal-init .hero-quote,
+.hero-image-wrapper.bat-reveal-init .hero-orbit-ring,
+.hero-image-wrapper.bat-reveal-init .hero-photo-ambient {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* When Revealed by Bat Swarm */
+.hero-image-wrapper.bat-revealed .hero-card-3d {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  filter: blur(0) brightness(1);
+}
+
+.hero-image-wrapper.bat-revealed .hero-floating-badge,
+.hero-image-wrapper.bat-revealed .hero-quote,
+.hero-image-wrapper.bat-revealed .hero-orbit-ring,
+.hero-image-wrapper.bat-revealed .hero-photo-ambient {
+  opacity: 1;
+  transform: scale(1);
 }
 
 /* Glowing Ambient Aura */
@@ -754,6 +790,35 @@ body {
 .hero-image-wrapper:hover .hero-card-3d img {
   transform: scale(1.04);
   filter: grayscale(0%) contrast(1.15);
+}
+
+/* Dramatic Glint Sweep on Bat Reveal */
+.hero-reveal-glint {
+  position: absolute;
+  top: -60%;
+  left: -120%;
+  width: 70%;
+  height: 220%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), rgba(220, 235, 255, 0.85), transparent);
+  transform: rotate(25deg);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.hero-card-3d.glint-active .hero-reveal-glint {
+  animation: heroPhotoGlint 0.95s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes heroPhotoGlint {
+  0% {
+    left: -120%;
+    opacity: 0.9;
+  }
+  100% {
+    left: 200%;
+    opacity: 0;
+  }
 }
 
 /* Lens Glare Sheen */

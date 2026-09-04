@@ -902,6 +902,133 @@
       });
     }
 
+    // ===== PHOTO BAT SWARM REVEAL =====
+    let isPhotoRevealing = false;
+    let photoLastTrigger = 0;
+
+    function triggerPhotoBatReveal(isReplay = false) {
+      const cardWrap = document.getElementById('hero-interactive-card');
+      const card3d = document.getElementById('hero-card-3d');
+      if (!cardWrap || !card3d || heroW === 0) return;
+
+      const now = performance.now();
+      if (isPhotoRevealing && now - photoLastTrigger < 1600) return;
+      isPhotoRevealing = true;
+      photoLastTrigger = now;
+
+      const cardRect = cardWrap.getBoundingClientRect();
+      const heroRect = heroSection.getBoundingClientRect();
+      const targetX = cardRect.left - heroRect.left + cardRect.width / 2;
+      const targetY = cardRect.top - heroRect.top + cardRect.height / 2;
+
+      // Ensure hidden state if replaying
+      if (isReplay) {
+        cardWrap.classList.remove('bat-revealed');
+        cardWrap.classList.add('bat-reveal-init');
+        card3d.classList.remove('glint-active');
+      }
+
+      const INCOMING_BATS = 16;
+      // Step 1: Bats swoop inward from outer edges toward the photo card
+      for (let i = 0; i < INCOMING_BATS; i++) {
+        setTimeout(() => {
+          if (!isHeroVisible) return;
+          const inAngle = (i / INCOMING_BATS) * Math.PI * 2 + (Math.random() - 0.5) * 0.3;
+          const spawnDist = Math.max(heroW, heroH) * 0.65 + 100;
+          const startX = targetX + Math.cos(inAngle) * spawnDist;
+          const startY = targetY + Math.sin(inAngle) * spawnDist;
+
+          const midDist = spawnDist * 0.45;
+          const perpAngle = inAngle + (i % 2 === 0 ? 0.6 : -0.6);
+          const p1X = targetX + Math.cos(perpAngle) * midDist;
+          const p1Y = targetY + Math.sin(perpAngle) * midDist;
+
+          const p2X = targetX + (Math.random() - 0.5) * 120;
+          const p2Y = targetY + (Math.random() - 0.5) * 120;
+
+          const p3X = targetX + (Math.random() - 0.5) * 60;
+          const p3Y = targetY + (Math.random() - 0.5) * 60;
+
+          const duration = 750 + Math.random() * 200;
+          const baseSize = 1.4 + Math.random() * 0.5;
+          const endSize = 1.8 + Math.random() * 0.6;
+
+          spawnBat({ x: startX, y: startY }, { x: p1X, y: p1Y }, { x: p2X, y: p2Y }, { x: p3X, y: p3Y }, duration, baseSize, endSize);
+        }, i * 35);
+      }
+
+      // Step 2: At climax of convergence, reveal photo and burst bats outward!
+      const CLIMAX_DELAY = 800;
+      setTimeout(() => {
+        if (!isHeroVisible) return;
+
+        // Reveal the photo card!
+        cardWrap.classList.remove('bat-reveal-init');
+        cardWrap.classList.add('bat-revealed');
+        card3d.classList.add('glint-active');
+
+        // Scatter 18 bats radially outward at high speed
+        const OUTWARD_BATS = 18;
+        for (let i = 0; i < OUTWARD_BATS; i++) {
+          setTimeout(() => {
+            const outAngle = (i / OUTWARD_BATS) * Math.PI * 2 + (Math.random() - 0.5) * 0.35;
+            const burstDist = Math.max(heroW, heroH) * 0.85 + Math.random() * 250;
+
+            const p0 = {
+              x: targetX + (Math.random() - 0.5) * 50,
+              y: targetY + (Math.random() - 0.5) * 50
+            };
+
+            const p1 = {
+              x: p0.x + Math.cos(outAngle) * (burstDist * 0.3) + (Math.random() - 0.5) * 60,
+              y: p0.y + Math.sin(outAngle) * (burstDist * 0.3) + (Math.random() - 0.5) * 60
+            };
+
+            const p2 = {
+              x: p0.x + Math.cos(outAngle) * (burstDist * 0.7),
+              y: p0.y + Math.sin(outAngle) * (burstDist * 0.7)
+            };
+
+            const p3 = {
+              x: p0.x + Math.cos(outAngle) * burstDist,
+              y: p0.y + Math.sin(outAngle) * burstDist
+            };
+
+            const duration = 850 + Math.random() * 300;
+            const baseSize = 2.0 + Math.random() * 0.8;
+            const endSize = baseSize * (1.2 + Math.random() * 0.4);
+
+            spawnBat(p0, p1, p2, p3, duration, baseSize, endSize);
+          }, i * 25);
+        }
+
+        setTimeout(() => {
+          isPhotoRevealing = false;
+        }, 900);
+      }, CLIMAX_DELAY);
+    }
+
+    // Trigger initial bat photo reveal
+    setTimeout(() => {
+      triggerPhotoBatReveal(false);
+    }, 450);
+
+    // Click on photo card replays the bat swarm reveal
+    const cardWrap = document.getElementById('hero-interactive-card');
+    if (cardWrap) {
+      cardWrap.addEventListener('click', () => {
+        triggerPhotoBatReveal(true);
+      });
+
+      // Safety fallback: ensure photo is always revealed after 3s
+      setTimeout(() => {
+        if (!cardWrap.classList.contains('bat-revealed')) {
+          cardWrap.classList.remove('bat-reveal-init');
+          cardWrap.classList.add('bat-revealed');
+        }
+      }, 3000);
+    }
+
     // Pause when hero is not visible (scroll away)
     if ('IntersectionObserver' in window) {
       const heroObserver = new IntersectionObserver((entries) => {
