@@ -5641,3 +5641,153 @@ body {
     justify-content: center;
   }
 }
+
+/* =================================================================
+   DARK MODE — COMPREHENSIVE OVERRIDES
+   Fixes all hardcoded #FFFFFF / light backgrounds for dark theme
+   ================================================================= */
+
+/* ── Core body & sections ── */
+[data-theme="dark"] body {
+  background: #0e0e11;
+  color: #e8e8f0;
+}
+[data-theme="dark"] section,
+[data-theme="dark"] .section {
+  background-color: transparent;
+}
+
+/* ── All white/near-white cards & containers ── */
+[data-theme="dark"] .skill-icon-box,
+[data-theme="dark"] .project-card,
+[data-theme="dark"] .service-card,
+[data-theme="dark"] .testimonial-card,
+[data-theme="dark"] .achievement-card,
+[data-theme="dark"] .hobby-item,
+[data-theme="dark"] .timeline-content,
+[data-theme="dark"] .contact-card,
+[data-theme="dark"] .contact-form-wrap,
+[data-theme="dark"] .lang-menu,
+[data-theme="dark"] .lang-btn,
+[data-theme="dark"] .nav-cta,
+[data-theme="dark"] .hero-social-link,
+[data-theme="dark"] .hero-card-3d,
+[data-theme="dark"] .hero-info-card,
+[data-theme="dark"] .stat-card,
+[data-theme="dark"] .about-card,
+[data-theme="dark"] .cert-card,
+[data-theme="dark"] .edu-card,
+[data-theme="dark"] .tab-pane,
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  background: #1a1a22 !important;
+  border-color: rgba(255,255,255,0.08) !important;
+  color: #e8e8f0 !important;
+}
+
+/* ── Alt section backgrounds ── */
+[data-theme="dark"] .about,
+[data-theme="dark"] .skills,
+[data-theme="dark"] .portfolio,
+[data-theme="dark"] .experience,
+[data-theme="dark"] .services,
+[data-theme="dark"] .achievements,
+[data-theme="dark"] .testimonials,
+[data-theme="dark"] .contact,
+[data-theme="dark"] .footer,
+[data-theme="dark"] .education,
+[data-theme="dark"] .certifications {
+  background: #0e0e11 !important;
+}
+[data-theme="dark"] .about:nth-child(even),
+[data-theme="dark"] .skills,
+[data-theme="dark"] .experience,
+[data-theme="dark"] .testimonials {
+  background: #121216 !important;
+}
+
+/* ── Hero section ── */
+[data-theme="dark"] .hero {
+  background: radial-gradient(circle at 70% 30%, #1e1e2e 0%, #0a0a0f 100%) !important;
+}
+
+/* ── Navbar ── */
+[data-theme="dark"] .navbar.scrolled {
+  background: rgba(14, 14, 17, 0.95) !important;
+}
+[data-theme="dark"] .nav-logo { color: #e8e8f0; }
+[data-theme="dark"] .nav-links a { color: #c8c8d8; }
+[data-theme="dark"] .nav-links a:hover { color: #ffffff; }
+
+/* ── Eyebrow badge / tags ── */
+[data-theme="dark"] .eyebrow-badge,
+[data-theme="dark"] .skill-tag,
+[data-theme="dark"] .tag,
+[data-theme="dark"] .badge,
+[data-theme="dark"] .label,
+[data-theme="dark"] .hero-eyebrow,
+[data-theme="dark"] .hero-typing-badge {
+  background: rgba(255,255,255,0.06) !important;
+  color: #c8c8d8 !important;
+  border-color: rgba(255,255,255,0.1) !important;
+}
+
+/* ── Progress bars & skill bars ── */
+[data-theme="dark"] .skill-bar-track,
+[data-theme="dark"] .progress-track {
+  background: rgba(255,255,255,0.08) !important;
+}
+
+/* ── Borders & dividers ── */
+[data-theme="dark"] hr,
+[data-theme="dark"] .divider {
+  border-color: rgba(255,255,255,0.08) !important;
+}
+
+/* ── Scrollbar ── */
+[data-theme="dark"] ::-webkit-scrollbar-track { background: #0e0e11; }
+[data-theme="dark"] ::-webkit-scrollbar-thumb { background: #2a2a35; }
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #3a3a48; }
+
+/* ── Social links & buttons ── */
+[data-theme="dark"] .social-circle,
+[data-theme="dark"] .btn-outline,
+[data-theme="dark"] .btn-ghost {
+  background: rgba(255,255,255,0.05) !important;
+  border-color: rgba(255,255,255,0.12) !important;
+  color: #e8e8f0 !important;
+}
+[data-theme="dark"] .social-circle:hover,
+[data-theme="dark"] .btn-outline:hover {
+  background: rgba(255,255,255,0.12) !important;
+}
+
+/* ── Preloader stays always dark ── */
+[data-theme="dark"] .preloader,
+[data-theme="light"] .preloader {
+  background: #050608 !important;
+}
+
+/* ── Lang dropdown ── */
+[data-theme="dark"] .lang-menu {
+  background: #1a1a22 !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5) !important;
+}
+[data-theme="dark"] .lang-option { color: #c8c8d8 !important; }
+[data-theme="dark"] .lang-option:hover { background: rgba(255,255,255,0.08) !important; }
+[data-theme="dark"] #lang-search {
+  background: rgba(255,255,255,0.05) !important;
+  color: #e8e8f0 !important;
+  border-color: rgba(255,255,255,0.1) !important;
+}
+
+/* ── Footer ── */
+[data-theme="dark"] footer,
+[data-theme="dark"] .footer {
+  background: #080809 !important;
+  color: #8a8a9a;
+}
+
+/* ── Glint / shine overlays — reduce in dark ── */
+[data-theme="dark"] .hero-bat-shroud { background: rgba(6,6,10,0.82) !important; }
