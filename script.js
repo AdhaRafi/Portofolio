@@ -57,7 +57,7 @@
     };
   }
 
-  // Draw an authentic, sleek silhouette bat with realistic flapping wings
+  // Draw a 3D-shaded cinematic bat with gradient wings, rim lighting & body volume
   function drawBat(ctx, x, y, size, angle, flapPhase, opacity) {
     ctx.save();
     ctx.translate(x, y);
@@ -66,75 +66,201 @@
     ctx.globalAlpha = Math.max(0, Math.min(1, opacity));
 
     const flap = Math.sin(flapPhase);
+    // Wing foreshortening: wings appear shallower when at extremes (3D perspective feel)
+    const flapAbs = Math.abs(flap);
+    const scaleY = 0.72 + flapAbs * 0.28; // vertical compression when wings are level
 
-    // Deep obsidian silhouette with crisp moonlight rim-light for clear visibility
-    ctx.fillStyle = '#050608';
-    ctx.strokeStyle = 'rgba(225, 235, 255, 0.85)'; // Clean silver moonlight rim
-    ctx.lineWidth = 0.85;
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
-    ctx.shadowBlur = 6;
-
-    ctx.beginPath();
-    // Head & pointed bat ears
-    ctx.moveTo(0, -6);
-    ctx.lineTo(-2, -9.5);
-    ctx.lineTo(-1, -5.5);
-    ctx.lineTo(1, -5.5);
-    ctx.lineTo(2, -9.5);
-    ctx.lineTo(0, -6);
-
-    // Body / Torso
-    ctx.ellipse(0, 0, 2.2, 5.2, 0, 0, Math.PI * 2);
-
-    // Left Wing
+    // ── Wing geometry ──
     const elbowX = -7.5;
-    const elbowY = -4 - flap * 4.5;
+    const elbowY = (-4 - flap * 4.5) * scaleY;
     const tipX = -21;
-    const tipY = -2 + flap * 11;
-    const s1X = -15, s1Y = 3 + flap * 5;
-    const s2X = -10, s2Y = 3.8 + flap * 3.5;
-    const s3X = -5,  s3Y = 3.2 + flap * 1.5;
+    const tipY = (-2 + flap * 11) * scaleY;
+    const s1X = -15, s1Y = (3 + flap * 5) * scaleY;
+    const s2X = -10, s2Y = (3.8 + flap * 3.5) * scaleY;
+    const s3X = -5,  s3Y = (3.2 + flap * 1.5) * scaleY;
 
-    ctx.moveTo(-1.2, -2);
-    ctx.quadraticCurveTo(-4.5, -5.5 - flap * 3, elbowX, elbowY);
-    ctx.quadraticCurveTo(-13.5, -5.5 - flap * 5.5, tipX, tipY);
-    ctx.quadraticCurveTo(-17.5, 0 + flap * 5.5, s1X, s1Y);
-    ctx.quadraticCurveTo(-12.5, 2 + flap * 3.8, s2X, s2Y);
-    ctx.quadraticCurveTo(-8, 2.5 + flap * 2, s3X, s3Y);
-    ctx.quadraticCurveTo(-2.5, 2.8, 0, 5.2);
+    // ── Build full wing path (for clipping gradient) ──
+    function buildWingPath() {
+      ctx.beginPath();
+      ctx.moveTo(-1.2, -2);
+      ctx.quadraticCurveTo(-4.5, (-5.5 - flap * 3) * scaleY, elbowX, elbowY);
+      ctx.quadraticCurveTo(-13.5, (-5.5 - flap * 5.5) * scaleY, tipX, tipY);
+      ctx.quadraticCurveTo(-17.5, (flap * 5.5) * scaleY, s1X, s1Y);
+      ctx.quadraticCurveTo(-12.5, (2 + flap * 3.8) * scaleY, s2X, s2Y);
+      ctx.quadraticCurveTo(-8, (2.5 + flap * 2) * scaleY, s3X, s3Y);
+      ctx.quadraticCurveTo(-2.5, 2.8, 0, 5.2);
+      ctx.quadraticCurveTo(2.5, 2.8, -s3X, s3Y);
+      ctx.quadraticCurveTo(8, (2.5 + flap * 2) * scaleY, -s2X, s2Y);
+      ctx.quadraticCurveTo(12.5, (2 + flap * 3.8) * scaleY, -s1X, s1Y);
+      ctx.quadraticCurveTo(17.5, (flap * 5.5) * scaleY, -tipX, tipY);
+      ctx.quadraticCurveTo(13.5, (-5.5 - flap * 5.5) * scaleY, -elbowX, elbowY);
+      ctx.quadraticCurveTo(4.5, (-5.5 - flap * 3) * scaleY, 1.2, -2);
+      ctx.closePath();
+    }
 
-    // Right Wing (symmetrical)
-    ctx.quadraticCurveTo(2.5, 2.8, -s3X, s3Y);
-    ctx.quadraticCurveTo(8, 2.5 + flap * 2, -s2X, s2Y);
-    ctx.quadraticCurveTo(12.5, 2 + flap * 3.8, -s1X, s1Y);
-    ctx.quadraticCurveTo(17.5, 0 + flap * 5.5, -tipX, tipY);
-    ctx.quadraticCurveTo(13.5, -5.5 - flap * 5.5, -elbowX, elbowY);
-    ctx.quadraticCurveTo(4.5, -5.5 - flap * 3, 1.2, -2);
+    // ── 1. Deep shadow base (gives volumetric depth) ──
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
+    ctx.shadowBlur = 14;
+    ctx.shadowOffsetX = 1.5 * (flap > 0 ? 1 : -1);
+    ctx.shadowOffsetY = 2;
 
-    ctx.closePath();
+    buildWingPath();
+    ctx.fillStyle = '#060709';
     ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+
+    // ── 2. Wing membrane 3D gradient (moonlight from upper-left) ──
+    // Left wing gradient: dark at body root → semi-transparent purple-blue at tip
+    const lgLeft = ctx.createRadialGradient(0, -1, 2, tipX * 0.7, tipY * 0.6, 22);
+    lgLeft.addColorStop(0,   'rgba(8, 8, 14, 0.98)');   // dark root
+    lgLeft.addColorStop(0.35,'rgba(20, 18, 32, 0.90)');  // mid wing
+    lgLeft.addColorStop(0.7, 'rgba(35, 30, 58, 0.75)');  // translucent membrane
+    lgLeft.addColorStop(1,   'rgba(60, 55, 90, 0.40)');  // thin tip glows slightly
+
+    // Right wing gradient
+    const lgRight = ctx.createRadialGradient(0, -1, 2, -tipX * 0.7, tipY * 0.6, 22);
+    lgRight.addColorStop(0,   'rgba(8, 8, 14, 0.98)');
+    lgRight.addColorStop(0.35,'rgba(20, 18, 32, 0.90)');
+    lgRight.addColorStop(0.7, 'rgba(35, 30, 58, 0.75)');
+    lgRight.addColorStop(1,   'rgba(60, 55, 90, 0.40)');
+
+    // Draw left wing half with gradient
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(-1.2, -2);
+    ctx.quadraticCurveTo(-4.5, (-5.5 - flap * 3) * scaleY, elbowX, elbowY);
+    ctx.quadraticCurveTo(-13.5, (-5.5 - flap * 5.5) * scaleY, tipX, tipY);
+    ctx.quadraticCurveTo(-17.5, (flap * 5.5) * scaleY, s1X, s1Y);
+    ctx.quadraticCurveTo(-12.5, (2 + flap * 3.8) * scaleY, s2X, s2Y);
+    ctx.quadraticCurveTo(-8, (2.5 + flap * 2) * scaleY, s3X, s3Y);
+    ctx.quadraticCurveTo(-2.5, 2.8, 0, 5.2);
+    ctx.lineTo(0, -2); ctx.closePath();
+    ctx.fillStyle = lgLeft;
+    ctx.fill();
+    ctx.restore();
+
+    // Draw right wing half
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(1.2, -2);
+    ctx.quadraticCurveTo(4.5, (-5.5 - flap * 3) * scaleY, -elbowX, elbowY);
+    ctx.quadraticCurveTo(13.5, (-5.5 - flap * 5.5) * scaleY, -tipX, tipY);
+    ctx.quadraticCurveTo(17.5, (flap * 5.5) * scaleY, -s1X, s1Y);
+    ctx.quadraticCurveTo(12.5, (2 + flap * 3.8) * scaleY, -s2X, s2Y);
+    ctx.quadraticCurveTo(8, (2.5 + flap * 2) * scaleY, -s3X, s3Y);
+    ctx.quadraticCurveTo(2.5, 2.8, 0, 5.2);
+    ctx.lineTo(0, -2); ctx.closePath();
+    ctx.fillStyle = lgRight;
+    ctx.fill();
+    ctx.restore();
+
+    // ── 3. Rim-light stroke (crisp silver moonlight edge) ──
+    buildWingPath();
+    ctx.strokeStyle = 'rgba(200, 215, 255, 0.70)';
+    ctx.lineWidth = 0.7;
     ctx.stroke();
 
-    // Subtle wing structure ribs for larger bats to enhance realism
-    if (size > 1.6) {
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
-      ctx.lineWidth = 0.5;
-      ctx.beginPath();
-      // Left ribs
-      ctx.moveTo(elbowX, elbowY);
-      ctx.lineTo(s1X, s1Y);
-      ctx.moveTo(elbowX, elbowY);
-      ctx.lineTo(s2X, s2Y);
-      // Right ribs
-      ctx.moveTo(-elbowX, elbowY);
-      ctx.lineTo(-s1X, s1Y);
-      ctx.moveTo(-elbowX, elbowY);
-      ctx.lineTo(-s2X, s2Y);
-      ctx.stroke();
-    }
+    // ── 4. Wing vein ribs (3D structural lines with depth shading) ──
+    ctx.lineWidth = 0.55;
+    ctx.beginPath();
+    // Left ribs
+    ctx.moveTo(-1.5, -1.5);
+    ctx.lineTo(elbowX, elbowY);
+    ctx.lineTo(tipX, tipY);
+    ctx.moveTo(elbowX, elbowY);
+    ctx.lineTo(s1X, s1Y);
+    ctx.moveTo(elbowX * 0.5, elbowY * 0.3);
+    ctx.lineTo(s2X, s2Y);
+    // Right ribs
+    ctx.moveTo(1.5, -1.5);
+    ctx.lineTo(-elbowX, elbowY);
+    ctx.lineTo(-tipX, tipY);
+    ctx.moveTo(-elbowX, elbowY);
+    ctx.lineTo(-s1X, s1Y);
+    ctx.moveTo(-elbowX * 0.5, elbowY * 0.3);
+    ctx.lineTo(-s2X, s2Y);
+    ctx.strokeStyle = 'rgba(170, 190, 255, 0.45)';
+    ctx.stroke();
+
+    // ── 5. 3D Body — Ellipsoid with volume shading ──
+    // Base body
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 2.4, 5.5, 0, 0, Math.PI * 2);
+    const bodyGrad = ctx.createLinearGradient(-2.4, -5.5, 2.4, 5.5);
+    bodyGrad.addColorStop(0,   'rgba(55, 52, 80, 1)');    // top lit (moonlight)
+    bodyGrad.addColorStop(0.3, 'rgba(22, 20, 38, 1)');    // upper mid
+    bodyGrad.addColorStop(0.7, 'rgba(8, 7, 14, 1)');      // lower mid (shadow)
+    bodyGrad.addColorStop(1,   'rgba(4, 3, 8, 1)');       // underside
+    ctx.fillStyle = bodyGrad;
+    ctx.fill();
+    // Body rim
+    ctx.strokeStyle = 'rgba(200, 215, 255, 0.65)';
+    ctx.lineWidth = 0.6;
+    ctx.stroke();
+    // Body specular highlight (tiny bright streak = 3D gloss)
+    ctx.beginPath();
+    ctx.ellipse(-0.6, -2.2, 0.55, 1.6, -0.4, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(230, 240, 255, 0.22)';
+    ctx.fill();
+
+    // ── 6. Head with 3D ears ──
+    // Head sphere
+    ctx.beginPath();
+    ctx.arc(0, -6.2, 2.2, 0, Math.PI * 2);
+    const headGrad = ctx.createRadialGradient(-0.7, -7.2, 0.3, 0, -6.2, 2.2);
+    headGrad.addColorStop(0,   'rgba(70, 65, 100, 1)');  // moonlit top
+    headGrad.addColorStop(0.5, 'rgba(18, 16, 30, 1)');
+    headGrad.addColorStop(1,   'rgba(6, 5, 10, 1)');
+    ctx.fillStyle = headGrad;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(200, 215, 255, 0.60)';
+    ctx.lineWidth = 0.55;
+    ctx.stroke();
+
+    // Left ear (pointed, with inner highlight)
+    ctx.beginPath();
+    ctx.moveTo(-1.0, -7.8);
+    ctx.lineTo(-2.8, -11.5);
+    ctx.lineTo(-0.3, -8.2);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(12, 10, 22, 1)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(200, 215, 255, 0.55)';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+    // Ear inner catch-light
+    ctx.beginPath();
+    ctx.moveTo(-1.3, -8.5);
+    ctx.lineTo(-2.1, -10.5);
+    ctx.lineTo(-0.8, -8.8);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(120, 110, 180, 0.30)';
+    ctx.fill();
+
+    // Right ear
+    ctx.beginPath();
+    ctx.moveTo(1.0, -7.8);
+    ctx.lineTo(2.8, -11.5);
+    ctx.lineTo(0.3, -8.2);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(12, 10, 22, 1)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(200, 215, 255, 0.55)';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(1.3, -8.5);
+    ctx.lineTo(2.1, -10.5);
+    ctx.lineTo(0.8, -8.8);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(120, 110, 180, 0.30)';
+    ctx.fill();
 
     ctx.restore();
   }
+
 
   // Generate Bat Swarm Flock
   const bats = [];
