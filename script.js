@@ -6,7 +6,7 @@
 (function () {
   'use strict';
 
-  // ===== BATMAN DARK KNIGHT PRELOADER =====
+  // ===== MINIMALIST NOIR BAT PRELOADER =====
   const canvas = document.getElementById('bat-canvas');
   const ctx = canvas ? canvas.getContext('2d') : null;
   const preloader = document.getElementById('preloader');
@@ -17,8 +17,7 @@
 
   let preloaderDone = false;
   let startTime = null;
-  const PRELOADER_DURATION = 2600; // total duration in ms
-  let particles = [];
+  const PRELOADER_DURATION = 1900; // Snappy, cinematic 1.9s duration
 
   function resizeCanvas() {
     if (!canvas) return;
@@ -42,7 +41,7 @@
   function getNameBounds() {
     if (!preloaderName) {
       const cx = window.innerWidth / 2;
-      const cy = window.innerHeight / 2 + 25;
+      const cy = window.innerHeight / 2;
       return { x: cx, y: cy, left: cx - 120, right: cx + 120, top: cy - 25, bottom: cy + 25, width: 240, height: 50 };
     }
     const r = preloaderName.getBoundingClientRect();
@@ -58,8 +57,8 @@
     };
   }
 
-  // Draw an anatomical, realistic bat with flapping wings
-  function drawBat(ctx, x, y, size, angle, flapPhase, opacity, isGold) {
+  // Draw an authentic, sleek silhouette bat with realistic flapping wings
+  function drawBat(ctx, x, y, size, angle, flapPhase, opacity) {
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate(angle);
@@ -68,89 +67,58 @@
 
     const flap = Math.sin(flapPhase);
 
-    // Dark sleek bat body with subtle moonlight/gold rim
-    ctx.fillStyle = isGold ? '#181206' : '#07090e';
-    ctx.strokeStyle = isGold ? 'rgba(245, 180, 40, 0.7)' : 'rgba(210, 225, 250, 0.45)';
-    ctx.lineWidth = 0.8;
+    // Deep obsidian silhouette with ultra-subtle rim
+    ctx.fillStyle = '#040507';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+    ctx.lineWidth = 0.6;
 
     ctx.beginPath();
-    // Head & pointed ears
+    // Head & pointed bat ears
     ctx.moveTo(0, -6);
-    ctx.lineTo(-2.2, -9.5); // left ear tip
-    ctx.lineTo(-1.2, -5.5);
-    ctx.lineTo(1.2, -5.5);
-    ctx.lineTo(2.2, -9.5);  // right ear tip
+    ctx.lineTo(-2, -9);
+    ctx.lineTo(-1, -5.5);
+    ctx.lineTo(1, -5.5);
+    ctx.lineTo(2, -9);
     ctx.lineTo(0, -6);
 
-    // Torso
-    ctx.ellipse(0, 0, 2.2, 5.5, 0, 0, Math.PI * 2);
+    // Body / Torso
+    ctx.ellipse(0, 0, 2, 5, 0, 0, Math.PI * 2);
 
     // Left Wing
-    const elbowX = -8;
-    const elbowY = -4 - flap * 4.5;
-    const tipX = -21;
-    const tipY = -2 + flap * 11;
+    const elbowX = -7;
+    const elbowY = -4 - flap * 4;
+    const tipX = -20;
+    const tipY = -2 + flap * 10;
+    const s1X = -14, s1Y = 3 + flap * 4.5;
+    const s2X = -9,  s2Y = 3.8 + flap * 3;
+    const s3X = -4.5, s3Y = 3.2 + flap * 1.5;
 
-    // Scallops along bottom of wing
-    const s1X = -15, s1Y = 3 + flap * 5;
-    const s2X = -10, s2Y = 4 + flap * 3.5;
-    const s3X = -5,  s3Y = 3.5 + flap * 1.5;
-
-    ctx.moveTo(-1.5, -2);
-    ctx.quadraticCurveTo(-5, -6 - flap * 3, elbowX, elbowY);
-    ctx.quadraticCurveTo(-14, -6 - flap * 6, tipX, tipY);
-    ctx.quadraticCurveTo(-18, 0 + flap * 6, s1X, s1Y);
-    ctx.quadraticCurveTo(-13, 2 + flap * 4, s2X, s2Y);
-    ctx.quadraticCurveTo(-8, 2.5 + flap * 2, s3X, s3Y);
-    ctx.quadraticCurveTo(-3, 3, 0, 5.5);
+    ctx.moveTo(-1.2, -2);
+    ctx.quadraticCurveTo(-4.5, -5.5 - flap * 2.5, elbowX, elbowY);
+    ctx.quadraticCurveTo(-13, -5.5 - flap * 5, tipX, tipY);
+    ctx.quadraticCurveTo(-17, 0 + flap * 5, s1X, s1Y);
+    ctx.quadraticCurveTo(-12, 2 + flap * 3.5, s2X, s2Y);
+    ctx.quadraticCurveTo(-7.5, 2.5 + flap * 2, s3X, s3Y);
+    ctx.quadraticCurveTo(-2.5, 2.8, 0, 5);
 
     // Right Wing (symmetrical)
-    ctx.quadraticCurveTo(3, 3, -s3X, s3Y);
-    ctx.quadraticCurveTo(8, 2.5 + flap * 2, -s2X, s2Y);
-    ctx.quadraticCurveTo(13, 2 + flap * 4, -s1X, s1Y);
-    ctx.quadraticCurveTo(18, 0 + flap * 6, -tipX, tipY);
-    ctx.quadraticCurveTo(14, -6 - flap * 6, -elbowX, elbowY);
-    ctx.quadraticCurveTo(5, -6 - flap * 3, 1.5, -2);
+    ctx.quadraticCurveTo(2.5, 2.8, -s3X, s3Y);
+    ctx.quadraticCurveTo(7.5, 2.5 + flap * 2, -s2X, s2Y);
+    ctx.quadraticCurveTo(12, 2 + flap * 3.5, -s1X, s1Y);
+    ctx.quadraticCurveTo(17, 0 + flap * 5, -tipX, tipY);
+    ctx.quadraticCurveTo(13, -5.5 - flap * 5, -elbowX, elbowY);
+    ctx.quadraticCurveTo(4.5, -5.5 - flap * 2.5, 1.2, -2);
 
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
-
-    // Wing bone details for larger bats
-    if (size > 1.3) {
-      ctx.strokeStyle = isGold ? 'rgba(245, 180, 40, 0.35)' : 'rgba(255, 255, 255, 0.2)';
-      ctx.lineWidth = 0.5;
-      ctx.beginPath();
-      // Arm bones
-      ctx.moveTo(-1.5, -2);
-      ctx.lineTo(elbowX, elbowY);
-      ctx.lineTo(tipX, tipY);
-      ctx.moveTo(elbowX, elbowY);
-      ctx.lineTo(s1X, s1Y);
-      ctx.moveTo(elbowX, elbowY);
-      ctx.lineTo(s2X, s2Y);
-      // Right wing bones
-      ctx.moveTo(1.5, -2);
-      ctx.lineTo(-elbowX, elbowY);
-      ctx.lineTo(-tipX, tipY);
-      ctx.moveTo(-elbowX, elbowY);
-      ctx.lineTo(-s1X, s1Y);
-      ctx.moveTo(-elbowX, elbowY);
-      ctx.lineTo(-s2X, s2Y);
-      ctx.stroke();
-    }
-
-    // Glowing bat eyes
-    ctx.fillStyle = '#ffd700';
-    ctx.fillRect(-1.2, -4.5, 0.8, 0.8);
-    ctx.fillRect(0.4, -4.5, 0.8, 0.8);
 
     ctx.restore();
   }
 
   // Generate Bat Swarm Flock
   const bats = [];
-  const TOTAL_BATS = 45;
+  const TOTAL_BATS = 11;
 
   function initBats() {
     bats.length = 0;
@@ -159,81 +127,73 @@
     const cy = window.innerHeight / 2;
 
     for (let i = 0; i < TOTAL_BATS; i++) {
-      // Different bat roles:
-      // 0 to 8: Scouts (early flutter across sky)
-      // 9 to 32: Main swarm swooping right across the name
-      // 33 to 44: Camera-rush foreground bats
-      let role = 'swarm';
       let delay = 0;
-      let duration = 1200;
-      let p0 = { x: 0, y: 0 };
-      let p1 = { x: 0, y: 0 };
-      let p2 = { x: 0, y: 0 };
-      let p3 = { x: 0, y: 0 };
+      let duration = 950;
+      let p0, p1, p2, p3;
       let baseSize = 1;
       let endSize = 1;
-      let isGold = Math.random() < 0.25;
+      let role = 'swarm';
 
-      if (i < 8) {
-        // Scouts
+      if (i < 2) {
+        // High scouts cutting rapidly across
         role = 'scout';
-        delay = i * 70;
-        duration = 1000 + Math.random() * 400;
-        const side = i % 2 === 0 ? -1 : 1;
-        p0 = { x: cx + side * (cx * 0.9), y: cy * 0.2 + (Math.random() - 0.5) * 100 };
-        p1 = { x: cx + side * 150, y: cy * 0.5 };
-        p2 = { x: cx - side * 120, y: cy * 0.7 };
-        p3 = { x: cx - side * (cx * 0.9), y: cy * 0.3 + (Math.random() - 0.5) * 120 };
-        baseSize = 0.75 + Math.random() * 0.45;
+        delay = 120 + i * 120;
+        duration = 850 + Math.random() * 150;
+        const dir = i % 2 === 0 ? 1 : -1;
+        p0 = { x: cx - dir * (cx * 0.9), y: cy * 0.35 + (Math.random() - 0.5) * 60 };
+        p1 = { x: cx - dir * 200, y: cy * 0.45 };
+        p2 = { x: cx + dir * 200, y: cy * 0.55 };
+        p3 = { x: cx + dir * (cx * 0.95), y: cy * 0.3 + (Math.random() - 0.5) * 80 };
+        baseSize = 0.8 + Math.random() * 0.3;
         endSize = baseSize;
-      } else if (i < 34) {
-        // Main Swarm — swoops DIRECTLY through the user's name!
+      } else if (i < 9) {
+        // Main flock swooping diagonally slicing through "RafiKuy"
         role = 'nameCross';
-        const batchIdx = i - 8;
-        delay = 400 + batchIdx * 50 + Math.random() * 80;
-        duration = 1100 + Math.random() * 300;
+        const batchIdx = i - 2;
+        delay = 380 + batchIdx * 70 + Math.random() * 40;
+        duration = 880 + Math.random() * 180;
 
-        // Swarm starts from behind Bat Signal (above center) or high corners
-        const startX = cx + (Math.random() - 0.5) * (window.innerWidth * 0.6);
-        const startY = cy - 220 - Math.random() * 120;
-        p0 = { x: startX, y: startY };
+        // Originates from upper-left
+        p0 = {
+          x: cx - (cx * 0.75) - Math.random() * 100,
+          y: cy * 0.15 + (batchIdx * 24) + (Math.random() - 0.5) * 30
+        };
 
-        // Diving downward toward the name
+        // Diving path heading into the title
         p1 = {
-          x: cx + (Math.random() - 0.5) * 200,
-          y: nameB.top - 80 - Math.random() * 60
+          x: cx - 180 + (Math.random() - 0.5) * 60,
+          y: nameB.top - 40 + (Math.random() - 0.5) * 30
         };
 
-        // Exact crossing point across the name "RafiKuy"
-        const nameXFraction = (batchIdx / 26);
-        const targetX = nameB.left + nameXFraction * nameB.width + (Math.random() - 0.5) * 30;
-        const targetY = nameB.y + (Math.random() - 0.5) * (nameB.height * 0.75);
-        p2 = { x: targetX, y: targetY };
+        // Mid flight crossing directly over the letters of "RafiKuy"
+        const norm = batchIdx / 7;
+        const crossX = nameB.left + norm * nameB.width + (Math.random() - 0.5) * 20;
+        const crossY = nameB.y + (Math.random() - 0.5) * 14;
+        p2 = { x: crossX, y: crossY };
 
-        // Exit swooping upward or toward camera
-        const exitSide = (batchIdx % 2 === 0 ? 1 : -1);
+        // Ascending swoop towards right exit
         p3 = {
-          x: targetX + exitSide * (window.innerWidth * 0.5 + Math.random() * 200),
-          y: cy + 180 + Math.random() * 160
+          x: cx + (cx * 0.85) + Math.random() * 120,
+          y: cy + 100 + batchIdx * 30
         };
 
-        baseSize = 0.9 + Math.random() * 0.6;
-        endSize = baseSize * (1.1 + Math.random() * 0.3);
+        baseSize = 0.95 + Math.random() * 0.35;
+        endSize = baseSize * 1.15;
       } else {
-        // Close Foreground rush bats (dramatic pop toward viewer)
+        // Foreground cinematic pass (larger, near camera)
         role = 'rush';
-        const rushIdx = i - 34;
-        delay = 1100 + rushIdx * 90;
-        duration = 850 + Math.random() * 250;
+        const rushIdx = i - 9;
+        delay = 800 + rushIdx * 140;
+        duration = 750 + Math.random() * 120;
 
-        const side = rushIdx % 2 === 0 ? -1 : 1;
-        p0 = { x: cx + side * (100 + Math.random() * 150), y: nameB.top - 40 };
-        p1 = { x: nameB.x + side * 40, y: nameB.y };
-        p2 = { x: cx + side * 280, y: cy + 150 };
-        p3 = { x: cx + side * (cx + 200), y: window.innerHeight + 150 };
+        const side = rushIdx === 0 ? -1 : 1;
+        p0 = { x: cx + side * (cx * 0.6), y: nameB.top - 90 };
+        p1 = { x: nameB.x + side * 50, y: nameB.y + 15 };
+        p2 = { x: cx + side * 220, y: cy + 160 };
+        p3 = { x: cx + side * (cx * 1.1), y: window.innerHeight + 100 };
 
         baseSize = 1.3;
-        endSize = 3.6 + Math.random() * 1.6; // huge scale near camera!
+        endSize = 2.2;
       }
 
       bats.push({
@@ -242,11 +202,9 @@
         duration,
         baseSize,
         endSize,
-        flapSpeed: 0.22 + Math.random() * 0.12,
+        flapSpeed: 0.24 + Math.random() * 0.08,
         flapPhase: Math.random() * Math.PI * 2,
-        isGold,
-        role,
-        hasLit: false
+        role
       });
     }
   }
@@ -267,10 +225,10 @@
     };
   }
 
-  // Trigger shine and letter lighting when bats cross the name
+  // Trigger silver glint when bats cross the name
   function triggerNameCrossing(batX, batY) {
     const nameB = getNameBounds();
-    if (batX >= nameB.left - 30 && batX <= nameB.right + 30 &&
+    if (batX >= nameB.left - 25 && batX <= nameB.right + 25 &&
         batY >= nameB.top - 20 && batY <= nameB.bottom + 20) {
       
       // Determine which letter of "RafiKuy" is nearest
@@ -280,7 +238,7 @@
         const charEl = batChars[charIdx];
         if (charEl && !charEl.classList.contains('lit')) {
           charEl.classList.add('lit');
-          setTimeout(() => charEl.classList.remove('lit'), 280);
+          setTimeout(() => charEl.classList.remove('lit'), 240);
         }
       }
 
@@ -288,57 +246,22 @@
       if (shineSweep && !shineSweep.classList.contains('active')) {
         shineSweep.classList.add('active');
       }
-
-      // Spawn golden bat spark particles
-      for (let p = 0; p < 2; p++) {
-        particles.push({
-          x: batX + (Math.random() - 0.5) * 16,
-          y: batY + (Math.random() - 0.5) * 16,
-          vx: (Math.random() - 0.5) * 1.5,
-          vy: (Math.random() - 0.5) * 1.5 - 0.5,
-          size: 1.5 + Math.random() * 2,
-          alpha: 1,
-          decay: 0.035 + Math.random() * 0.02
-        });
-      }
     }
   }
 
-  // Main Batman Animation Loop
+  // Main Minimalist Bat Animation Loop
   function animateBatmanPreloader(timestamp) {
     if (!startTime) startTime = timestamp;
     const elapsed = timestamp - startTime;
     const totalProgress = Math.min(elapsed / PRELOADER_DURATION, 1);
 
-    // Update Loading Bar
+    // Update Minimalist Loading Bar
     if (preloaderFill) {
       preloaderFill.style.width = (totalProgress * 100) + '%';
     }
 
     if (ctx && canvas) {
       ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-
-      // Render & update particles
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const pt = particles[i];
-        pt.x += pt.vx;
-        pt.y += pt.vy;
-        pt.alpha -= pt.decay;
-
-        if (pt.alpha <= 0) {
-          particles.splice(i, 1);
-          continue;
-        }
-
-        ctx.save();
-        ctx.fillStyle = `rgba(245, 197, 24, ${pt.alpha})`;
-        ctx.shadowColor = '#ffd700';
-        ctx.shadowBlur = 6;
-        ctx.beginPath();
-        ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
 
       // Render Bats
       for (let i = 0; i < bats.length; i++) {
@@ -354,7 +277,7 @@
         const pos = bezierPoint(b.p0, b.p1, b.p2, b.p3, t);
 
         // Velocity / facing angle from slightly ahead on curve
-        const nextT = Math.min(t + 0.018, 1);
+        const nextT = Math.min(t + 0.02, 1);
         const nextPos = bezierPoint(b.p0, b.p1, b.p2, b.p3, nextT);
         const dx = nextPos.x - pos.x;
         const dy = nextPos.y - pos.y;
@@ -363,13 +286,13 @@
         // Current scale & opacity
         const currentSize = b.baseSize + (b.endSize - b.baseSize) * t;
         let opacity = 1;
-        if (t < 0.1) opacity = t / 0.1;
+        if (t < 0.12) opacity = t / 0.12;
         if (t > 0.88) opacity = (1 - t) / 0.12;
 
         // Flap animation
         b.flapPhase += b.flapSpeed;
 
-        drawBat(ctx, pos.x, pos.y, currentSize, angle, b.flapPhase, opacity, b.isGold);
+        drawBat(ctx, pos.x, pos.y, currentSize, angle, b.flapPhase, opacity);
 
         // Trigger interaction when passing the name
         if (b.role === 'nameCross' || b.role === 'rush') {
@@ -381,7 +304,7 @@
     if (totalProgress < 1) {
       requestAnimationFrame(animateBatmanPreloader);
     } else {
-      setTimeout(hidePreloader, 250);
+      setTimeout(hidePreloader, 180);
     }
   }
 
@@ -389,7 +312,7 @@
   if (canvas && ctx) {
     requestAnimationFrame(animateBatmanPreloader);
   } else {
-    setTimeout(hidePreloader, 2000);
+    setTimeout(hidePreloader, 1500);
   }
 
   function hidePreloader() {
@@ -400,7 +323,7 @@
       preloader.classList.add('done');
       setTimeout(() => {
         preloader.style.display = 'none';
-      }, 700);
+      }, 650);
     }
     if (typeof initHeroAnimations === 'function') {
       initHeroAnimations();
@@ -414,10 +337,10 @@
     preloaderEl.addEventListener('touchstart', hidePreloader, { passive: true });
   }
 
-  // Absolute safety timeout: dismiss after 3.2s
+  // Absolute safety timeout: dismiss after 2.4s
   setTimeout(() => {
     hidePreloader();
-  }, 3200);
+  }, 2400);
 
   // ===== CUSTOM CURSOR (Desktop Only) =====
   if (window.innerWidth > 768) {
