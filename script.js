@@ -17,7 +17,7 @@
 
   let preloaderDone = false;
   let startTime = null;
-  const PRELOADER_DURATION = 1900; // Snappy, cinematic 1.9s duration
+  const PRELOADER_DURATION = 2300; // Cinematic 2.3s duration so bat flock flight is fully seen
 
   function resizeCanvas() {
     if (!canvas) return;
@@ -67,58 +67,78 @@
 
     const flap = Math.sin(flapPhase);
 
-    // Deep obsidian silhouette with ultra-subtle rim
-    ctx.fillStyle = '#040507';
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-    ctx.lineWidth = 0.6;
+    // Deep obsidian silhouette with crisp moonlight rim-light for clear visibility
+    ctx.fillStyle = '#050608';
+    ctx.strokeStyle = 'rgba(225, 235, 255, 0.85)'; // Clean silver moonlight rim
+    ctx.lineWidth = 0.85;
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
+    ctx.shadowBlur = 6;
 
     ctx.beginPath();
     // Head & pointed bat ears
     ctx.moveTo(0, -6);
-    ctx.lineTo(-2, -9);
+    ctx.lineTo(-2, -9.5);
     ctx.lineTo(-1, -5.5);
     ctx.lineTo(1, -5.5);
-    ctx.lineTo(2, -9);
+    ctx.lineTo(2, -9.5);
     ctx.lineTo(0, -6);
 
     // Body / Torso
-    ctx.ellipse(0, 0, 2, 5, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 0, 2.2, 5.2, 0, 0, Math.PI * 2);
 
     // Left Wing
-    const elbowX = -7;
-    const elbowY = -4 - flap * 4;
-    const tipX = -20;
-    const tipY = -2 + flap * 10;
-    const s1X = -14, s1Y = 3 + flap * 4.5;
-    const s2X = -9,  s2Y = 3.8 + flap * 3;
-    const s3X = -4.5, s3Y = 3.2 + flap * 1.5;
+    const elbowX = -7.5;
+    const elbowY = -4 - flap * 4.5;
+    const tipX = -21;
+    const tipY = -2 + flap * 11;
+    const s1X = -15, s1Y = 3 + flap * 5;
+    const s2X = -10, s2Y = 3.8 + flap * 3.5;
+    const s3X = -5,  s3Y = 3.2 + flap * 1.5;
 
     ctx.moveTo(-1.2, -2);
-    ctx.quadraticCurveTo(-4.5, -5.5 - flap * 2.5, elbowX, elbowY);
-    ctx.quadraticCurveTo(-13, -5.5 - flap * 5, tipX, tipY);
-    ctx.quadraticCurveTo(-17, 0 + flap * 5, s1X, s1Y);
-    ctx.quadraticCurveTo(-12, 2 + flap * 3.5, s2X, s2Y);
-    ctx.quadraticCurveTo(-7.5, 2.5 + flap * 2, s3X, s3Y);
-    ctx.quadraticCurveTo(-2.5, 2.8, 0, 5);
+    ctx.quadraticCurveTo(-4.5, -5.5 - flap * 3, elbowX, elbowY);
+    ctx.quadraticCurveTo(-13.5, -5.5 - flap * 5.5, tipX, tipY);
+    ctx.quadraticCurveTo(-17.5, 0 + flap * 5.5, s1X, s1Y);
+    ctx.quadraticCurveTo(-12.5, 2 + flap * 3.8, s2X, s2Y);
+    ctx.quadraticCurveTo(-8, 2.5 + flap * 2, s3X, s3Y);
+    ctx.quadraticCurveTo(-2.5, 2.8, 0, 5.2);
 
     // Right Wing (symmetrical)
     ctx.quadraticCurveTo(2.5, 2.8, -s3X, s3Y);
-    ctx.quadraticCurveTo(7.5, 2.5 + flap * 2, -s2X, s2Y);
-    ctx.quadraticCurveTo(12, 2 + flap * 3.5, -s1X, s1Y);
-    ctx.quadraticCurveTo(17, 0 + flap * 5, -tipX, tipY);
-    ctx.quadraticCurveTo(13, -5.5 - flap * 5, -elbowX, elbowY);
-    ctx.quadraticCurveTo(4.5, -5.5 - flap * 2.5, 1.2, -2);
+    ctx.quadraticCurveTo(8, 2.5 + flap * 2, -s2X, s2Y);
+    ctx.quadraticCurveTo(12.5, 2 + flap * 3.8, -s1X, s1Y);
+    ctx.quadraticCurveTo(17.5, 0 + flap * 5.5, -tipX, tipY);
+    ctx.quadraticCurveTo(13.5, -5.5 - flap * 5.5, -elbowX, elbowY);
+    ctx.quadraticCurveTo(4.5, -5.5 - flap * 3, 1.2, -2);
 
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
+
+    // Subtle wing structure ribs for larger bats to enhance realism
+    if (size > 1.6) {
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      // Left ribs
+      ctx.moveTo(elbowX, elbowY);
+      ctx.lineTo(s1X, s1Y);
+      ctx.moveTo(elbowX, elbowY);
+      ctx.lineTo(s2X, s2Y);
+      // Right ribs
+      ctx.moveTo(-elbowX, elbowY);
+      ctx.lineTo(-s1X, s1Y);
+      ctx.moveTo(-elbowX, elbowY);
+      ctx.lineTo(-s2X, s2Y);
+      ctx.stroke();
+    }
 
     ctx.restore();
   }
 
   // Generate Bat Swarm Flock
   const bats = [];
-  const TOTAL_BATS = 11;
+  const TOTAL_BATS = 15;
 
   function initBats() {
     bats.length = 0;
@@ -128,72 +148,72 @@
 
     for (let i = 0; i < TOTAL_BATS; i++) {
       let delay = 0;
-      let duration = 950;
+      let duration = 1100;
       let p0, p1, p2, p3;
-      let baseSize = 1;
-      let endSize = 1;
+      let baseSize = 1.8;
+      let endSize = 2.0;
       let role = 'swarm';
 
-      if (i < 2) {
-        // High scouts cutting rapidly across
+      if (i < 3) {
+        // High scouts cutting rapidly across upper screen
         role = 'scout';
-        delay = 120 + i * 120;
-        duration = 850 + Math.random() * 150;
+        delay = 100 + i * 150;
+        duration = 950 + Math.random() * 200;
         const dir = i % 2 === 0 ? 1 : -1;
-        p0 = { x: cx - dir * (cx * 0.9), y: cy * 0.35 + (Math.random() - 0.5) * 60 };
-        p1 = { x: cx - dir * 200, y: cy * 0.45 };
-        p2 = { x: cx + dir * 200, y: cy * 0.55 };
-        p3 = { x: cx + dir * (cx * 0.95), y: cy * 0.3 + (Math.random() - 0.5) * 80 };
-        baseSize = 0.8 + Math.random() * 0.3;
+        p0 = { x: cx - dir * (cx * 0.9), y: cy * 0.3 + (Math.random() - 0.5) * 80 };
+        p1 = { x: cx - dir * 180, y: cy * 0.4 };
+        p2 = { x: cx + dir * 180, y: cy * 0.5 };
+        p3 = { x: cx + dir * (cx * 0.95), y: cy * 0.35 + (Math.random() - 0.5) * 80 };
+        baseSize = 1.5 + Math.random() * 0.4;
         endSize = baseSize;
-      } else if (i < 9) {
-        // Main flock swooping diagonally slicing through "RafiKuy"
+      } else if (i < 12) {
+        // Main flock swooping diagonally slicing directly through "RafiKuy"
         role = 'nameCross';
-        const batchIdx = i - 2;
-        delay = 380 + batchIdx * 70 + Math.random() * 40;
-        duration = 880 + Math.random() * 180;
+        const batchIdx = i - 3;
+        delay = 350 + batchIdx * 80 + Math.random() * 40;
+        duration = 1050 + Math.random() * 200;
 
-        // Originates from upper-left
+        // Originates from upper-left corner
         p0 = {
-          x: cx - (cx * 0.75) - Math.random() * 100,
-          y: cy * 0.15 + (batchIdx * 24) + (Math.random() - 0.5) * 30
+          x: cx - (cx * 0.8) - Math.random() * 120,
+          y: cy * 0.15 + (batchIdx * 25) + (Math.random() - 0.5) * 40
         };
 
         // Diving path heading into the title
         p1 = {
-          x: cx - 180 + (Math.random() - 0.5) * 60,
-          y: nameB.top - 40 + (Math.random() - 0.5) * 30
+          x: cx - 180 + (Math.random() - 0.5) * 70,
+          y: nameB.top - 50 + (Math.random() - 0.5) * 30
         };
 
         // Mid flight crossing directly over the letters of "RafiKuy"
-        const norm = batchIdx / 7;
-        const crossX = nameB.left + norm * nameB.width + (Math.random() - 0.5) * 20;
-        const crossY = nameB.y + (Math.random() - 0.5) * 14;
+        const norm = batchIdx / 9;
+        const crossX = nameB.left + norm * nameB.width + (Math.random() - 0.5) * 24;
+        const crossY = nameB.y + (Math.random() - 0.5) * 16;
         p2 = { x: crossX, y: crossY };
 
         // Ascending swoop towards right exit
         p3 = {
-          x: cx + (cx * 0.85) + Math.random() * 120,
-          y: cy + 100 + batchIdx * 30
+          x: cx + (cx * 0.85) + Math.random() * 140,
+          y: cy + 120 + batchIdx * 35
         };
 
-        baseSize = 0.95 + Math.random() * 0.35;
-        endSize = baseSize * 1.15;
+        baseSize = 1.7 + Math.random() * 0.6; // Prominent, clearly visible size
+        endSize = baseSize * 1.2;
       } else {
         // Foreground cinematic pass (larger, near camera)
         role = 'rush';
-        const rushIdx = i - 9;
-        delay = 800 + rushIdx * 140;
-        duration = 750 + Math.random() * 120;
+        const rushIdx = i - 12;
+        delay = 750 + rushIdx * 180;
+        duration = 900 + Math.random() * 150;
 
         const side = rushIdx === 0 ? -1 : 1;
-        p0 = { x: cx + side * (cx * 0.6), y: nameB.top - 90 };
-        p1 = { x: nameB.x + side * 50, y: nameB.y + 15 };
-        p2 = { x: cx + side * 220, y: cy + 160 };
-        p3 = { x: cx + side * (cx * 1.1), y: window.innerHeight + 100 };
+        p0 = { x: cx + side * (cx * 0.65), y: nameB.top - 100 };
+        p1 = { x: nameB.x + side * 60, y: nameB.y + 20 };
+        p2 = { x: cx + side * 240, y: cy + 180 };
+        p3 = { x: cx + side * (cx * 1.15), y: window.innerHeight + 120 };
 
-        baseSize = 1.3;
-        endSize = 2.2;
+        baseSize = 2.4;
+        endSize = 3.8; // Dramatic cinematic scale
       }
 
       bats.push({
@@ -202,7 +222,7 @@
         duration,
         baseSize,
         endSize,
-        flapSpeed: 0.24 + Math.random() * 0.08,
+        flapSpeed: 0.22 + Math.random() * 0.08,
         flapPhase: Math.random() * Math.PI * 2,
         role
       });
@@ -337,10 +357,10 @@
     preloaderEl.addEventListener('touchstart', hidePreloader, { passive: true });
   }
 
-  // Absolute safety timeout: dismiss after 2.4s
+  // Absolute safety timeout: dismiss after 3.0s
   setTimeout(() => {
     hidePreloader();
-  }, 2400);
+  }, 3000);
 
   // ===== CUSTOM CURSOR (Desktop Only) =====
   if (window.innerWidth > 768) {

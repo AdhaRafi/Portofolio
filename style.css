@@ -127,7 +127,7 @@ img {
   position: fixed;
   inset: 0;
   z-index: 100000;
-  background: #08080a;
+  background: radial-gradient(circle at 50% 48%, #191e2b 0%, #0c0f16 45%, #050608 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -146,13 +146,13 @@ img {
   pointer-events: none !important;
 }
 
-/* Canvas for 60fps Silhouette Bats */
+/* Canvas for 60fps Silhouette Bats (z-index 10 to fly in front of name) */
 #bat-canvas {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  z-index: 2;
+  z-index: 10;
   pointer-events: none;
 }
 
