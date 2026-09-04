@@ -819,7 +819,10 @@
       }
     }
 
-    // Render loop
+    // Render loop for all hero bats (ambient, title bursts, and photo swarm)
+    let photoSwarmBats = [];
+    let isSwarmingActive = false;
+
     function renderHeroBats(timestamp) {
       if (!ctx || heroW === 0) {
         animFrameId = null;
@@ -827,8 +830,9 @@
       }
 
       ctx.clearRect(0, 0, heroW, heroH);
-
       const now = performance.now();
+
+      // 1. Render Ambient & Title Burst Bats
       for (let i = heroBats.length - 1; i >= 0; i--) {
         const b = heroBats[i];
         const elapsed = now - b.startTime;
@@ -855,11 +859,60 @@
         drawBatOnCanvas(pos.x, pos.y, currentSize, angle, b.flapPhase, opacity);
       }
 
-      if (heroBats.length > 0 && isHeroVisible) {
+      // 2. Render Photo Swarm Bats (Clustering on card & taking off)
+      if (photoSwarmBats.length > 0) {
+        for (let i = photoSwarmBats.length - 1; i >= 0; i--) {
+          const b = photoSwarmBats[i];
+
+          if (b.inFlight) {
+            // Bats flying inward to swarm the card (Replay mode)
+            b.currentX += (b.homeX - b.currentX) * b.inSpeed;
+            b.currentY += (b.homeY - b.currentY) * b.inSpeed;
+            b.currentAngle = Math.atan2(b.homeY - b.currentY, b.homeX - b.currentX) + Math.PI / 2;
+            const dist = Math.hypot(b.homeX - b.currentX, b.homeY - b.currentY);
+            if (dist < 12) {
+              b.inFlight = false;
+              b.currentX = b.homeX;
+              b.currentY = b.homeY;
+            }
+          } else if (!b.launched) {
+            // Actively swarming / crawling on the photo card ("dikerubutin")
+            if (now >= b.launchTime) {
+              b.launched = true;
+            } else {
+              // Rapid wing flaps and organic crawling jitter across the photo
+              b.currentX = b.homeX + Math.sin(now * 0.009 + b.flapPhase) * 6 + Math.cos(now * 0.004) * 3;
+              b.currentY = b.homeY + Math.cos(now * 0.008 + b.flapPhase) * 6;
+              b.currentAngle = b.baseAngle + Math.sin(now * 0.012 + b.flapPhase) * 0.35;
+            }
+          } else {
+            // Flying away / peeling off into the hero sky ("minggir terbang")
+            b.currentX += b.vx;
+            b.currentY += b.vy;
+            b.vx *= 1.032;
+            b.vy *= 1.032;
+            b.currentAngle = Math.atan2(b.vy, b.vx) + Math.PI / 2;
+            b.size *= 1.008;
+
+            // Remove bat when offscreen
+            if (b.currentX < -200 || b.currentX > heroW + 200 || b.currentY < -200 || b.currentY > heroH + 200) {
+              photoSwarmBats.splice(i, 1);
+              continue;
+            }
+          }
+
+          b.flapPhase += b.flapSpeed;
+          drawBatOnCanvas(b.currentX, b.currentY, b.size, b.currentAngle, b.flapPhase, b.opacity);
+        }
+      }
+
+      if ((heroBats.length > 0 || photoSwarmBats.length > 0) && isHeroVisible) {
         animFrameId = requestAnimationFrame(renderHeroBats);
       } else {
         animFrameId = null;
-        ctx.clearRect(0, 0, heroW, heroH);
+        if (heroBats.length === 0 && photoSwarmBats.length === 0) {
+          ctx.clearRect(0, 0, heroW, heroH);
+        }
       }
     }
 
@@ -875,13 +928,13 @@
       }, delay);
     }
 
-    // Initial ambient flight after 1.8s
+    // Initial ambient flight after 2.5s
     setTimeout(() => {
       if (isHeroVisible) {
         spawnAmbientBats();
       }
       scheduleNextAmbient();
-    }, 1800);
+    }, 2500);
 
     // Click on PORTFOLIO title triggers bat burst
     const heroTitle = document.getElementById('hero-title');
@@ -902,131 +955,130 @@
       });
     }
 
-    // ===== PHOTO BAT SWARM REVEAL =====
-    let isPhotoRevealing = false;
+    // ===== PHOTO BAT SWARM & REVEAL ENGINE =====
+    // Kelelawar mengerubuti foto, lalu terbang minggir membuka foto
     let photoLastTrigger = 0;
 
-    function triggerPhotoBatReveal(isReplay = false) {
+    function startPhotoBatSwarm(isReplay = false) {
       const cardWrap = document.getElementById('hero-interactive-card');
       const card3d = document.getElementById('hero-card-3d');
       if (!cardWrap || !card3d || heroW === 0) return;
 
       const now = performance.now();
-      if (isPhotoRevealing && now - photoLastTrigger < 1600) return;
-      isPhotoRevealing = true;
+      if (isSwarmingActive && now - photoLastTrigger < 1600) return;
+      isSwarmingActive = true;
       photoLastTrigger = now;
 
-      const cardRect = cardWrap.getBoundingClientRect();
+      const cardRect = card3d.getBoundingClientRect();
       const heroRect = heroSection.getBoundingClientRect();
-      const targetX = cardRect.left - heroRect.left + cardRect.width / 2;
-      const targetY = cardRect.top - heroRect.top + cardRect.height / 2;
+      const cLeft = cardRect.left - heroRect.left;
+      const cTop = cardRect.top - heroRect.top;
+      const cW = cardRect.width;
+      const cH = cardRect.height;
+      const cCenterX = cLeft + cW / 2;
+      const cCenterY = cTop + cH / 2;
 
-      // Ensure hidden state if replaying
-      if (isReplay) {
-        cardWrap.classList.remove('bat-revealed');
-        cardWrap.classList.add('bat-reveal-init');
-        card3d.classList.remove('glint-active');
+      // Set card to swarming state (dark shroud active, photo dimmed)
+      cardWrap.classList.remove('bat-revealed');
+      cardWrap.classList.add('bat-swarming');
+      card3d.classList.remove('glint-active');
+
+      photoSwarmBats = [];
+      const TOTAL_SWARM_BATS = 34; // 34 bats densely covering the card
+      const SWARM_HOLD = isReplay ? 1000 : 900; // time bats swarm/crawl on the card before takeoff
+
+      const cols = 5;
+      const rows = 7;
+      let batIdx = 0;
+
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          if (batIdx >= TOTAL_SWARM_BATS) break;
+
+          // Perch position spread across the photo card
+          const targetX = cLeft + 22 + (c / (cols - 1)) * (cW - 44) + (Math.random() - 0.5) * 22;
+          const targetY = cTop + 22 + (r / (rows - 1)) * (cH - 44) + (Math.random() - 0.5) * 22;
+
+          // Outward trajectory away from card center
+          const angleFromCenter = Math.atan2(targetY - cCenterY, targetX - cCenterX);
+          const exitAngle = angleFromCenter + (Math.random() - 0.5) * 0.45;
+          const launchSpeed = 8.5 + Math.random() * 8.5;
+
+          let currentX = targetX;
+          let currentY = targetY;
+          let inFlight = false;
+
+          if (isReplay) {
+            // If replay, bats fly in from outside the screen to swarm the card
+            const inDist = Math.max(heroW, heroH) * 0.6 + Math.random() * 120;
+            const inAngle = Math.random() * Math.PI * 2;
+            currentX = targetX + Math.cos(inAngle) * inDist;
+            currentY = targetY + Math.sin(inAngle) * inDist;
+            inFlight = true;
+          }
+
+          photoSwarmBats.push({
+            homeX: targetX,
+            homeY: targetY,
+            currentX,
+            currentY,
+            inFlight,
+            inSpeed: 0.11 + Math.random() * 0.05,
+            exitAngle,
+            vx: Math.cos(exitAngle) * launchSpeed,
+            vy: Math.sin(exitAngle) * launchSpeed - 1.8,
+            baseAngle: exitAngle,
+            currentAngle: (Math.random() - 0.5) * Math.PI,
+            size: 1.4 + Math.random() * 0.65,
+            flapPhase: Math.random() * Math.PI * 2,
+            flapSpeed: 0.32 + Math.random() * 0.12,
+            launchTime: now + (isReplay ? 500 : 0) + SWARM_HOLD + batIdx * 22, // Staggered takeoff
+            launched: false,
+            opacity: 1
+          });
+
+          batIdx++;
+        }
       }
 
-      const INCOMING_BATS = 16;
-      // Step 1: Bats swoop inward from outer edges toward the photo card
-      for (let i = 0; i < INCOMING_BATS; i++) {
-        setTimeout(() => {
-          if (!isHeroVisible) return;
-          const inAngle = (i / INCOMING_BATS) * Math.PI * 2 + (Math.random() - 0.5) * 0.3;
-          const spawnDist = Math.max(heroW, heroH) * 0.65 + 100;
-          const startX = targetX + Math.cos(inAngle) * spawnDist;
-          const startY = targetY + Math.sin(inAngle) * spawnDist;
-
-          const midDist = spawnDist * 0.45;
-          const perpAngle = inAngle + (i % 2 === 0 ? 0.6 : -0.6);
-          const p1X = targetX + Math.cos(perpAngle) * midDist;
-          const p1Y = targetY + Math.sin(perpAngle) * midDist;
-
-          const p2X = targetX + (Math.random() - 0.5) * 120;
-          const p2Y = targetY + (Math.random() - 0.5) * 120;
-
-          const p3X = targetX + (Math.random() - 0.5) * 60;
-          const p3Y = targetY + (Math.random() - 0.5) * 60;
-
-          const duration = 750 + Math.random() * 200;
-          const baseSize = 1.4 + Math.random() * 0.5;
-          const endSize = 1.8 + Math.random() * 0.6;
-
-          spawnBat({ x: startX, y: startY }, { x: p1X, y: p1Y }, { x: p2X, y: p2Y }, { x: p3X, y: p3Y }, duration, baseSize, endSize);
-        }, i * 35);
-      }
-
-      // Step 2: At climax of convergence, reveal photo and burst bats outward!
-      const CLIMAX_DELAY = 800;
+      // Schedule the photo emergence when bats begin dispersing
       setTimeout(() => {
         if (!isHeroVisible) return;
-
-        // Reveal the photo card!
-        cardWrap.classList.remove('bat-reveal-init');
+        // Unveil the photo!
+        cardWrap.classList.remove('bat-swarming');
         cardWrap.classList.add('bat-revealed');
         card3d.classList.add('glint-active');
+      }, (isReplay ? 500 : 0) + SWARM_HOLD + 320);
 
-        // Scatter 18 bats radially outward at high speed
-        const OUTWARD_BATS = 18;
-        for (let i = 0; i < OUTWARD_BATS; i++) {
-          setTimeout(() => {
-            const outAngle = (i / OUTWARD_BATS) * Math.PI * 2 + (Math.random() - 0.5) * 0.35;
-            const burstDist = Math.max(heroW, heroH) * 0.85 + Math.random() * 250;
+      setTimeout(() => {
+        isSwarmingActive = false;
+      }, (isReplay ? 500 : 0) + SWARM_HOLD + 1600);
 
-            const p0 = {
-              x: targetX + (Math.random() - 0.5) * 50,
-              y: targetY + (Math.random() - 0.5) * 50
-            };
-
-            const p1 = {
-              x: p0.x + Math.cos(outAngle) * (burstDist * 0.3) + (Math.random() - 0.5) * 60,
-              y: p0.y + Math.sin(outAngle) * (burstDist * 0.3) + (Math.random() - 0.5) * 60
-            };
-
-            const p2 = {
-              x: p0.x + Math.cos(outAngle) * (burstDist * 0.7),
-              y: p0.y + Math.sin(outAngle) * (burstDist * 0.7)
-            };
-
-            const p3 = {
-              x: p0.x + Math.cos(outAngle) * burstDist,
-              y: p0.y + Math.sin(outAngle) * burstDist
-            };
-
-            const duration = 850 + Math.random() * 300;
-            const baseSize = 2.0 + Math.random() * 0.8;
-            const endSize = baseSize * (1.2 + Math.random() * 0.4);
-
-            spawnBat(p0, p1, p2, p3, duration, baseSize, endSize);
-          }, i * 25);
-        }
-
-        setTimeout(() => {
-          isPhotoRevealing = false;
-        }, 900);
-      }, CLIMAX_DELAY);
+      // Trigger animation frame loop
+      if (!animFrameId) {
+        animFrameId = requestAnimationFrame(renderHeroBats);
+      }
     }
 
-    // Trigger initial bat photo reveal
+    // Initial photo bat swarm reveal on hero activation
     setTimeout(() => {
-      triggerPhotoBatReveal(false);
-    }, 450);
+      startPhotoBatSwarm(false);
+    }, 350);
 
-    // Click on photo card replays the bat swarm reveal
+    // Click on photo card: bats swarm back in and scatter to reveal photo again
     const cardWrap = document.getElementById('hero-interactive-card');
     if (cardWrap) {
       cardWrap.addEventListener('click', () => {
-        triggerPhotoBatReveal(true);
+        startPhotoBatSwarm(true);
       });
 
-      // Safety fallback: ensure photo is always revealed after 3s
+      // Safety fallback: guarantee photo is 100% visible after 3.5s
       setTimeout(() => {
         if (!cardWrap.classList.contains('bat-revealed')) {
-          cardWrap.classList.remove('bat-reveal-init');
+          cardWrap.classList.remove('bat-swarming');
           cardWrap.classList.add('bat-revealed');
         }
-      }, 3000);
+      }, 3500);
     }
 
     // Pause when hero is not visible (scroll away)

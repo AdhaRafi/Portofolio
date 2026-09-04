@@ -648,7 +648,7 @@ body {
   position: relative;
 }
 
-/* ===== HERO PHOTO 3D CARD & CYBER ORBIT ===== */
+/* ===== HERO PHOTO 3D CARD & BAT SWARM REVEAL ===== */
 .hero-image-wrapper {
   position: relative;
   max-width: 420px;
@@ -657,31 +657,47 @@ body {
   cursor: pointer;
 }
 
-/* Bat Swarm Reveal Initial State (Masked/Hidden) */
-.hero-image-wrapper.bat-reveal-init .hero-card-3d {
+/* Dark Shroud covering photo while bats are swarming it ("dikerubutin") */
+.hero-bat-shroud {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(15, 18, 26, 0.9) 0%, rgba(6, 7, 10, 0.98) 100%);
+  z-index: 8;
   opacity: 0;
-  transform: scale(0.85) translateY(28px);
-  filter: blur(14px) brightness(0.35);
-  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  border-radius: 24px;
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.hero-image-wrapper.bat-reveal-init .hero-floating-badge,
-.hero-image-wrapper.bat-reveal-init .hero-quote,
-.hero-image-wrapper.bat-reveal-init .hero-orbit-ring,
-.hero-image-wrapper.bat-reveal-init .hero-photo-ambient {
-  opacity: 0;
-  transform: scale(0.8);
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+/* Bat Swarm Active State: Photo is engulfed/covered in shadow and bats */
+.hero-image-wrapper.bat-swarming .hero-bat-shroud {
+  opacity: 0.92;
 }
 
-/* When Revealed by Bat Swarm */
-.hero-image-wrapper.bat-revealed .hero-card-3d {
-  opacity: 1;
-  transform: scale(1) translateY(0);
-  filter: blur(0) brightness(1);
+.hero-image-wrapper.bat-swarming .hero-card-3d img {
+  filter: brightness(0.12) contrast(1.2) blur(3px) !important;
+  transform: scale(0.96);
+  transition: filter 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s ease;
+}
+
+.hero-image-wrapper.bat-swarming .hero-floating-badge,
+.hero-image-wrapper.bat-swarming .hero-quote,
+.hero-image-wrapper.bat-swarming .hero-orbit-ring,
+.hero-image-wrapper.bat-swarming .hero-photo-ambient {
+  opacity: 0.3;
+  transform: scale(0.92);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* When Revealed: Bats fly away and photo emerges crystal clear */
+.hero-image-wrapper.bat-revealed .hero-bat-shroud {
+  opacity: 0;
+}
+
+.hero-image-wrapper.bat-revealed .hero-card-3d img {
+  filter: grayscale(0%) contrast(1.1) brightness(1) blur(0px) !important;
+  transform: scale(1);
+  transition: filter 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s ease;
 }
 
 .hero-image-wrapper.bat-revealed .hero-floating-badge,
@@ -690,6 +706,7 @@ body {
 .hero-image-wrapper.bat-revealed .hero-photo-ambient {
   opacity: 1;
   transform: scale(1);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Glowing Ambient Aura */
