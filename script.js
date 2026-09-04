@@ -339,6 +339,105 @@
     if (preloaderDone) return;
     preloaderDone = true;
 
+    // ===== FULLSCREEN BAT EXPLOSION TRANSITION =====
+    // Bats flood the screen from center, then scatter outward revealing the page
+    const transCanvas = document.getElementById('bat-transition-canvas');
+    if (transCanvas) {
+      const tc = transCanvas.getContext('2d');
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const W = window.innerWidth;
+      const H = window.innerHeight;
+      transCanvas.width = W * dpr;
+      transCanvas.height = H * dpr;
+      transCanvas.style.width = W + 'px';
+      transCanvas.style.height = H + 'px';
+      tc.setTransform(1, 0, 0, 1, 0, 0);
+      tc.scale(dpr, dpr);
+      transCanvas.style.display = 'block';
+
+      // Spawn a MASSIVE flock from center exploding outward
+      const NUM_BATS = 80;
+      const cx = W / 2;
+      const cy = H / 2;
+      const transBats = [];
+
+      for (let i = 0; i < NUM_BATS; i++) {
+        const angle = (i / NUM_BATS) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
+        const speed = 14 + Math.random() * 18;
+        const delay = Math.random() * 280; // stagger appearance
+        const startRadius = 20 + Math.random() * 60; // burst from near center
+        transBats.push({
+          x: cx + Math.cos(angle) * startRadius,
+          y: cy + Math.sin(angle) * startRadius,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 2,
+          angle: angle + Math.PI / 2,
+          size: 1.6 + Math.random() * 1.2,
+          flapPhase: Math.random() * Math.PI * 2,
+          flapSpeed: 0.28 + Math.random() * 0.18,
+          opacity: 0,
+          delay,
+          born: false
+        });
+      }
+
+      let transStart = null;
+      const TRANS_DURATION = 1100; // total explosion duration
+
+      function renderTransition(timestamp) {
+        if (!transStart) transStart = timestamp;
+        const elapsed = timestamp - transStart;
+        const progress = Math.min(elapsed / TRANS_DURATION, 1);
+
+        tc.clearRect(0, 0, W, H);
+
+        // Dark overlay that fades out as bats scatter
+        const overlayAlpha = Math.max(0, 0.85 - progress * 1.1);
+        tc.fillStyle = `rgba(4, 4, 6, ${overlayAlpha})`;
+        tc.fillRect(0, 0, W, H);
+
+        let anyAlive = false;
+        for (let i = 0; i < transBats.length; i++) {
+          const b = transBats[i];
+          if (elapsed < b.delay) { anyAlive = true; continue; }
+
+          // Fade in
+          b.opacity = Math.min(b.opacity + 0.12, 1);
+
+          // Move
+          b.x += b.vx;
+          b.y += b.vy;
+          b.vy += 0.08; // slight gravity drift
+          b.flapPhase += b.flapSpeed;
+
+          // Facing angle: follow velocity
+          b.angle = Math.atan2(b.vy, b.vx) + Math.PI / 2;
+
+          // Fade out near end or when off-screen
+          const offscreen = b.x < -150 || b.x > W + 150 || b.y < -150 || b.y > H + 150;
+          if (offscreen || progress > 0.55) {
+            b.opacity = Math.max(0, b.opacity - 0.055);
+          }
+
+          if (b.opacity > 0) {
+            drawBat(tc, b.x, b.y, b.size, b.angle, b.flapPhase, b.opacity);
+            anyAlive = true;
+          }
+        }
+
+        if (anyAlive && progress < 1) {
+          requestAnimationFrame(renderTransition);
+        } else {
+          // Fully done — hide canvas
+          tc.clearRect(0, 0, W, H);
+          transCanvas.style.display = 'none';
+        }
+      }
+
+      requestAnimationFrame(renderTransition);
+    }
+
+    // Dismiss the preloader while bats are in flight
     if (preloader && !preloader.classList.contains('done')) {
       preloader.classList.add('done');
       setTimeout(() => {
@@ -349,6 +448,7 @@
       initHeroAnimations();
     }
   }
+
 
   // Click/Tap anywhere to skip preloader immediately
   const preloaderEl = document.getElementById('preloader');
